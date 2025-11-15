@@ -1,0 +1,196 @@
+﻿{
+    "inputParameters": [
+        {
+            "name": "BodySide",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Side"
+                },
+                {
+                    "language": "ro",
+                    "value": "Mână"
+                }
+            ],
+            "type": "list",
+            "value": [
+                {
+                    "text": [
+                        {
+                            "language": "en",
+                            "value": "Left"
+                        },
+                        {
+                            "language": "ro",
+                            "value": "Stânga"
+                        }
+                    ],
+                    "value": "0"
+                },
+                {
+                    "text": [
+                        {
+                            "language": "en",
+                            "value": "Right"
+                        },
+                        {
+                            "language": "ro",
+                            "value": "Dreapta"
+                        }
+                    ],
+                    "value": "1"
+                }
+            ],
+            "defaultValue": "0",
+            "isImplicit": true,
+            "runtimeUpdate": true
+        },
+        {
+            "name": "IterationCount",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Iterations"
+                },
+                {
+                    "language": "ro",
+                    "value": "Iterații"
+                }
+            ],
+            "finalText": [
+                {
+                    "language": "en",
+                    "value": "games"
+                },
+                {
+                    "language": "ro",
+                    "value": "jocuri"
+                }
+            ],
+            "type": "int",
+            "defaultValue": "1",
+            "minValue": "1",
+            "maxValue": "200",
+            "isImplicit": true,
+            "isHomeUseOnly": true
+        },
+        {
+            "name": "ExampleInt",
+            "text": "Example int",
+            "type": "int",
+            "defaultValue": "1",
+            "minValue": "1",
+            "maxValue": "5",
+            "runtimeUpdate": true,
+            "categoryName": "ExampleCategory1",
+            "observedEvents": [
+                {
+                    "name": "show",
+                    "activeEventNames": [
+                        "onOption0Selected"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ExampleBool",
+            "text": "Example Bool",
+            "type": "bool",
+            "defaultValue": false, 
+            "categoryName": "ExampleCategory1",
+            "observedEvents": [
+                {
+                    "name": "enable",
+                    "activeEventNames": [
+                        "onNoGameIsPlaying"
+                    ]
+                }
+            ]
+        },
+	    {
+            "name": "ExampleList",
+            "text": "Example List",
+            "type": "list",
+            "value": [
+                {
+                    "text": "Option 0",
+                    "value": "0"
+                },
+                {
+                    "text": "Option 1",
+                    "value": "1"
+                },
+                {
+                    "text": "Option 2",
+                    "value": "2"
+                }
+            ],
+            "defaultValue": "0",
+            "categoryName": "ExampleCategory2",
+            "emittedEvents": [
+                {
+                    "value": "0",
+                    "eventNames": [
+                        "onOption0Selected"
+                    ]
+                }
+            ]
+        }
+    ],
+    "inputParameterCategories": [
+        {
+            "name": "ExampleCategory1",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Example Category 1"
+                },
+                {
+                    "language": "ro",
+                    "value": "Exemplu categorie 1"
+                }
+            ]
+        },
+        {
+            "name": "ExampleCategory2",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Example Category 2"
+                },
+                {
+                    "language": "ro",
+                    "value": "Exemplu categorie 2"
+                }
+            ]
+        }
+    ],
+    "buttons": [
+        {
+            "name": "startgame",
+            "text": "Start Game",
+            "type": "start",
+            "observedEvents": [
+                {
+                    "name": "show",
+                    "activeEventNames": [
+                        "onNoGameIsPlaying"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "stopgame",
+            "text": "Stop Game",
+            "type": "stop",
+            "observedEvents": [
+                {
+                    "name": "show",
+                    "activeEventNames": [
+                        "onGameIsPlaying"
+                    ]
+                }
+            ]
+        }
+    ]
+}

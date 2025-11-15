@@ -1,0 +1,419 @@
+﻿{
+    "inputParameters": [
+        {
+            "name": "BodySide",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Side"
+                },
+                {
+                    "language": "ro",
+                    "value": "Mână"
+                }
+            ],
+            "type": "list",
+            "value": [
+                {
+                    "text": [
+                        {
+                            "language": "en",
+                            "value": "Left"
+                        },
+                        {
+                            "language": "ro",
+                            "value": "Stânga"
+                        }
+                    ],
+                    "value": "0"
+                },
+                {
+                    "text": [
+                        {
+                            "language": "en",
+                            "value": "Right"
+                        },
+                        {
+                            "language": "ro",
+                            "value": "Dreapta"
+                        }
+                    ],
+                    "value": "1"
+                }
+            ],
+            "defaultValue": "0",
+            "isImplicit": true,
+            "runtimeUpdate": false,
+            "observedEvents": [
+                {
+                    "name": "enable",
+                    "activeEventNames": [
+                        "onNoGameIsPlaying"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "IterationCount",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Iterations"
+                },
+                {
+                    "language": "ro",
+                    "value": "Iterații"
+                }
+            ],
+            "finalText": [
+                {
+                    "language": "en",
+                    "value": "games"
+                },
+                {
+                    "language": "ro",
+                    "value": "jocuri"
+                }
+            ],
+            "type": "int",
+            "defaultValue": "1",
+            "minValue": "1",
+            "maxValue": "10",
+            "isImplicit": true,
+            "homeUseOnly": true
+        },
+        {
+            "name": "Haptic",
+            "text": "Haptic",
+            "type": "bool",
+            "defaultValue": false,
+            "hdcId": "HAPTIC",
+            "categoryName": "Input",
+            "requiresHDC": true
+        },
+        {
+            "name": "NrTotalFructe",
+            "text": "Total",
+            "type": "int",
+            "defaultValue": "10",
+            "minValue": "1",
+            "maxValue": "50",
+            "categoryName": "Fruits",
+            "runtimeUpdate": false,
+            "observedEvents": [
+                {
+                    "name": "enable",
+                    "activeEventNames": [
+                        "onNoGameIsPlaying"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "NrFructe",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "visible"
+                },
+                {
+                    "language": "ro",
+                    "value": "vizibile"
+                }
+            ],
+            "type": "int",
+            "defaultValue": "3",
+            "minValue": "1",
+            "maxValue": "10",
+            "categoryName": "Fruits",
+            "runtimeUpdate": false,
+            "observedEvents": [
+                {
+                    "name": "enable",
+                    "activeEventNames": [
+                        "onNoGameIsPlaying"
+                    ]
+                }
+            ]
+        },
+	    {
+            "name": "CountdownTimer",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Countdown Timer (min)"
+                },
+                {
+                    "language": "ro",
+                    "value": "Timp limită (min)"
+                }
+            ],
+            "type": "list",
+	        "runtimeUpdate": false,
+            "value": [
+                {
+                    "text": "None",
+                    "value": "0"
+                },
+                {
+                    "text": "1 min",
+                    "value": "1"
+                },
+                {
+                    "text": "2 min",
+                    "value": "2"
+                },
+                {
+                    "text": "3 min",
+                    "value": "3"
+                },
+                {
+                    "text": "4 min",
+                    "value": "4"
+                },
+                {
+                    "text": "5 min",
+                    "value": "5"
+                }
+            ],
+            "defaultValue": "0",
+            "categoryName": "Fruits",
+            "observedEvents": [
+                {
+                    "name": "enable",
+                    "activeEventNames": [
+                        "onNoGameIsPlaying"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AngleAbduction",
+            "text": "X",
+            "finalText": "°",
+            "type": "ivec2",
+            "minDefaultValue": "30",
+            "maxDefaultValue": "90",
+            "minName": "MinAngleAbduction",
+            "maxName": "MaxAngleAbduction",
+            "minValue": "30",
+            "maxValue": "90",
+            "runtimeUpdate": true,
+            "categoryName": "Range"
+        },
+        {
+            "name": "AngleFlexion",
+            "text": "Y",
+            "finalText": "°",
+            "type": "ivec2",
+            "minDefaultValue": "45",
+            "maxDefaultValue": "110",
+            "minName": "MinAngleFlexion",
+            "maxName": "MaxAngleFlexion",
+            "minValue": "45",
+            "maxValue": "135",
+            "runtimeUpdate": true,
+            "categoryName": "Range"
+        },
+        {
+            "name": "DistancePlacement",
+            "text": "Dist",
+            "finalText": "cm",
+            "type": "ivec2",
+            "minDefaultValue": "20",
+            "maxDefaultValue": "50",
+            "minName": "MinDistancePlacement",
+            "maxName": "MaxDistancePlacement",
+            "minValue": "0",
+            "maxValue": "75",
+            "runtimeUpdate": true,
+            "categoryName": "Range"
+        },
+        {
+            "name": "GameType",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Target"
+                },
+                {
+                    "language": "ro",
+                    "value": "Țintă"
+                }
+            ],
+            "type": "list",
+            "value": [
+                {
+                    "text": [
+                        {
+                            "language": "en",
+                            "value": "Basket"
+                        },
+                        {
+                            "language": "ro",
+                            "value": "Coș"
+                        }
+                    ],
+                    "value": "0"
+                },
+                {
+                    "text": [
+                        {
+                            "language": "en",
+                            "value": "Mouth"
+                        },
+                        {
+                            "language": "ro",
+                            "value": "Gură"
+                        }
+                    ],
+                    "value": "1"
+                }
+            ],
+            "defaultValue": "0",
+            "categoryName": "Target",
+            "runtimeUpdate": false,
+            "emittedEvents": [
+                {
+                    "value": "0",
+                    "eventNames": [
+                        "onBasketSelected"
+                    ]
+                }
+            ],
+            "observedEvents": [
+                {
+                    "name": "enable",
+                    "activeEventNames": [
+                        "onNoGameIsPlaying"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "BasketScale",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "basket size"
+                },
+                {
+                    "language": "ro",
+                    "value": "Dimensiune coș"
+                }
+            ],
+            "finalText": "%",
+            "type": "int",
+            "defaultValue": "100",
+            "minValue": "0",
+            "maxValue": "200",
+            "runtimeUpdate": true,
+            "categoryName": "Target",
+            "observedEvents": [
+                {
+                    "name": "show",
+                    "activeEventNames": [
+                        "onBasketSelected"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "BasketOffsetY",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "basket Y"
+                },
+                {
+                    "language": "ro",
+                    "value": "coș Y"
+                }
+            ],
+            "finalText": "cm",
+            "type": "int",
+            "defaultValue": "0",
+            "minValue": "-100",
+            "maxValue": "100",
+            "runtimeUpdate": true,
+            "categoryName": "Target",
+            "observedEvents": [
+                {
+                    "name": "show",
+                    "activeEventNames": [
+                        "onBasketSelected"
+                    ]
+                }
+            ]
+        }
+    ],
+    "inputParameterCategories": [
+        {
+            "name": "Fruits",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Fruits"
+                },
+                {
+                    "language": "ro",
+                    "value": "Fructe"
+                }
+            ]
+        },
+        {
+            "name": "Range",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Range"
+                },
+                {
+                    "language": "ro",
+                    "value": "Limită"
+                }
+            ]
+        },
+        {
+            "name": "Target",
+            "text": [
+                {
+                    "language": "en",
+                    "value": "Target"
+                },
+                {
+                    "language": "ro",
+                    "value": "Țintă"
+                }
+            ]
+        }
+    ],
+    "buttons" : [
+        {
+            "name": "startgame",
+            "text": "Start Game",
+            "type": "start",
+            "observedEvents": [
+                {
+                    "name": "show",
+                    "activeEventNames": [
+                        "onNoGameIsPlaying"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "stopgame",
+            "text": "Stop Game",
+            "type": "stop",
+            "observedEvents": [
+                {
+                    "name": "show",
+                    "activeEventNames": [
+                        "onGameIsPlaying"
+                    ]
+                }
+            ]
+        }
+    ]
+}
