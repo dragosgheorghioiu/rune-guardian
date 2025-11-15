@@ -5091,7 +5091,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2609c54f376cffc4da1ab9401cc1a36f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skeletonType: 1
+  _skeletonType: 5
   _updateRootPose: 0
   _updateRootScale: 1
   _enablePhysicsCapsules: 0
@@ -9652,7 +9652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2609c54f376cffc4da1ab9401cc1a36f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skeletonType: 0
+  _skeletonType: 4
   _updateRootPose: 0
   _updateRootScale: 1
   _enablePhysicsCapsules: 0
@@ -13223,6 +13223,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8549063510148482618, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 282.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549063510148482618, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 233.01
+      objectReference: {fileID: 0}
     - target: {fileID: 8551012235493163410, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
       propertyPath: m_RootOrder
       value: 7
