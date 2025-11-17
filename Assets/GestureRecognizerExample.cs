@@ -20,6 +20,10 @@ public class GestureRecognizerExample : MonoBehaviour
 
     private GameObject lineObject;
 
+    public ProjectileShooter shooter;
+    public GameObject projectileTypeA;
+    public GameObject projectileTypeB;
+
     void Start()
     {
         recognizer = new Unistroke();
@@ -73,6 +77,12 @@ public class GestureRecognizerExample : MonoBehaviour
                 if (result.Score >= minScore)
                 {
                     Debug.Log($"<color=green>✓ Recognized: {result.Name} (Score: {result.Score:F2})</color>");
+                    if (result.Name.CompareTo("square") == 0) {
+                        shooter.Shoot(projectileTypeA);
+                    } else if (result.Name.CompareTo("circle") == 0)
+                    {
+                        shooter.Shoot(projectileTypeB);
+                    }
                 }
                 else
                 {

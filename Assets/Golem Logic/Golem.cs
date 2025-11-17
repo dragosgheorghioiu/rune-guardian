@@ -30,7 +30,6 @@ public class Golem : MonoBehaviour
         if (isDead) return;
         isMoving = true;
         anim.SetBool("IsWalking", true);
-        //anim.SetFloat("WalkSpeedMultiplier", speed);
     }
 
     void Update()
