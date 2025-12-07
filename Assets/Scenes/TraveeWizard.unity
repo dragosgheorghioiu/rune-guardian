@@ -1209,6 +1209,290 @@ Transform:
   m_Children: []
   m_Father: {fileID: 361891489}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1597782996
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1597783004}
+  - component: {fileID: 1597782999}
+  - component: {fileID: 1597782998}
+  - component: {fileID: 1597782997}
+  - component: {fileID: 1597783007}
+  - component: {fileID: 1597783006}
+  - component: {fileID: 1597783005}
+  m_Layer: 0
+  m_Name: SessionContainerRG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1597782997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597782996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5833662999920964c8223ded1d7f1bc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!45 &1597782998
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597782996}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 0}
+--- !u!114 &1597782999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597782996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9df904a73f11aaf4e9ebaff479489098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InputData: "{\r\n    \"inputParameters\": [\r\n        {\r\n            \"name\":
+    \"BodySide\",\r\n            \"text\": [\r\n                {\r\n                   
+    \"language\": \"en\",\r\n                    \"value\": \"Side\"\r\n               
+    },\r\n                {\r\n                    \"language\": \"ro\",\r\n                   
+    \"value\": \"M\xE2n\u0103\"\r\n                }\r\n            ],\r\n           
+    \"type\": \"list\",\r\n            \"value\": [\r\n                {\r\n                   
+    \"text\": [\r\n                        {\r\n                            \"language\":
+    \"en\",\r\n                            \"value\": \"Left\"\r\n                       
+    },\r\n                        {\r\n                            \"language\":
+    \"ro\",\r\n                            \"value\": \"St\xE2nga\"\r\n                       
+    }\r\n                    ],\r\n                    \"value\": \"0\"\r\n               
+    },\r\n                {\r\n                    \"text\": [\r\n                       
+    {\r\n                            \"language\": \"en\",\r\n                           
+    \"value\": \"Right\"\r\n                        },\r\n                       
+    {\r\n                            \"language\": \"ro\",\r\n                           
+    \"value\": \"Dreapta\"\r\n                        }\r\n                    ],\r\n                   
+    \"value\": \"1\"\r\n                }\r\n            ],\r\n            \"defaultValue\":
+    \"0\",\r\n            \"isImplicit\": true,\r\n            \"runtimeUpdate\":
+    false,\r\n            \"observedEvents\": [\r\n                {\r\n                   
+    \"name\": \"enable\",\r\n                    \"activeEventNames\": [\r\n                       
+    \"onNoGameIsPlaying\"\r\n                    ]\r\n                }\r\n           
+    ]\r\n        },\r\n        {\r\n            \"name\": \"IterationCount\",\r\n           
+    \"text\": [\r\n                {\r\n                    \"language\": \"en\",\r\n                   
+    \"value\": \"Iterations\"\r\n                },\r\n                {\r\n                   
+    \"language\": \"ro\",\r\n                    \"value\": \"Itera\u021Bii\"\r\n               
+    }\r\n            ],\r\n            \"finalText\": [\r\n                {\r\n                   
+    \"language\": \"en\",\r\n                    \"value\": \"games\"\r\n               
+    },\r\n                {\r\n                    \"language\": \"ro\",\r\n                   
+    \"value\": \"jocuri\"\r\n                }\r\n            ],\r\n            \"type\":
+    \"int\",\r\n            \"defaultValue\": \"1\",\r\n            \"minValue\":
+    \"1\",\r\n            \"maxValue\": \"10\",\r\n            \"isImplicit\": true,\r\n           
+    \"isHomeUseOnly\": true\r\n        },\r\n        {\r\n            \"name\": \"Haptic\",\r\n           
+    \"text\": \"Haptic\",\r\n            \"type\": \"bool\",\r\n            \"defaultValue\":
+    false,\r\n            \"hdcId\": \"HAPTIC\",\r\n            \"categoryName\":
+    \"Input\",\r\n            \"requiresHDC\": true\r\n        },\r\n        {\r\n           
+    \"name\": \"NrTotalFructe\",\r\n            \"text\": \"Total\",\r\n           
+    \"type\": \"int\",\r\n            \"defaultValue\": \"10\",\r\n            \"minValue\":
+    \"1\",\r\n            \"maxValue\": \"50\",\r\n            \"categoryName\":
+    \"Fruits\",\r\n            \"runtimeUpdate\": false,\r\n            \"observedEvents\":
+    [\r\n                {\r\n                    \"name\": \"enable\",\r\n                   
+    \"activeEventNames\": [\r\n                        \"onNoGameIsPlaying\"\r\n                   
+    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n           
+    \"name\": \"NrFructe\",\r\n            \"text\": [\r\n                {\r\n                   
+    \"language\": \"en\",\r\n                    \"value\": \"visible\"\r\n               
+    },\r\n                {\r\n                    \"language\": \"ro\",\r\n                   
+    \"value\": \"vizibile\"\r\n                }\r\n            ],\r\n           
+    \"type\": \"int\",\r\n            \"defaultValue\": \"3\",\r\n            \"minValue\":
+    \"1\",\r\n            \"maxValue\": \"10\",\r\n            \"categoryName\":
+    \"Fruits\",\r\n            \"runtimeUpdate\": false,\r\n            \"observedEvents\":
+    [\r\n                {\r\n                    \"name\": \"enable\",\r\n                   
+    \"activeEventNames\": [\r\n                        \"onNoGameIsPlaying\"\r\n                   
+    ]\r\n                }\r\n            ]\r\n        },\r\n\t    {\r\n           
+    \"name\": \"CountdownTimer\",\r\n            \"text\": [\r\n                {\r\n                   
+    \"language\": \"en\",\r\n                    \"value\": \"Countdown Timer (min)\"\r\n               
+    },\r\n                {\r\n                    \"language\": \"ro\",\r\n                   
+    \"value\": \"Timp limit\u0103 (min)\"\r\n                }\r\n            ],\r\n           
+    \"type\": \"list\",\r\n\t        \"runtimeUpdate\": false,\r\n            \"value\":
+    [\r\n                {\r\n                    \"text\": \"None\",\r\n                   
+    \"value\": \"0\"\r\n                },\r\n                {\r\n                   
+    \"text\": \"1 min\",\r\n                    \"value\": \"1\"\r\n               
+    },\r\n                {\r\n                    \"text\": \"2 min\",\r\n                   
+    \"value\": \"2\"\r\n                },\r\n                {\r\n                   
+    \"text\": \"3 min\",\r\n                    \"value\": \"3\"\r\n               
+    },\r\n                {\r\n                    \"text\": \"4 min\",\r\n                   
+    \"value\": \"4\"\r\n                },\r\n                {\r\n                   
+    \"text\": \"5 min\",\r\n                    \"value\": \"5\"\r\n               
+    }\r\n            ],\r\n            \"defaultValue\": \"0\",\r\n            \"categoryName\":
+    \"Fruits\",\r\n            \"observedEvents\": [\r\n                {\r\n                   
+    \"name\": \"enable\",\r\n                    \"activeEventNames\": [\r\n                       
+    \"onNoGameIsPlaying\"\r\n                    ]\r\n                }\r\n           
+    ]\r\n        },\r\n        {\r\n            \"name\": \"AngleAbduction\",\r\n           
+    \"text\": \"X\",\r\n            \"finalText\": \"\xB0\",\r\n            \"type\":
+    \"ivec2\",\r\n            \"minDefaultValue\": \"30\",\r\n            \"maxDefaultValue\":
+    \"90\",\r\n            \"minName\": \"MinAngleAbduction\",\r\n            \"maxName\":
+    \"MaxAngleAbduction\",\r\n            \"minValue\": \"30\",\r\n            \"maxValue\":
+    \"90\",\r\n            \"runtimeUpdate\": true,\r\n            \"categoryName\":
+    \"Range\"\r\n        },\r\n        {\r\n            \"name\": \"AngleFlexion\",\r\n           
+    \"text\": \"Y\",\r\n            \"finalText\": \"\xB0\",\r\n            \"type\":
+    \"ivec2\",\r\n            \"minDefaultValue\": \"45\",\r\n            \"maxDefaultValue\":
+    \"110\",\r\n            \"minName\": \"MinAngleFlexion\",\r\n            \"maxName\":
+    \"MaxAngleFlexion\",\r\n            \"minValue\": \"45\",\r\n            \"maxValue\":
+    \"135\",\r\n            \"runtimeUpdate\": true,\r\n            \"categoryName\":
+    \"Range\"\r\n        },\r\n        {\r\n            \"name\": \"DistancePlacement\",\r\n           
+    \"text\": \"Dist\",\r\n            \"finalText\": \"cm\",\r\n            \"type\":
+    \"ivec2\",\r\n            \"minDefaultValue\": \"20\",\r\n            \"maxDefaultValue\":
+    \"50\",\r\n            \"minName\": \"MinDistancePlacement\",\r\n           
+    \"maxName\": \"MaxDistancePlacement\",\r\n            \"minValue\": \"0\",\r\n           
+    \"maxValue\": \"75\",\r\n            \"runtimeUpdate\": true,\r\n           
+    \"categoryName\": \"Range\"\r\n        },\r\n        {\r\n            \"name\":
+    \"GameType\",\r\n            \"text\": [\r\n                {\r\n                   
+    \"language\": \"en\",\r\n                    \"value\": \"Target\"\r\n               
+    },\r\n                {\r\n                    \"language\": \"ro\",\r\n                   
+    \"value\": \"\u021Aint\u0103\"\r\n                }\r\n            ],\r\n           
+    \"type\": \"list\",\r\n            \"value\": [\r\n                {\r\n                   
+    \"text\": [\r\n                        {\r\n                            \"language\":
+    \"en\",\r\n                            \"value\": \"Basket\"\r\n                       
+    },\r\n                        {\r\n                            \"language\":
+    \"ro\",\r\n                            \"value\": \"Co\u0219\"\r\n                       
+    }\r\n                    ],\r\n                    \"value\": \"0\"\r\n               
+    },\r\n                {\r\n                    \"text\": [\r\n                       
+    {\r\n                            \"language\": \"en\",\r\n                           
+    \"value\": \"Mouth\"\r\n                        },\r\n                       
+    {\r\n                            \"language\": \"ro\",\r\n                           
+    \"value\": \"Gur\u0103\"\r\n                        }\r\n                   
+    ],\r\n                    \"value\": \"1\"\r\n                }\r\n           
+    ],\r\n            \"defaultValue\": \"0\",\r\n            \"categoryName\": \"Target\",\r\n           
+    \"runtimeUpdate\": false,\r\n            \"emittedEvents\": [\r\n               
+    {\r\n                    \"value\": \"0\",\r\n                    \"eventNames\":
+    [\r\n                        \"onBasketSelected\"\r\n                    ]\r\n               
+    }\r\n            ],\r\n            \"observedEvents\": [\r\n                {\r\n                   
+    \"name\": \"enable\",\r\n                    \"activeEventNames\": [\r\n                       
+    \"onNoGameIsPlaying\"\r\n                    ]\r\n                }\r\n           
+    ]\r\n        },\r\n        {\r\n            \"name\": \"BasketScale\",\r\n           
+    \"text\": [\r\n                {\r\n                    \"language\": \"en\",\r\n                   
+    \"value\": \"basket size\"\r\n                },\r\n                {\r\n                   
+    \"language\": \"ro\",\r\n                    \"value\": \"Dimensiune co\u0219\"\r\n               
+    }\r\n            ],\r\n            \"finalText\": \"%\",\r\n            \"type\":
+    \"int\",\r\n            \"defaultValue\": \"100\",\r\n            \"minValue\":
+    \"0\",\r\n            \"maxValue\": \"200\",\r\n            \"runtimeUpdate\":
+    true,\r\n            \"categoryName\": \"Target\",\r\n            \"observedEvents\":
+    [\r\n                {\r\n                    \"name\": \"show\",\r\n                   
+    \"activeEventNames\": [\r\n                        \"onBasketSelected\"\r\n                   
+    ]\r\n                }\r\n            ]\r\n        },\r\n        {\r\n           
+    \"name\": \"BasketOffsetY\",\r\n            \"text\": [\r\n                {\r\n                   
+    \"language\": \"en\",\r\n                    \"value\": \"basket Y\"\r\n               
+    },\r\n                {\r\n                    \"language\": \"ro\",\r\n                   
+    \"value\": \"co\u0219 Y\"\r\n                }\r\n            ],\r\n           
+    \"finalText\": \"cm\",\r\n            \"type\": \"int\",\r\n            \"defaultValue\":
+    \"0\",\r\n            \"minValue\": \"-100\",\r\n            \"maxValue\": \"100\",\r\n           
+    \"runtimeUpdate\": true,\r\n            \"categoryName\": \"Target\",\r\n           
+    \"observedEvents\": [\r\n                {\r\n                    \"name\": \"show\",\r\n                   
+    \"activeEventNames\": [\r\n                        \"onBasketSelected\"\r\n                   
+    ]\r\n                }\r\n            ]\r\n        }\r\n    ],\r\n    \"inputParameterCategories\":
+    [\r\n        {\r\n            \"name\": \"Fruits\",\r\n            \"text\":
+    [\r\n                {\r\n                    \"language\": \"en\",\r\n                   
+    \"value\": \"Fruits\"\r\n                },\r\n                {\r\n                   
+    \"language\": \"ro\",\r\n                    \"value\": \"Fructe\"\r\n               
+    }\r\n            ]\r\n        },\r\n        {\r\n            \"name\": \"Range\",\r\n           
+    \"text\": [\r\n                {\r\n                    \"language\": \"en\",\r\n                   
+    \"value\": \"Range\"\r\n                },\r\n                {\r\n                   
+    \"language\": \"ro\",\r\n                    \"value\": \"Limit\u0103\"\r\n               
+    }\r\n            ]\r\n        },\r\n        {\r\n            \"name\": \"Target\",\r\n           
+    \"text\": [\r\n                {\r\n                    \"language\": \"en\",\r\n                   
+    \"value\": \"Target\"\r\n                },\r\n                {\r\n                   
+    \"language\": \"ro\",\r\n                    \"value\": \"\u021Aint\u0103\"\r\n               
+    }\r\n            ]\r\n        }\r\n    ],\r\n    \"buttons\" : [\r\n        {\r\n           
+    \"name\": \"startgame\",\r\n            \"text\": \"Start Game\",\r\n           
+    \"type\": \"start\",\r\n            \"observedEvents\": [\r\n               
+    {\r\n                    \"name\": \"show\",\r\n                    \"activeEventNames\":
+    [\r\n                        \"onNoGameIsPlaying\"\r\n                    ]\r\n               
+    }\r\n            ]\r\n        },\r\n        {\r\n            \"name\": \"stopgame\",\r\n           
+    \"text\": \"Stop Game\",\r\n            \"type\": \"stop\",\r\n            \"observedEvents\":
+    [\r\n                {\r\n                    \"name\": \"show\",\r\n                   
+    \"activeEventNames\": [\r\n                        \"onGameIsPlaying\"\r\n                   
+    ]\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n"
+  Parameters: '{"BodySide":"0","IterationCount":"1","Haptic":"False","NrTotalFructe":"10","NrFructe":"3","CountdownTimer":"0","MinAngleAbduction":"30","MaxAngleAbduction":"90","MinAngleFlexion":"45","MaxAngleFlexion":"110","MinDistancePlacement":"20","MaxDistancePlacement":"50","GameType":"0","BasketScale":"100","BasketOffsetY":"0","duration":"0"}'
+  Language: 0
+  UseType: 1
+--- !u!4 &1597783004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597782996}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1597783005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597782996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e2bfdd060597d4ca78f2352d76575f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _finishGamePanel: {fileID: 0}
+--- !u!114 &1597783006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597782996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de7d4b87d110de144b3796304316c7f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _finishGamePanel: {fileID: 0}
+--- !u!114 &1597783007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597782996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb05b9274246b1e4a9af005d6888d695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inputData:
+    GameType: 0
+    Haptic: 0
+    EnemyCount: 0
+    EnemyHealth: 0
+    EnemySpeed: 0
+    EnemySpawnRate: 0
+    SpellCooldown: 0
+    SpellDamage: 0
+    MaxSpellsPerRound: 0
+    MaxWaves: 0
+    RoundDuration: 0
+    EnableHealthRegen: 0
+    HealthRegenRate: 0
+    duration: 0
+    BodySide: 0
+  _clinicalUseController: {fileID: 0}
+  _homeUseController: {fileID: 0}
 --- !u!4 &1631857703 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6536860776232889757, guid: 70d02a90551f23042a882cdceeaf8e3a, type: 3}
@@ -3367,6 +3651,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 243411773}
   - {fileID: 107892997}
+  - {fileID: 1597783004}
   - {fileID: 8551012235969130734}
   - {fileID: 1709044344}
   - {fileID: 701718204}
