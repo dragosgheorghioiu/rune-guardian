@@ -1,8 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ExampleGame
+namespace RuneGuardian
 {
     /// <summary>
     /// Data type used for the object assigned with controlling game
@@ -26,7 +26,12 @@ namespace ExampleGame
             _inputData = inputData;
 
             // Game logic
-            Debug.Log(_inputData.BodySide);
+            // Game logic: log only valid InputData fields
+            Debug.Log("BodySide: " + _inputData.BodySide);
+            Debug.Log("GameType: " + _inputData.GameType);
+            Debug.Log("EnemyCount: " + _inputData.EnemyCount);
+            Debug.Log("Haptic: " + _inputData.Haptic);
+            Debug.Log("RoundDuration: " + _inputData.RoundDuration);
 
             _eventsManager.EventName = "onNoGameIsPlaying";
         }
@@ -36,20 +41,37 @@ namespace ExampleGame
             _inputData = inputData;
 
             // Game logic
-            Debug.Log(_inputData.BodySide);
+            // Game logic: log only valid InputData fields
+            Debug.Log("BodySide: " + _inputData.BodySide);
+            Debug.Log("GameType: " + _inputData.GameType);
+            Debug.Log("EnemyCount: " + _inputData.EnemyCount);
+            Debug.Log("Haptic: " + _inputData.Haptic);
+            Debug.Log("RoundDuration: " + _inputData.RoundDuration);
         }
 
         public void StartGame()
         {
             // Game logic
-            Debug.Log(_inputData.BodySide);
+            // Game logic: log only valid InputData fields
+            Debug.Log("BodySide: " + _inputData.BodySide);
+            Debug.Log("GameType: " + _inputData.GameType);
+            Debug.Log("EnemyCount: " + _inputData.EnemyCount);
+            Debug.Log("Haptic: " + _inputData.Haptic);
+            Debug.Log("MaxWaves: " + _inputData.MaxWaves);
+            Debug.Log("SpellDamage: " + _inputData.SpellDamage);
 
             _timerController.StartTimer();
 
             _eventsManager.EventName = "onGameIsPlaying";
 
             _outputDataController.SendNoteInformation(
-                "Start sesiune joc."
+                "Start sesiune joc. "
+                + "BodySide: " + _inputData.BodySide + ". "
+                + "GameType: " + _inputData.GameType + ". "
+                + "EnemyCount: " + _inputData.EnemyCount + ". "
+                + "SpellDamage: " + _inputData.SpellDamage + ". "
+                + "RoundDuration: " + _inputData.RoundDuration + "s. "
+                + "Haptic: " + _inputData.Haptic + "."
             );
         }
 
@@ -76,7 +98,7 @@ namespace ExampleGame
 
             _outputDataController.SendNoteInformation(
                 "Stop sesiune joc. "
-              );
+                      );
 
             _outputDataController.PushGameSession(
                 new GameSessionOutputData()
