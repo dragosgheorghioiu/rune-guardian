@@ -46,6 +46,14 @@ namespace RuneGuardian
         {
             shooter = projectileShooter;
             
+            // Apply gesture recognizer parameters from InputData
+            if (inputData != null)
+            {
+                minPoints = inputData.GestureMinPoints;
+                minScore = inputData.GestureMinScore;
+                minPointDistance = inputData.GestureMinPointDistance;
+            }
+            
             // Initialize gesture recognizer and templates
             recognizer = new Unistroke();
             AddCircleTemplate();
@@ -57,7 +65,13 @@ namespace RuneGuardian
 
         void Start()
         {
-            recognizer = new Unistroke();
+            if (recognizer == null)
+            {
+                recognizer = new Unistroke();
+                AddCircleTemplate();
+                AddSquareTemplate();
+                AddTriangleTemplate();
+            }
 
             if (mainCamera == null)
                 mainCamera = Camera.main;
@@ -70,16 +84,6 @@ namespace RuneGuardian
             activeNode = useRightHand ? XRNode.RightHand : XRNode.LeftHand;
             activeControllerTransform = useRightHand ? rightControllerTransform : leftControllerTransform;
             UpdateActiveDevice();
-
-            // Templates are now initialized in Init() method
-            // if called from RuneGuardianController, or initialize here as fallback
-            if (recognizer == null)
-            {
-                recognizer = new Unistroke();
-                AddCircleTemplate();
-                AddSquareTemplate();
-                AddTriangleTemplate();
-            }
 
             Debug.Log("Gesture Recognizer ready! Use VR controller trigger to draw.");
             if (enableKeyboardFallback)

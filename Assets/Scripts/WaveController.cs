@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -53,6 +52,8 @@ namespace RuneGuardian
 
         public void UpdateGame(InputData inputData)
         {
+            Debug.Log("WaveController UpdateGame called");
+
             _inputData = inputData;
 
             if (!_gameActive)
