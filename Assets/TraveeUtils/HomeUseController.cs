@@ -1,4 +1,3 @@
-using FruitsGame;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,39 +6,47 @@ namespace RuneGuardian
 {
     public class HomeUseController : GameManagerBase
     {
-        /// <summary>
-        /// A GameObject that contains a panel with a game-over message.
-        /// </summary>
+        private RuneGuardianController _runeGuardianController;
         [SerializeField]
-        private GameObject _finishGamePanel;
+        private FinishExercisePanelsController _finishExercisePanelsController;
 
-        /// <summary>
-        /// Object that contains the input parameter values for the game.
-        /// </summary>
         private InputData _inputData;
+
+        private void Start()
+        {
+            // Initialize the RuneGuardianController if not already done
+            if (_runeGuardianController == null)
+            {
+                _runeGuardianController = new RuneGuardianController();
+            }
+        }
+
+        public int WavesCompleted
+        {
+            get { return _runeGuardianController.WavesCompleted; }
+        }
 
         public void Init(InputData inputData)
         {
             _inputData = inputData;
 
-            // Game logic
-            Debug.Log("BodySide: " + _inputData.BodySide);
-            Debug.Log("GameType: " + _inputData.GameType);
-            Debug.Log("EnemyCount: " + _inputData.EnemyCount);
-            Debug.Log("Haptic: " + _inputData.Haptic);
-            Debug.Log("RoundDuration: " + _inputData.RoundDuration);
+            _runeGuardianController.Init(_inputData, OnAllWavesCompleted, OnStartVibration);
 
             StartIteration();
         }
 
+        public void UpdateGame(InputData inputData)
+        {
+            _inputData = inputData;
+
+            _runeGuardianController.UpdateGame(_inputData);
+        }
+
         protected void StartIteration()
         {
-            _finishGamePanel.SetActive(false);
+            _finishExercisePanelsController.Hide(FinishExercisePanelType.PANEL_TYPE_HOME_USE);
 
-            // Game logic
-            Debug.Log("StartIteration - BodySide: " + _inputData.BodySide);
-            Debug.Log("StartIteration - EnemyCount: " + _inputData.EnemyCount);
-            Debug.Log("StartIteration - Haptic: " + _inputData.Haptic);
+            _runeGuardianController.StartGame();
 
             _timerController.StartTimer();
         }
@@ -56,48 +63,46 @@ namespace RuneGuardian
             SessionContainer.OnStop();
         }
 
-        protected void OnTimeFinished ()
+        protected void OnAllWavesCompleted()
+        {
+            SessionContainer.OnIterationCompleted();
+
+            OnGameFinished();
+        }
+
+        protected void OnTimeFinished()
         {
             OnGameFinished();
         }
 
-        protected void OnGameFinished()
+        private void OnGameFinished()
         {
-            // Game logic
-            // ...
-
-            _finishGamePanel.SetActive(true);
+            _finishExercisePanelsController.Show(FinishExercisePanelType.PANEL_TYPE_HOME_USE);
 
             _timerController.StopTimer();
-            Debug.Log("OnGameFinished - BodySide: " + _inputData.BodySide);
-            Debug.Log("OnGameFinished - EnemyCount: " + _inputData.EnemyCount);
-
-            _outputDataController.SendNoteInformation(
-                "Stop sesiune joc. "
-                + "BodySide: " + _inputData.BodySide + ". "
-                + "GameType: " + _inputData.GameType + ". "
-                + "EnemyCount: " + _inputData.EnemyCount + ". "
-                + "RoundDuration: " + _inputData.RoundDuration + "s."
-            );
 
             _outputDataController.PushGameSession(
-                new GameSessionOutputData() {
+                new GameSessionOutputData()
+                {
                     StartTime = _timerController.StartDateTime,
                     FinishTime = _timerController.FinishDateTime.Value,
                     BodySide = _inputData.BodySide.ToString(),
+                    WavesCompleted = _runeGuardianController.WavesCompleted
                 }
             );
         }
 
-        /// <summary>
-        /// Helper method!
-        /// </summary>
         private SessionContainer SessionContainer
         {
-            get {
+            get
+            {
                 return GameObject.Find("SessionContainer").GetComponent<SessionContainer>();
             }
         }
-    }
 
+        protected void OnStartVibration()
+        {
+            SendHDCMessage("START_VIBRATION");
+        }
+    }
 }

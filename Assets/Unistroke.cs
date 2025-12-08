@@ -14,7 +14,7 @@ namespace RuneGuardian
         private static readonly float Phi = 0.5f * (-1f + Mathf.Sqrt(5f));
 
         // Template storage
-        private List<GestureTemplate> templates = new List<GestureTemplate>();
+        private List<GestureTemplate> Templates = new List<GestureTemplate>();
 
         /// <summary>
         /// Represents a gesture template
@@ -62,7 +62,7 @@ namespace RuneGuardian
             // Find if this shape name already exists and append variant number
             string templateName = name;
             int variantCount = 0;
-            foreach (var template in templates)
+            foreach (var template in Templates)
             {
                 if (template.Name.StartsWith(name))
                 {
@@ -75,7 +75,7 @@ namespace RuneGuardian
                 templateName = $"{name}_{variantCount + 1}";
             }
 
-            templates.Add(new GestureTemplate(templateName, points));
+            Templates.Add(new GestureTemplate(templateName, points));
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace RuneGuardian
             points = TranslateToOrigin(points);
 
             string templateName = $"{shapeName}_{variantName}";
-            templates.Add(new GestureTemplate(templateName, points));
+            Templates.Add(new GestureTemplate(templateName, points));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace RuneGuardian
         /// </summary>
         public RecognitionResult Recognize(List<Vector2> points)
         {
-            if (templates.Count == 0)
+            if (Templates.Count == 0)
             {
                 return new RecognitionResult("No templates", 0f);
             }
@@ -113,7 +113,7 @@ namespace RuneGuardian
             float bestDistance = float.MaxValue;
             GestureTemplate bestTemplate = null;
 
-            foreach (var template in templates)
+            foreach (var template in Templates)
             {
                 float distance = DistanceAtBestAngle(points, template.Points,
                     -AngleRange, AngleRange, AnglePrecision);
@@ -142,7 +142,7 @@ namespace RuneGuardian
         /// </summary>
         public void ClearTemplates()
         {
-            templates.Clear();
+            Templates.Clear();
         }
 
         // ===== STEP 1: RESAMPLE =====
