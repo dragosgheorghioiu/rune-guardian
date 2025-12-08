@@ -50,10 +50,25 @@ namespace RuneGuardian
             _wavesCompleted = 0;
         }
 
+        private void Update()
+        {
+            if (!_gameActive || _inputData == null)
+                return;
+            
+            Debug.Log("WaveController Game Active");
+
+            // Update enemy spawning every frame
+            UpdateEnemySpawning();
+
+            // Check if wave is complete
+            if (_enemiesSpawnedInWave >= _inputData.EnemyCount && _activeEnemies.Count == 0)
+            {
+                CompleteWave();
+            }
+        }
+
         public void UpdateGame(InputData inputData)
         {
-            Debug.Log("WaveController UpdateGame called");
-
             _inputData = inputData;
 
             if (!_gameActive)
@@ -77,6 +92,8 @@ namespace RuneGuardian
             _wavesCompleted = 0;
             _enemySpawnTimer = 0f;
             _enemiesSpawnedInWave = 0;
+
+            Debug.Log("WaveController StartGame called");
 
             StartWave();
         }
@@ -145,6 +162,8 @@ namespace RuneGuardian
             // Instantiate the enemy
             GameObject enemy = Instantiate(enemyPrefab, transform);
 
+            Debug.LogWarning("Spawned enemy: " + enemy.name);
+
             // Configure enemy based on input data
             // This assumes enemies have a script with these properties
             var enemyComponent = enemy.GetComponent<IEnemy>();
@@ -153,6 +172,22 @@ namespace RuneGuardian
                 enemyComponent.SetHealth(_inputData.EnemyHealth);
                 enemyComponent.SetSpeed(_inputData.EnemySpeed);
                 enemyComponent.SetDifficulty(_inputData.GameType);
+            }
+
+            // Find and assign target to Golem
+            var golemComponent = enemy.GetComponent<Golem>();
+            if (golemComponent != null)
+            {
+                GameObject target = GameObject.Find("Target");
+                if (target != null)
+                {
+                    golemComponent.targetPoint = target.transform;
+                    Debug.Log("Assigned Target to Golem");
+                }
+                else
+                {
+                    Debug.LogWarning("Target GameObject not found in scene!");
+                }
             }
 
             _activeEnemies.Add(enemy);

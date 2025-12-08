@@ -60,6 +60,8 @@ namespace RuneGuardian
 
         public void StartGame()
         {
+            Debug.Log("ClinicalUseController StartGame called - hiding finish panel");
+
             _finishExercisePanelsController.Hide(FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE);
 
             _runeGuardianController.StartGame();
@@ -67,6 +69,8 @@ namespace RuneGuardian
             _timerController.StartTimer();
 
             _eventsManager.EventName = "onGameIsPlaying";
+
+            Debug.Log("ClinicalUseController StartGame called");
 
             _outputDataController.SendNoteInformation(
                 "Start sesiune joc."

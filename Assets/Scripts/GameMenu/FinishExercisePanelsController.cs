@@ -27,48 +27,61 @@ public class FinishExercisePanelsController : MonoBehaviour
 
     protected void Awake()
     {
+        if (_finishExercisePanelClinicalUse == null || _finishExercisePanelHomeUse == null)
+        {
+            Debug.LogError("FinishExercisePanelsController: Finish Exercise Panels not assigned in the inspector!");
+            return;
+        }
+
         _finishExercisePanelClinicalUse.SetActive(false);
         _finishExercisePanelHomeUse.SetActive(false);
     }
 
     public void Show(FinishExercisePanelType panelType)
     {
-        if (panelType == FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE) {
+        if (panelType == FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE)
+        {
             ShowFinishExercisePanelClinicalUse();
         }
 
-        if (panelType == FinishExercisePanelType.PANEL_TYPE_HOME_USE) {
+        if (panelType == FinishExercisePanelType.PANEL_TYPE_HOME_USE)
+        {
             ShowFinishExercisePanelHomeUse();
         }
     }
 
     public void Hide(FinishExercisePanelType panelType)
     {
-        if (panelType == FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE) {
-            _finishExercisePanelClinicalUse.SetActive(false);
+        if (panelType == FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE)
+        {
+            // _finishExercisePanelClinicalUse.SetActive(false);
         }
 
-        if (panelType == FinishExercisePanelType.PANEL_TYPE_HOME_USE) {
+        if (panelType == FinishExercisePanelType.PANEL_TYPE_HOME_USE)
+        {
             _finishExercisePanelHomeUse.SetActive(false);
         }
     }
 
     public void SetText(FinishExercisePanelType panelType, string text)
     {
-        if (panelType == FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE) {
-            _finishExercisePanelClinicalUseTextRenderer.text = text;
+        if (panelType == FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE)
+        {
+            // _finishExercisePanelClinicalUseTextRenderer.text = text;
         }
 
-        if (panelType == FinishExercisePanelType.PANEL_TYPE_HOME_USE) {
+        if (panelType == FinishExercisePanelType.PANEL_TYPE_HOME_USE)
+        {
             _finishExercisePanelHomeUseTextRenderer.text = text;
         }
     }
 
     protected void ShowFinishExercisePanelClinicalUse()
     {
-        _finishExercisePanelClinicalUse.SetActive(true);
+        // _finishExercisePanelClinicalUse.SetActive(true);
 
-        foreach (Camera camera in _cameras) {
+        foreach (Camera camera in _cameras)
+        {
             camera.cullingMask &= ~(1 << LayerMask.NameToLayer("UI"));
         }
     }
@@ -77,7 +90,8 @@ public class FinishExercisePanelsController : MonoBehaviour
     {
         _finishExercisePanelHomeUse.SetActive(true);
 
-        foreach (Camera camera in _cameras) {
+        foreach (Camera camera in _cameras)
+        {
             camera.cullingMask |= (1 << LayerMask.NameToLayer("UI"));
         }
     }
