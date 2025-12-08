@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RuneGuardian
@@ -21,10 +19,19 @@ namespace RuneGuardian
 
         private void Start()
         {
-            // Initialize the RuneGuardianController if not already done
+            // Find RuneGuardianController in the scene
             if (_runeGuardianController == null)
             {
-                _runeGuardianController = new RuneGuardianController();
+                _runeGuardianController = FindObjectOfType<RuneGuardianController>();
+                if (_runeGuardianController == null)
+                {
+                    Debug.LogError("RuneGuardianController not found in the scene!");
+                }
+            }
+            // Validate that FinishExercisePanelsController is assigned
+            if (_finishExercisePanelsController == null)
+            {
+                Debug.LogError("FinishExercisePanelsController is not assigned in the Inspector!");
             }
         }
 
@@ -45,6 +52,8 @@ namespace RuneGuardian
         public void UpdateGame(InputData inputData)
         {
             _inputData = inputData;
+
+            Debug.Log("ClinicalUseController UpdateGame called");
 
             _runeGuardianController.UpdateGame(_inputData);
         }

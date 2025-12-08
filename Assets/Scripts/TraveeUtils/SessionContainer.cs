@@ -1,9 +1,6 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace RuneGuardian
 {
@@ -124,6 +121,8 @@ namespace RuneGuardian
         public override void OnUpdate(string json)
         {
             _inputData = JsonUtility.FromJson<InputData>(json);
+
+            Debug.Log("SessionContainer OnUpdate called");
 
             _clinicalUseController.UpdateGame(_inputData);
         }

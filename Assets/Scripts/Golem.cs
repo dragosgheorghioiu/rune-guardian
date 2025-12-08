@@ -4,27 +4,54 @@ using UnityEngine;
 
 namespace RuneGuardian
 {
-    public class Golem : MonoBehaviour
+    public class Golem : MonoBehaviour, IEnemy
     {
         [Header("Movement")]
         public Transform targetPoint;
-        public float speed = 2f;
+        public float baseSpeed = 2f;
+        private float speed;
 
         [Header("Health")]
-        public int maxHealth = 2;
+        public int baseMaxHealth = 2;
+        private int maxHealth;
         private int currentHealth;
 
         private Animator anim;
         private bool isDead = false;
         private bool isMoving = false;
         private bool isHitAnimationPlaying = false;
+        private RuneDifficulty difficulty;
 
         void Start()
         {
             anim = GetComponent<Animator>();
+            
+            // Use base values if not set by WaveController
+            if (maxHealth == 0)
+                maxHealth = baseMaxHealth;
+            if (speed == 0)
+                speed = baseSpeed;
+                
             currentHealth = maxHealth;
 
             Invoke(nameof(StartWalking), 1f);
+        }
+
+        // IEnemy interface implementation
+        public void SetHealth(int health)
+        {
+            maxHealth = health;
+            currentHealth = health;
+        }
+
+        public void SetSpeed(int speedValue)
+        {
+            speed = speedValue;
+        }
+
+        public void SetDifficulty(RuneDifficulty difficulty)
+        {
+            this.difficulty = difficulty;
         }
 
         void StartWalking()

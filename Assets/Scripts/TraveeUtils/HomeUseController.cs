@@ -14,10 +14,19 @@ namespace RuneGuardian
 
         private void Start()
         {
-            // Initialize the RuneGuardianController if not already done
+            // Find RuneGuardianController in the scene
             if (_runeGuardianController == null)
             {
-                _runeGuardianController = new RuneGuardianController();
+                _runeGuardianController = FindObjectOfType<RuneGuardianController>();
+                if (_runeGuardianController == null)
+                {
+                    Debug.LogError("RuneGuardianController not found in the scene!");
+                }
+            }
+            // Validate that FinishExercisePanelsController is assigned
+            if (_finishExercisePanelsController == null)
+            {
+                Debug.LogError("FinishExercisePanelsController is not assigned in the Inspector!");
             }
         }
 
