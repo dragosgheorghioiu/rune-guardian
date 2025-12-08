@@ -76,24 +76,37 @@ namespace RuneGuardian
         void Start()
         {
 #if (UNITY_EDITOR)
-            //OnInit("{\"GameType\":\"0\"," +
-            //    "\"Haptic\":\"true\"," +
-            //    "\"EnemyCount\":\"3\"," +
-            //    "\"EnemyHealth\":\"10\"," +
-            //    "\"EnemySpeed\":\"2\"," +
-            //    "\"EnemySpawnRate\":\"2000\"," +
-            //    "\"SpellCooldown\":\"3\"," +
-            //    "\"SpellDamage\":\"5\"," +
-            //    "\"MaxSpellsPerRound\":\"10\"," +
-            //    "\"MaxWaves\":\"5\"," +
-            //    "\"RoundDuration\":\"60\"," +
-            //    "\"EnableHealthRegen\":\"false\"," +
-            //    "\"HealthRegenRate\":\"1\"," +
-            //    "\"duration\":\"0\"," +
-            //    "\"BodySide\":\"0\"}");
+            OnInit("{\"GameType\":\"0\"," +
+               "\"Haptic\":\"true\"," +
+               "\"EnemyCount\":\"3\"," +
+               "\"EnemyHealth\":\"10\"," +
+               "\"EnemySpeed\":\"2\"," +
+               "\"EnemySpawnRate\":\"2000\"," +
+               "\"SpellCooldown\":\"3\"," +
+               "\"SpellDamage\":\"5\"," +
+               "\"MaxSpellsPerRound\":\"10\"," +
+               "\"MaxWaves\":\"5\"," +
+               "\"RoundDuration\":\"60\"," +
+               "\"EnableHealthRegen\":\"false\"," +
+               "\"HealthRegenRate\":\"1\"," +
+               "\"GestureMinPoints\":\"10\"," +
+               "\"GestureMinScore\":\"0.5\"," +
+               "\"GestureMinPointDistance\":\"0.05\"," +
+               "\"duration\":\"0\"," +
+               "\"BodySide\":\"0\"}");
+            
+            // Auto-start game in editor for testing
+            Invoke("AutoStartGame", 1f);
 #endif
-
         }
+
+#if (UNITY_EDITOR)
+        private void AutoStartGame()
+        {
+            Debug.Log("Auto-starting game in editor mode...");
+            OnCustomEvent("startgame");
+        }
+#endif
 
         /// <summary>
         /// Event called when the main VR application notifies the exergame to start.
@@ -121,8 +134,6 @@ namespace RuneGuardian
         public override void OnUpdate(string json)
         {
             _inputData = JsonUtility.FromJson<InputData>(json);
-
-            Debug.Log("SessionContainer OnUpdate called");
 
             _clinicalUseController.UpdateGame(_inputData);
         }

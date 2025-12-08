@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
@@ -39,13 +38,12 @@ namespace RuneGuardian
         private InputDevice activeDevice;
         private XRNode activeNode;
         private Vector3 lastRecordedPosition;
-
-        public ProjectileShooter shooter;
+        private ProjectileShooter shooter;
 
         public void Init(ProjectileShooter projectileShooter, InputData inputData)
         {
             shooter = projectileShooter;
-            
+
             // Apply gesture recognizer parameters from InputData
             if (inputData != null)
             {
@@ -53,7 +51,7 @@ namespace RuneGuardian
                 minScore = inputData.GestureMinScore;
                 minPointDistance = inputData.GestureMinPointDistance;
             }
-            
+
             // Initialize gesture recognizer and templates
             recognizer = new Unistroke();
             AddCircleTemplate();
@@ -150,11 +148,11 @@ namespace RuneGuardian
             if (!activeDevice.isValid || activeControllerTransform == null)
                 return;
 
-            // Get trigger value (0.0 to 1.0)
+            // Get grip button (side trigger) instead of main trigger to avoid jumps
             bool triggerPressed = false;
-            if (activeDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggerButton))
+            if (activeDevice.TryGetFeatureValue(CommonUsages.gripButton, out bool gripButton))
             {
-                triggerPressed = triggerButton;
+                triggerPressed = gripButton;
             }
 
             // Start drawing

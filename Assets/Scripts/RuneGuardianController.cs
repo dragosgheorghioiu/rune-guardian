@@ -96,6 +96,7 @@ namespace RuneGuardian
         {
             if (_waveController != null)
             {
+                Debug.Log("RuneGuardianController StartGame called");
                 _waveController.StartGame();
             }
         }
