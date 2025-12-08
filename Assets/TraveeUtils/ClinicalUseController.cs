@@ -10,28 +10,34 @@ namespace RuneGuardian
     /// </summary>
     public class ClinicalUseController : GameManagerBase
     {
-        /// <summary>
-        /// A GameObject that contains a panel with a game-over message.
-        /// </summary>
+        private RuneGuardianController _runeGuardianController;
         [SerializeField]
-        private GameObject _finishGamePanel;
+        private FinishExercisePanelsController _finishExercisePanelsController;
 
         /// <summary>
         /// Object that contains the input parameter values for the game.
         /// </summary>
         private InputData _inputData;
 
+        private void Start()
+        {
+            // Initialize the RuneGuardianController if not already done
+            if (_runeGuardianController == null)
+            {
+                _runeGuardianController = new RuneGuardianController();
+            }
+        }
+
+        public int WavesCompleted
+        {
+            get { return _runeGuardianController.WavesCompleted; }
+        }
+
         public void Init(InputData inputData)
         {
             _inputData = inputData;
 
-            // Game logic
-            // Game logic: log only valid InputData fields
-            Debug.Log("BodySide: " + _inputData.BodySide);
-            Debug.Log("GameType: " + _inputData.GameType);
-            Debug.Log("EnemyCount: " + _inputData.EnemyCount);
-            Debug.Log("Haptic: " + _inputData.Haptic);
-            Debug.Log("RoundDuration: " + _inputData.RoundDuration);
+            _runeGuardianController.Init(_inputData, OnAllWavesCompleted, OnStartVibration);
 
             _eventsManager.EventName = "onNoGameIsPlaying";
         }
@@ -40,42 +46,35 @@ namespace RuneGuardian
         {
             _inputData = inputData;
 
-            // Game logic
-            // Game logic: log only valid InputData fields
-            Debug.Log("BodySide: " + _inputData.BodySide);
-            Debug.Log("GameType: " + _inputData.GameType);
-            Debug.Log("EnemyCount: " + _inputData.EnemyCount);
-            Debug.Log("Haptic: " + _inputData.Haptic);
-            Debug.Log("RoundDuration: " + _inputData.RoundDuration);
+            _runeGuardianController.UpdateGame(_inputData);
         }
 
         public void StartGame()
         {
-            // Game logic
-            // Game logic: log only valid InputData fields
-            Debug.Log("BodySide: " + _inputData.BodySide);
-            Debug.Log("GameType: " + _inputData.GameType);
-            Debug.Log("EnemyCount: " + _inputData.EnemyCount);
-            Debug.Log("Haptic: " + _inputData.Haptic);
-            Debug.Log("MaxWaves: " + _inputData.MaxWaves);
-            Debug.Log("SpellDamage: " + _inputData.SpellDamage);
+            _finishExercisePanelsController.Hide(FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE);
+
+            _runeGuardianController.StartGame();
 
             _timerController.StartTimer();
 
             _eventsManager.EventName = "onGameIsPlaying";
 
             _outputDataController.SendNoteInformation(
-                "Start sesiune joc. "
-                + "BodySide: " + _inputData.BodySide + ". "
-                + "GameType: " + _inputData.GameType + ". "
-                + "EnemyCount: " + _inputData.EnemyCount + ". "
-                + "SpellDamage: " + _inputData.SpellDamage + ". "
-                + "RoundDuration: " + _inputData.RoundDuration + "s. "
-                + "Haptic: " + _inputData.Haptic + "."
+                "Start sesiune joc."
+                + " Dificultate: " + _inputData.GameType.ToString() + "."
+                + " Număr inamici pe val: " + _inputData.EnemyCount + "."
+                + " Număr valuri: " + _inputData.MaxWaves + "."
+                + " Rază de regenerare vieață: " + (_inputData.EnableHealthRegen ? "Da" : "Nu") + "."
+                + " Haptic: " + _inputData.Haptic + "."
             );
         }
 
         public void StopGame()
+        {
+            OnGameFinished();
+        }
+
+        protected void OnAllWavesCompleted()
         {
             OnGameFinished();
         }
@@ -87,10 +86,7 @@ namespace RuneGuardian
 
         private void OnGameFinished()
         {
-            // Game logic
-            // ...
-
-            _finishGamePanel.SetActive(true);
+            _finishExercisePanelsController.Show(FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE);
 
             _timerController.StopTimer();
 
@@ -98,7 +94,9 @@ namespace RuneGuardian
 
             _outputDataController.SendNoteInformation(
                 "Stop sesiune joc. "
-                      );
+                + "Valuri completate: " + _runeGuardianController.WavesCompleted + ". "
+                + "Inamici învinși: " + _runeGuardianController.EnemiesDefeated + "."
+            );
 
             _outputDataController.PushGameSession(
                 new GameSessionOutputData()
@@ -106,8 +104,14 @@ namespace RuneGuardian
                     StartTime = _timerController.StartDateTime,
                     FinishTime = _timerController.FinishDateTime.Value,
                     BodySide = _inputData.BodySide.ToString(),
+                    WavesCompleted = _runeGuardianController.WavesCompleted
                 }
             );
+        }
+
+        protected void OnStartVibration()
+        {
+            SendHDCMessage("START_VIBRATION");
         }
     }
 }

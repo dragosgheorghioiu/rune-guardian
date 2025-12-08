@@ -42,6 +42,11 @@ namespace RuneGuardian
         public bool EnableHealthRegen;
         public int HealthRegenRate; // health per second
 
+        // Gesture recognizer parameters
+        public int GestureMinPoints; // minimum points for gesture recognition
+        public float GestureMinScore; // minimum score threshold for recognition
+        public float GestureMinPointDistance; // minimum distance between points
+
         // Implicit/default parameters
         public int duration; // duration in seconds
         public BodySide BodySide;
