@@ -2,10 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class SpawnedToy : MonoBehaviour
 {
     public static Action onToyDespawn;
+    public static Action onToyHit;
+    public static Action onToyRepaired;
+
     [Header("Cu ce spell trebuie sa fie lovit")]
     public ProjectileType requiredProjectile;
 
@@ -65,8 +69,8 @@ public class SpawnedToy : MonoBehaviour
 
             if (Vector3.Distance(transform.position, despawnPoint.position) <= arriveDistance)
             {
-                onToyDespawn?.Invoke();
                 Destroy(gameObject);
+                onToyDespawn?.Invoke();
             }
         }
     }
@@ -76,7 +80,7 @@ public class SpawnedToy : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, dest, moveSpeed * Time.deltaTime);
     }
 
-    public void TryHit(ProjectileType projectileType)
+    async public void TryHit(ProjectileType projectileType)
     {
         // ignora deocamdata proiectilul daca nu a ajuns la target
         if (state != State.WaitingAtTarget)
@@ -87,7 +91,13 @@ public class SpawnedToy : MonoBehaviour
             return;
 
         // hit by correct projectile
+        onToyHit?.Invoke();
+        await Task.Delay(1000);
+
         SwapToHitVariant();
+        onToyRepaired?.Invoke();
+
+        await Task.Delay(2500);
         state = State.MovingToDespawn;
 
         OnStartedDespawn?.Invoke();
