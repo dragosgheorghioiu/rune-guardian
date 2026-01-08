@@ -39,12 +39,14 @@ namespace RuneGuardian
             public string Name;
             public float Score;
             public float Angle;
+            public int TemplateIndex;
 
-            public RecognitionResult(string name, float score, float angle = 0f)
+            public RecognitionResult(string name, float score, float angle = 0f, int templateIndex = -1)
             {
                 Name = name;
                 Score = score;
                 Angle = angle;
+                TemplateIndex = templateIndex;
             }
         }
 
@@ -112,9 +114,11 @@ namespace RuneGuardian
             // Find the best match
             float bestDistance = float.MaxValue;
             GestureTemplate bestTemplate = null;
+            int bestTemplateIndex = -1;
 
-            foreach (var template in Templates)
+            for (int i = 0; i < Templates.Count; i++)
             {
+                var template = Templates[i];
                 float distance = DistanceAtBestAngle(points, template.Points,
                     -AngleRange, AngleRange, AnglePrecision);
 
@@ -122,6 +126,7 @@ namespace RuneGuardian
                 {
                     bestDistance = distance;
                     bestTemplate = template;
+                    bestTemplateIndex = i;
                 }
             }
 
@@ -134,7 +139,7 @@ namespace RuneGuardian
                 ? bestTemplate.Name.Substring(0, bestTemplate.Name.IndexOf("_"))
                 : bestTemplate.Name;
 
-            return new RecognitionResult(shapeName, score);
+            return new RecognitionResult(shapeName, score, 0f, bestTemplateIndex);
         }
 
         /// <summary>

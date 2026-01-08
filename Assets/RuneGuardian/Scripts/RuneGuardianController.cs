@@ -1,83 +1,19 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace RuneGuardian
 {
-    public class RuneGuardianController : MonoBehaviour
+    public class RuneGuardianController
     {
-        private ProjectileShooter _projectileShooter;
-        private WaveController _waveController;
-        private GestureRecognizerExample _gestureRecognizer;
-
+        public static Action onRuneGuardianStart;
+        public static Action<InputData> OnRuneGuardianInit;
         private InputData _inputData;
 
-        public int WavesCompleted
-        {
-            get { return _waveController != null ? _waveController.WavesCompleted : 0; }
-        }
-
-        public int EnemiesDefeated
-        {
-            get { return _waveController != null ? _waveController.EnemiesDefeated : 0; }
-        }
-
-        private void Awake()
-        {
-            FindComponents();
-        }
-
-        private void FindComponents()
-        {
-            // Get components from the same GameObject first, then search the scene
-            if (_waveController == null)
-            {
-                _waveController = GetComponent<WaveController>();
-                if (_waveController == null)
-                {
-                    _waveController = FindObjectOfType<WaveController>();
-                    if (_waveController == null)
-                    {
-                        Debug.LogError("WaveController not found in the scene!");
-                    }
-                }
-            }
-            if (_projectileShooter == null)
-            {
-                _projectileShooter = GetComponent<ProjectileShooter>();
-                if (_projectileShooter == null)
-                {
-                    _projectileShooter = FindObjectOfType<ProjectileShooter>();
-                    if (_projectileShooter == null)
-                    {
-                        Debug.LogError("ProjectileShooter not found in the scene!");
-                    }
-                }
-            }
-            if (_gestureRecognizer == null)
-            {
-                _gestureRecognizer = GetComponent<GestureRecognizerExample>();
-                if (_gestureRecognizer == null)
-                {
-                    _gestureRecognizer = FindObjectOfType<GestureRecognizerExample>();
-                }
-            }
-        }
-
-        public void Init(InputData inputData,
-            UnityAction onAllWavesCompletedAction,
-            UnityAction onStartVibrationsAction)
+        public RuneGuardianController(InputData inputData)
         {
             _inputData = inputData;
-
-            if (_waveController != null)
-            {
-                _waveController.Init(_inputData, onAllWavesCompletedAction, onStartVibrationsAction);
-            }
-            
-            if (_gestureRecognizer != null)
-            {
-                _gestureRecognizer.Init(_projectileShooter, _inputData);
-            }
+            OnRuneGuardianInit?.Invoke(inputData);
         }
 
         public void UpdateGame(InputData inputData)
@@ -86,43 +22,20 @@ namespace RuneGuardian
 
             _inputData = inputData;
 
-            if (_waveController != null)
-            {
-                _waveController.UpdateGame(_inputData);
-            }
+            Debug.Log(inputData);
         }
 
         public void StartGame()
         {
-            if (_waveController != null)
-            {
-                Debug.Log("RuneGuardianController StartGame called");
-                _waveController.StartGame();
-            }
+            Debug.Log("RuneGuardianController StartGame called");
         }
 
         public void StopGame()
         {
-            if (_waveController != null)
-            {
-                _waveController.StopGame();
-            }
         }
 
         public void DestroyEnemyInstances()
         {
-            if (_waveController != null)
-            {
-                _waveController.DestroyEnemyInstances();
-            }
-        }
-
-        public void ApplyHapticFeedback()
-        {
-            if (_inputData.Haptic)
-            {
-                // Implement haptic feedback based on InputData settings
-            }
         }
     }
 }

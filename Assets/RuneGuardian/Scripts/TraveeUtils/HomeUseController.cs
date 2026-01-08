@@ -6,40 +6,22 @@ namespace RuneGuardian
 {
     public class HomeUseController : GameManagerBase
     {
+
         private RuneGuardianController _runeGuardianController;
-        [SerializeField]
-        private FinishExercisePanelsController _finishExercisePanelsController;
+        [SerializeField] private FinishExercisePanelsController _finishExercisePanelsController;
 
         private InputData _inputData;
 
-        private void Start()
+        public void StartGame()
         {
-            // Find RuneGuardianController in the scene
-            if (_runeGuardianController == null)
-            {
-                _runeGuardianController = FindObjectOfType<RuneGuardianController>();
-                if (_runeGuardianController == null)
-                {
-                    Debug.LogError("RuneGuardianController not found in the scene!");
-                }
-            }
-            // Validate that FinishExercisePanelsController is assigned
-            if (_finishExercisePanelsController == null)
-            {
-                Debug.LogError("FinishExercisePanelsController is not assigned in the Inspector!");
-            }
-        }
-
-        public int WavesCompleted
-        {
-            get { return _runeGuardianController.WavesCompleted; }
+            RuneGuardianController.onRuneGuardianStart?.Invoke();
         }
 
         public void Init(InputData inputData)
         {
             _inputData = inputData;
-
-            _runeGuardianController.Init(_inputData, OnAllWavesCompleted, OnStartVibration);
+            _runeGuardianController = new RuneGuardianController(_inputData);
+            RuneGuardianController.OnRuneGuardianInit(inputData);
 
             StartIteration();
         }
@@ -95,8 +77,6 @@ namespace RuneGuardian
                 {
                     StartTime = _timerController.StartDateTime,
                     FinishTime = _timerController.FinishDateTime.Value,
-                    BodySide = _inputData.BodySide.ToString(),
-                    WavesCompleted = _runeGuardianController.WavesCompleted
                 }
             );
         }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using RuneGuardian;
 using UnityEngine;
 
 public class RandomToySpawner : MonoBehaviour
@@ -11,25 +12,29 @@ public class RandomToySpawner : MonoBehaviour
 
     [Header("Spawnable prefabs (3)")]
     [SerializeField] private SpawnedToy[] prefabs;
-
-    [Header("Spawn rules")]
-    [SerializeField] private bool autoSpawnIfNone = true;
+    private List<int> validToys;
 
     private SpawnedToy current;
 
     [SerializeField] private ConveyorController conveyor;
 
-    private void Start()
+    private void OnEnable()
     {
-        SpawnRandom();
+       RuneGuardianController.OnRuneGuardianInit += Init;
+       RuneGuardianController.onRuneGuardianStart += SpawnRandom; 
+    }
+    private void OnDisable()
+    {
+       RuneGuardianController.onRuneGuardianStart -= SpawnRandom; 
+       RuneGuardianController.OnRuneGuardianInit -= Init;
     }
 
-    private void Update()
+    public void Init(InputData inputData)
     {
-        if (!autoSpawnIfNone) return;
-
-        if (current == null)
-            SpawnRandom();
+        validToys = new List<int>();
+        if (inputData.enabledDirtyObjects) validToys.Add(0);
+        if (inputData.enabledDestroyedObjects) validToys.Add(1);
+        if (inputData.enabledUncoloredObjects) validToys.Add(2);
     }
 
     public void SpawnRandom()
@@ -45,8 +50,8 @@ public class RandomToySpawner : MonoBehaviour
             return;
         }
 
-        int idx = Random.Range(0, prefabs.Length);
-        current = Instantiate(prefabs[idx], spawnPoint.position, spawnPoint.rotation);
+        int idx = Random.Range(0, validToys.Count);
+        current = Instantiate(prefabs[validToys[idx]], spawnPoint.position, spawnPoint.rotation);
         current.Init(targetPoint, despawnPoint);
 
         if (conveyor != null) conveyor.StartConveyor();

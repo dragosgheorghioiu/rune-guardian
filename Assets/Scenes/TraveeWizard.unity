@@ -5280,37 +5280,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1043185223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &524221398
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 524221399}
-  m_Layer: 0
-  m_Name: Target
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &524221399
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 524221398}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.291, y: 0.945, z: 0.51}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &563023208
 GameObject:
   m_ObjectHideFlags: 0
@@ -5353,6 +5322,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af9ea683544b184083cef283557012d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &585200440
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 585200442}
+  - component: {fileID: 585200441}
+  m_Layer: 0
+  m_Name: GestureRecognizer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &585200441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585200440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50c489e3a401760439d6ee8b4160c87b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineRenderer: {fileID: 0}
+  mainCamera: {fileID: 0}
+  drawColor: {r: 1, g: 1, b: 1, a: 1}
+  lineWidth: 0.1
+  rightControllerTransform: {fileID: 0}
+  leftControllerTransform: {fileID: 0}
+  useRightHand: 1
+  minPoints: 10
+  minScore: 0.5
+  minPointDistance: 0.01
+  enableKeyboardFallback: 1
+  shootTypeAKey: 104
+  shootTypeBKey: 106
+  shootTypeTriangleKey: 107
+--- !u!4 &585200442
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585200440}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.98291, y: -0.8143512, z: 4.2867184}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &592830407 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7422705393377570876, guid: e0ab8cd42a61ed74f87fabe0e8bad0c6, type: 3}
@@ -5415,37 +5442,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
   m_PrefabInstance: {fileID: 1709044344}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &724624982
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 724624983}
-  m_Layer: 0
-  m_Name: '--------------- '
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &724624983
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 724624982}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9104902, y: 4.0596375, z: 8.050002}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &769622613 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 776005567144873873, guid: 100565b723386bb459d8836f18e79114, type: 3}
@@ -5487,7 +5483,6 @@ MonoBehaviour:
   - {fileID: 2382301889566939397, guid: 8a4c58f0bcdbc2049b20963958ce328d, type: 3}
   - {fileID: 8230953787198793048, guid: 2c852f7e254528b46917fa801f3e9c49, type: 3}
   - {fileID: 465292653460604870, guid: 00d1d5df8bac8f9409b0fa91c841180a, type: 3}
-  autoSpawnIfNone: 1
   conveyor: {fileID: 592830411}
 --- !u!4 &782170343
 Transform:
@@ -5542,68 +5537,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b942c16a6d6a4edaad7c18c7d5762cdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &871674421
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 871674422}
-  m_Layer: 0
-  m_Name: ---------------
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &871674422
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 871674421}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9104902, y: 4.0596375, z: 8.050002}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &937307381
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 937307382}
-  m_Layer: 0
-  m_Name: AdaugatAcumJos
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &937307382
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 937307381}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.9104902, y: 4.0596375, z: 8.050002}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &947563409
 GameObject:
   m_ObjectHideFlags: 0
@@ -5740,108 +5673,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7026100452311158935, guid: 100565b723386bb459d8836f18e79114, type: 3}
   m_PrefabInstance: {fileID: 8298904658370397528}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1153926002
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1153926006}
-  - component: {fileID: 1153926005}
-  - component: {fileID: 1153926004}
-  - component: {fileID: 1153926003}
-  - component: {fileID: 1153926007}
-  m_Layer: 0
-  m_Name: RuneGuardianController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1153926003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153926002}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4fb308d6eea15d4a822184797e9e55f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _enemyPrefabs:
-  - {fileID: 1438169871030806, guid: c9bc790a133e19c40b64d6db4cfb7a22, type: 3}
---- !u!114 &1153926004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153926002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7f97079c87863043a20d9c9871db266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePoint: {fileID: 1653590542}
-  projectileTypeA: {fileID: 5953150540030620772, guid: 2890f3c6f43f1944a92022a8142eb715, type: 3}
-  projectileTypeB: {fileID: 5858378969830320633, guid: 55654496e2c975d4da0ee7506948a82f, type: 3}
---- !u!114 &1153926005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153926002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ccfbdb7aee1c3549821cdc73fd56db2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1153926006
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153926002}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.87, y: 1.03, z: 16.76}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1153926007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153926002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c489e3a401760439d6ee8b4160c87b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lineRenderer: {fileID: 0}
-  mainCamera: {fileID: 0}
-  drawColor: {r: 1, g: 1, b: 1, a: 1}
-  lineWidth: 0.05
-  rightControllerTransform: {fileID: 0}
-  leftControllerTransform: {fileID: 0}
-  useRightHand: 1
-  minPoints: 10
-  minScore: 0.5
-  minPointDistance: 0.01
-  enableKeyboardFallback: 1
-  shootTypeAKey: 273
-  shootTypeBKey: 274
-  shootTypeTriangleKey: 51
 --- !u!114 &1212801764 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6495768481687004848, guid: 100565b723386bb459d8836f18e79114, type: 3}
@@ -6120,24 +5951,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inputData:
-    GameType: 0
-    Haptic: 0
-    EnemyCount: 0
-    EnemyHealth: 0
-    EnemySpeed: 0
-    EnemySpawnRate: 0
-    SpellCooldown: 0
-    SpellDamage: 0
-    MaxSpellsPerRound: 0
-    MaxWaves: 0
-    RoundDuration: 0
-    EnableHealthRegen: 0
-    HealthRegenRate: 0
-    GestureMinPoints: 0
-    GestureMinScore: 0
-    GestureMinPointDistance: 0
-    duration: 0
-    BodySide: 0
+    gameMode: 0
+    enabledDirtyObjects: 0
+    enabledDestroyedObjects: 0
+    enabledUncoloredObjects: 0
+    dirtyObjectsDrawing: 0
+    destroyedObjectsDrawing: 0
+    uncoloredObjectsDrawing: 0
+    gestureMinScore: 0
+    gestureMaxScore: 0
   _clinicalUseController: {fileID: 1597783005}
   _homeUseController: {fileID: 1597783006}
 --- !u!114 &1597783008
@@ -6152,74 +5974,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9df904a73f11aaf4e9ebaff479489098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputData: "{\n  \"inputParameters\": [\n    {\n      \"name\": \"GameType\",\n     
-    \"text\": [\n        { \"language\": \"en\", \"value\": \"Difficulty\" }\n     
-    ],\n      \"type\": \"list\",\n      \"value\": [\n        { \"text\": [{ \"language\":
-    \"en\", \"value\": \"Easy\" }], \"value\": \"0\" },\n        { \"text\": [{ \"language\":
-    \"en\", \"value\": \"Medium\" }], \"value\": \"1\" },\n        { \"text\": [{
-    \"language\": \"en\", \"value\": \"Hard\" }], \"value\": \"2\" }\n      ],\n     
-    \"defaultValue\": \"0\",\n      \"categoryName\": \"Core\"\n    },\n    {\n     
-    \"name\": \"Haptic\",\n      \"text\": \"Haptic\",\n      \"type\": \"bool\",\n     
-    \"defaultValue\": false,\n      \"categoryName\": \"Core\"\n    },\n    {\n     
-    \"name\": \"EnemyCount\",\n      \"text\": \"Enemy Count\",\n      \"type\":
-    \"int\",\n      \"defaultValue\": \"3\",\n      \"minValue\": \"1\",\n      \"maxValue\":
-    \"100\",\n      \"categoryName\": \"Enemy\"\n    },\n    {\n      \"name\": \"EnemyHealth\",\n     
-    \"text\": \"Enemy Health\",\n      \"type\": \"int\",\n      \"defaultValue\":
-    \"10\",\n      \"minValue\": \"1\",\n      \"maxValue\": \"1000\",\n      \"categoryName\":
-    \"Enemy\"\n    },\n    {\n      \"name\": \"EnemySpeed\",\n      \"text\": \"Enemy
-    Speed\",\n      \"type\": \"int\",\n      \"defaultValue\": \"2\",\n      \"minValue\":
-    \"1\",\n      \"maxValue\": \"20\",\n      \"categoryName\": \"Enemy\"\n    },\n   
-    {\n      \"name\": \"EnemySpawnRate\",\n      \"text\": \"Enemy Spawn Rate (ms)\",\n     
-    \"type\": \"int\",\n      \"defaultValue\": \"2000\",\n      \"minValue\": \"100\",\n     
-    \"maxValue\": \"10000\",\n      \"categoryName\": \"Enemy\"\n    },\n    {\n     
-    \"name\": \"SpellCooldown\",\n      \"text\": \"Spell Cooldown (s)\",\n     
-    \"type\": \"int\",\n      \"defaultValue\": \"3\",\n      \"minValue\": \"1\",\n     
-    \"maxValue\": \"60\",\n      \"categoryName\": \"Spell\"\n    },\n    {\n     
-    \"name\": \"SpellDamage\",\n      \"text\": \"Spell Damage\",\n      \"type\":
-    \"int\",\n      \"defaultValue\": \"5\",\n      \"minValue\": \"1\",\n      \"maxValue\":
-    \"100\",\n      \"categoryName\": \"Spell\"\n    },\n    {\n      \"name\": \"MaxSpellsPerRound\",\n     
-    \"text\": \"Max Spells Per Round\",\n      \"type\": \"int\",\n      \"defaultValue\":
-    \"10\",\n      \"minValue\": \"1\",\n      \"maxValue\": \"100\",\n      \"categoryName\":
-    \"Spell\"\n    },\n    {\n      \"name\": \"MaxWaves\",\n      \"text\": \"Max
-    Waves\",\n      \"type\": \"int\",\n      \"defaultValue\": \"5\",\n      \"minValue\":
-    \"1\",\n      \"maxValue\": \"50\",\n      \"categoryName\": \"Session\"\n   
-    },\n    {\n      \"name\": \"RoundDuration\",\n      \"text\": \"Round Duration
-    (s)\",\n      \"type\": \"int\",\n      \"defaultValue\": \"60\",\n      \"minValue\":
-    \"10\",\n      \"maxValue\": \"600\",\n      \"categoryName\": \"Session\"\n   
-    },\n    {\n      \"name\": \"EnableHealthRegen\",\n      \"text\": \"Enable Health
-    Regen\",\n      \"type\": \"bool\",\n      \"defaultValue\": false,\n      \"categoryName\":
-    \"Session\"\n    },\n    {\n      \"name\": \"HealthRegenRate\",\n      \"text\":
-    \"Health Regen Rate\",\n      \"type\": \"int\",\n      \"defaultValue\": \"1\",\n     
-    \"minValue\": \"0\",\n      \"maxValue\": \"100\",\n      \"categoryName\": \"Session\"\n   
-    },\n    {\n      \"name\": \"duration\",\n      \"text\": \"Session Duration
-    (s)\",\n      \"type\": \"int\",\n      \"defaultValue\": \"0\",\n      \"minValue\":
-    \"0\",\n      \"maxValue\": \"3600\",\n      \"categoryName\": \"Session\"\n   
-    },\n    {\n      \"name\": \"GestureMinPoints\",\n      \"text\": \"Gesture Min
-    Points\",\n      \"type\": \"int\",\n      \"defaultValue\": \"10\",\n      \"minValue\":
-    \"5\",\n      \"maxValue\": \"50\",\n      \"categoryName\": \"Gesture\"\n   
-    },\n    {\n      \"name\": \"GestureMinScore\",\n      \"text\": \"Gesture Min
-    Score\",\n      \"type\": \"float\",\n      \"defaultValue\": \"0.5\",\n     
-    \"minValue\": \"0.0\",\n      \"maxValue\": \"1.0\",\n      \"categoryName\":
-    \"Gesture\"\n    },\n    {\n      \"name\": \"GestureMinPointDistance\",\n     
-    \"text\": \"Gesture Min Point Distance\",\n      \"type\": \"float\",\n     
-    \"defaultValue\": \"0.01\",\n      \"minValue\": \"0.001\",\n      \"maxValue\":
-    \"0.1\",\n      \"categoryName\": \"Gesture\"\n    },\n    {\n      \"name\":
-    \"BodySide\",\n      \"text\": [\n        { \"language\": \"en\", \"value\":
-    \"Side\" }\n      ],\n      \"type\": \"list\",\n      \"value\": [\n       
-    { \"text\": [{ \"language\": \"en\", \"value\": \"Left\" }], \"value\": \"0\"
-    },\n        { \"text\": [{ \"language\": \"en\", \"value\": \"Right\" }], \"value\":
-    \"1\" }\n      ],\n      \"defaultValue\": \"0\",\n      \"categoryName\": \"Core\"\n   
-    }\n  ],\n  \"inputParameterCategories\": [\n    { \"name\": \"Core\", \"text\":
-    [{ \"language\": \"en\", \"value\": \"Core\" }] },\n    { \"name\": \"Enemy\",
-    \"text\": [{ \"language\": \"en\", \"value\": \"Enemy\" }] },\n    { \"name\":
-    \"Spell\", \"text\": [{ \"language\": \"en\", \"value\": \"Spell\" }] },\n   
-    { \"name\": \"Session\", \"text\": [{ \"language\": \"en\", \"value\": \"Session\"
-    }] },\n    { \"name\": \"Gesture\", \"text\": [{ \"language\": \"en\", \"value\":
-    \"Gesture\" }] }\n  ],\n  \"buttons\": [\n    {\n      \"name\": \"startgame\",\n     
-    \"text\": \"Start Game\",\n      \"type\": \"start\"\n    },\n    {\n      \"name\":
-    \"stopgame\",\n      \"text\": \"Stop Game\",\n      \"type\": \"stop\"\n   
-    }\n  ]\n}"
-  Parameters: '{"GameType":"0","Haptic":"False","EnemyCount":"3","EnemyHealth":"10","EnemySpeed":"2","EnemySpawnRate":"2000","SpellCooldown":"3","SpellDamage":"5","MaxSpellsPerRound":"10","MaxWaves":"5","RoundDuration":"60","EnableHealthRegen":"False","HealthRegenRate":"1","duration":"0","BodySide":"0","GestureMinPoints":"10"}'
+  InputData: "{\r\n  \"inputParameters\": [\r\n    {\r\n      \"name\": \"GameMode\",\r\n     
+    \"text\": [\r\n        { \"language\": \"en\", \"value\": \"Game Mode\" }\r\n     
+    ],\r\n      \"type\": \"list\",\r\n      \"value\": [\r\n        { \"text\":
+    [{ \"language\": \"en\", \"value\": \"Conveyor\" }], \"value\": \"0\" },\r\n       
+    { \"text\": [{ \"language\": \"en\", \"value\": \"Grid\" }], \"value\": \"1\"
+    }\r\n      ],\r\n      \"defaultValue\": \"0\",\r\n      \"categoryName\": \"Core\"\r\n   
+    },\r\n    {\r\n      \"name\": \"enabledDirtyObjects\",\r\n      \"text\": \"enabledDirtyObjects\",\r\n     
+    \"type\": \"bool\",\r\n      \"defaultValue\": true,\r\n      \"categoryName\":
+    \"Core\"\r\n    },\r\n    {\r\n      \"name\": \"enabledDestroyedObjects\",\r\n     
+    \"text\": \"enabledDestroyedObjects\",\r\n      \"type\": \"bool\",\r\n     
+    \"defaultValue\": true,\r\n      \"categoryName\": \"Core\"\r\n    },\r\n   
+    {\r\n      \"name\": \"enabledUncoloredObjects\",\r\n      \"text\": \"enabledUncoloredObjects\",\r\n     
+    \"type\": \"bool\",\r\n      \"defaultValue\": true,\r\n      \"categoryName\":
+    \"Core\"\r\n    },\r\n    {\r\n      \"name\": \"dirtyObjectsDrawing\",\r\n     
+    \"text\": \"dirtyObjectsDrawing\",\r\n      \"type\": \"int\",\r\n      \"defaultValue\":
+    0,\r\n      \"minValue\": 0,\r\n      \"maxValue\": 3,\r\n      \"categoryName\":
+    \"Core\"\r\n    },\r\n    {\r\n      \"name\": \"destroyedObjectsDrawing\",\r\n     
+    \"text\": \"destroyedObjectsDrawing\",\r\n      \"type\": \"int\",\r\n      \"defaultValue\":
+    1,\r\n      \"minValue\": 0,\r\n      \"maxValue\": 3,\r\n      \"categoryName\":
+    \"Core\"\r\n    },\r\n    {\r\n      \"name\": \"uncoloredObjectsDrawing\",\r\n     
+    \"text\": \"uncoloredObjectsDrawing\",\r\n      \"type\": \"int\",\r\n      \"defaultValue\":
+    2,\r\n      \"minValue\": 0,\r\n      \"maxValue\": 3,\r\n      \"categoryName\":
+    \"Core\"\r\n    },\r\n    {\r\n      \"name\": \"gestureMinScore\",\r\n     
+    \"text\": \"gestureMinScore\",\r\n      \"type\": \"int\",\r\n      \"defaultValue\":
+    60,\r\n      \"minValue\": 30,\r\n      \"maxValue\": 95,\r\n      \"categoryName\":
+    \"Core\"\r\n    },\r\n    {\r\n      \"name\": \"gestureMaxScore\",\r\n     
+    \"text\": \"gestureMaxScore\",\r\n      \"type\": \"int\",\r\n      \"defaultValue\":
+    90,\r\n      \"minValue\": 30,\r\n      \"maxValue\": 95,\r\n      \"categoryName\":
+    \"Core\"\r\n    }\r\n  ],\r\n  \"inputParameterCategories\": [\r\n    { \"name\":
+    \"Core\", \"text\": [{ \"language\": \"en\", \"value\": \"Core\" }] },\r\n  ],\r\n 
+    \"buttons\": [\r\n    {\r\n      \"name\": \"startgame\",\r\n      \"text\":
+    \"Start Game\",\r\n      \"type\": \"start\",\r\n      \"observedEvents\": [\r\n       
+    {\r\n          \"name\": \"show\",\r\n          \"activeEventNames\": [\r\n           
+    \"onNoGameIsPlaying\"\r\n          ]\r\n        }\r\n      ]\r\n    },\r\n   
+    {\r\n      \"name\": \"stopgame\",\r\n      \"text\": \"Stop Game\",\r\n     
+    \"type\": \"stop\",\r\n      \"observedEvents\": [\r\n        {\r\n         
+    \"name\": \"show\",\r\n          \"activeEventNames\": [\r\n            \"onGameIsPlaying\"\r\n         
+    ]\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}"
+  Parameters: '{"duration":"0","GameMode":"0","enabledDirtyObjects":"True","enabledDestroyedObjects":"False","enabledUncoloredObjects":"False","dirtyObjectsDrawing":"0","destroyedObjectsDrawing":"1","uncoloredObjectsDrawing":"2","gestureMinScore":"60","gestureMaxScore":"90"}'
   Language: 0
   UseType: 1
 --- !u!114 &1597783009
@@ -6523,9 +6316,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   from: {fileID: 1408550425}
   to: {fileID: 2122393703}
-  cubeProjectile: {fileID: 2836305111013482824, guid: eed0c15c209f07a48b15a2c7b2aac67b, type: 3}
-  sphereProjectile: {fileID: 7237571349227094115, guid: 75de9617b3d120649aa584ff92b73ea8, type: 3}
-  capsuleProjectile: {fileID: 8126920235944948429, guid: 191a6dbb6b464424cab71980ab3c810b, type: 3}
+  projectileTypes:
+  - {fileID: 2836305111013482824, guid: eed0c15c209f07a48b15a2c7b2aac67b, type: 3}
+  - {fileID: 8126920235944948429, guid: 191a6dbb6b464424cab71980ab3c810b, type: 3}
+  - {fileID: 7237571349227094115, guid: 75de9617b3d120649aa584ff92b73ea8, type: 3}
   speed: 5
   spawnOffset: 0.2
 --- !u!1 &1950070797 stripped
@@ -8566,15 +8360,11 @@ SceneRoots:
   - {fileID: 1597783004}
   - {fileID: 8551012235969130734}
   - {fileID: 1709044344}
-  - {fileID: 1153926006}
   - {fileID: 174768607}
-  - {fileID: 524221399}
-  - {fileID: 871674422}
-  - {fileID: 937307382}
-  - {fileID: 724624983}
   - {fileID: 1408550425}
   - {fileID: 144254282}
   - {fileID: 947563410}
   - {fileID: 1927204383}
+  - {fileID: 585200442}
   - {fileID: 782170343}
   - {fileID: 1307579742}

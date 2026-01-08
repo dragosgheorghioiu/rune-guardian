@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
@@ -6,6 +7,18 @@ namespace RuneGuardian
 {
     public class GestureRecognizerExample : MonoBehaviour
     {
+        public static event Action<int> OnValidGesture;
+
+        void OnEnable()
+        {
+            RuneGuardianController.OnRuneGuardianInit += Init;
+        }
+
+        void OnDisable()
+        {
+            RuneGuardianController.OnRuneGuardianInit -= Init;
+        }
+
         [Header("Gesture Recognition")]
         private Unistroke recognizer;
         private List<Vector2> currentGesture;
@@ -38,41 +51,53 @@ namespace RuneGuardian
         private InputDevice activeDevice;
         private XRNode activeNode;
         private Vector3 lastRecordedPosition;
-        private ProjectileShooter shooter;
 
-        public void Init(ProjectileShooter projectileShooter, InputData inputData)
+        /// <summary>
+        /// Represents a shape template with its name and corresponding add function
+        /// </summary>
+        private class ShapeTemplate
         {
-            shooter = projectileShooter;
+            public string Name;
+            public Action AddTemplateAction;
 
-            // Apply gesture recognizer parameters from InputData
-            if (inputData != null)
+            public ShapeTemplate(string name, Action addTemplateAction)
             {
-                minPoints = inputData.GestureMinPoints;
-                minScore = inputData.GestureMinScore;
-                minPointDistance = inputData.GestureMinPointDistance;
+                Name = name;
+                AddTemplateAction = addTemplateAction;
             }
-
-            // Initialize gesture recognizer and templates
-            recognizer = new Unistroke();
-            AddCircleTemplate();
-            AddSquareTemplate();
-            AddTriangleTemplate();
-
-            Debug.Log("Gesture Recognizer initialized from RuneGuardianController!");
         }
 
-        void Start()
+        private List<ShapeTemplate> availableShapes;
+        private List<ShapeTemplate> validShapes;
+
+
+        void Init(InputData inputData)
         {
-            if (recognizer == null)
+            if (inputData != null)
             {
-                recognizer = new Unistroke();
-                AddCircleTemplate();
-                AddSquareTemplate();
-                AddTriangleTemplate();
+                minScore = inputData.gestureMinScore;
             }
 
-            if (mainCamera == null)
-                mainCamera = Camera.main;
+            recognizer = new Unistroke();
+            availableShapes = new List<ShapeTemplate>
+            {
+                new("Circle", AddCircleTemplate),
+                new("Square", AddSquareTemplate),
+                new("Triangle", AddTriangleTemplate),
+            };
+
+            validShapes = new();
+            validShapes.Add(availableShapes[inputData.dirtyObjectsDrawing]);
+            validShapes.Add(availableShapes[inputData.destroyedObjectsDrawing]);
+            validShapes.Add(availableShapes[inputData.uncoloredObjectsDrawing]);
+            foreach (var shape in validShapes)
+            {
+                shape.AddTemplateAction();
+            }
+
+            Debug.Log("Gesture Recognizer initialized from RuneGuardianController!");
+
+            mainCamera ??= Camera.main;
 
             if (rightControllerTransform == null || leftControllerTransform == null)
             {
@@ -126,18 +151,15 @@ namespace RuneGuardian
             {
                 if (Input.GetKeyDown(shootTypeAKey))
                 {
-                    Debug.Log("Keyboard: Shooting Type A (Square)");
-                    OnGestureRecognized("square");
+                    OnValidGesture?.Invoke(0);
                 }
                 else if (Input.GetKeyDown(shootTypeBKey))
                 {
-                    Debug.Log("Keyboard: Shooting Type B (Circle)");
-                    OnGestureRecognized("circle");
+                    OnValidGesture?.Invoke(1);
                 }
                 else if (Input.GetKeyDown(shootTypeTriangleKey))
                 {
-                    Debug.Log("Keyboard: Triangle gesture");
-                    OnGestureRecognized("triangle");
+                    OnValidGesture?.Invoke(2);
                 }
             }
 
@@ -223,7 +245,7 @@ namespace RuneGuardian
                 if (result.Score >= minScore)
                 {
                     Debug.Log($"✓ Recognized: {result.Name} (Score: {result.Score:F2})");
-                    OnGestureRecognized(result.Name);
+                    OnValidGesture?.Invoke(result.TemplateIndex);
                 }
                 else
                 {
@@ -240,24 +262,8 @@ namespace RuneGuardian
                 Destroy(lineObject, 0.5f);
         }
 
-        void OnGestureRecognized(string gestureName)
-        {
-            if (shooter == null) return;
 
-            if (gestureName == "square")
-            {
-                shooter.Shoot(shooter.projectileTypeA);
-            }
-            else if (gestureName == "circle")
-            {
-                shooter.Shoot(shooter.projectileTypeB);
-            }
-            else if (gestureName == "triangle")
-            {
-                Debug.Log("Triangle recognized! (No projectile assigned)");
-            }
-        }
-
+        // TODO(dragos): maybe add a sparkly effect when drawing
         void CreateLineRenderer()
         {
             lineObject = new GameObject("GestureLine");
@@ -332,5 +338,6 @@ namespace RuneGuardian
         };
             recognizer.AddTemplate("triangle", triangle2);
         }
+
     }
 }
