@@ -5858,6 +5858,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7026100452311158935, guid: 100565b723386bb459d8836f18e79114, type: 3}
   m_PrefabInstance: {fileID: 5382844909466115892}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1307579741
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1307579742}
+  m_Layer: 0
+  m_Name: '--------------- '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1307579742
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307579741}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.9104902, y: 4.0596375, z: 8.050002}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1336112875
 GameObject:
   m_ObjectHideFlags: 0
@@ -6492,10 +6523,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   from: {fileID: 1408550425}
   to: {fileID: 2122393703}
-  cubeProjectile: {fileID: 1830959147406044646, guid: e0b55f7a7f62be346976cfa7e104826d, type: 3}
-  sphereProjectile: {fileID: 3191673413552098838, guid: 75aec285960783c47b74aa4f1644a542, type: 3}
-  capsuleProjectile: {fileID: 8715169471591852961, guid: 81e23b124ac6e3d4587b0c57d914927b, type: 3}
-  speed: 12
+  cubeProjectile: {fileID: 2836305111013482824, guid: eed0c15c209f07a48b15a2c7b2aac67b, type: 3}
+  sphereProjectile: {fileID: 7237571349227094115, guid: 75de9617b3d120649aa584ff92b73ea8, type: 3}
+  capsuleProjectile: {fileID: 8126920235944948429, guid: 191a6dbb6b464424cab71980ab3c810b, type: 3}
+  speed: 5
   spawnOffset: 0.2
 --- !u!1 &1950070797 stripped
 GameObject:
@@ -8534,7 +8565,6 @@ SceneRoots:
   - {fileID: 243411773}
   - {fileID: 1597783004}
   - {fileID: 8551012235969130734}
-  - {fileID: 1408550425}
   - {fileID: 1709044344}
   - {fileID: 1153926006}
   - {fileID: 174768607}
@@ -8542,7 +8572,9 @@ SceneRoots:
   - {fileID: 871674422}
   - {fileID: 937307382}
   - {fileID: 724624983}
+  - {fileID: 1408550425}
   - {fileID: 144254282}
   - {fileID: 947563410}
   - {fileID: 1927204383}
   - {fileID: 782170343}
+  - {fileID: 1307579742}
