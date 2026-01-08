@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnedToy : MonoBehaviour
 {
+    public static Action onToyDespawn;
     [Header("Cu ce spell trebuie sa fie lovit")]
     public ProjectileType requiredProjectile;
 
@@ -62,7 +64,10 @@ public class SpawnedToy : MonoBehaviour
             MoveTowards(despawnPoint.position);
 
             if (Vector3.Distance(transform.position, despawnPoint.position) <= arriveDistance)
+            {
+                onToyDespawn?.Invoke();
                 Destroy(gameObject);
+            }
         }
     }
 

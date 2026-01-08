@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using RuneGuardian;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class RandomToySpawner : MonoBehaviour
 {
@@ -22,11 +23,13 @@ public class RandomToySpawner : MonoBehaviour
     {
        RuneGuardianController.OnRuneGuardianInit += Init;
        RuneGuardianController.onRuneGuardianStart += SpawnRandom; 
+       SpawnedToy.onToyDespawn += DelayedSpawnRandom; 
     }
     private void OnDisable()
     {
        RuneGuardianController.onRuneGuardianStart -= SpawnRandom; 
        RuneGuardianController.OnRuneGuardianInit -= Init;
+       SpawnedToy.onToyDespawn -= DelayedSpawnRandom; 
     }
 
     public void Init(InputData inputData)
@@ -35,6 +38,12 @@ public class RandomToySpawner : MonoBehaviour
         if (inputData.enabledDirtyObjects) validToys.Add(0);
         if (inputData.enabledDestroyedObjects) validToys.Add(1);
         if (inputData.enabledUncoloredObjects) validToys.Add(2);
+    }
+
+    public async void DelayedSpawnRandom()
+    {
+        await Task.Delay(1000);
+        SpawnRandom();
     }
 
     public void SpawnRandom()
