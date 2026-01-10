@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using RuneGuardian;
 using UnityEngine;
@@ -24,15 +23,15 @@ public class RandomToySpawner : MonoBehaviour
 
     private void OnEnable()
     {
-       RuneGuardianController.OnRuneGuardianInit += Init;
-       RuneGuardianController.onRuneGuardianStart += SpawnRandom; 
-       SpawnedToy.onToyDespawn += DelayedSpawnRandom; 
+        RuneGuardianController.OnRuneGuardianInit += Init;
+        RuneGuardianController.onRuneGuardianStart += SpawnRandom;
+        SpawnedToy.onToyDespawn += DelayedSpawnRandom;
     }
     private void OnDisable()
     {
-       RuneGuardianController.onRuneGuardianStart -= SpawnRandom; 
-       RuneGuardianController.OnRuneGuardianInit -= Init;
-       SpawnedToy.onToyDespawn -= DelayedSpawnRandom; 
+        RuneGuardianController.onRuneGuardianStart -= SpawnRandom;
+        RuneGuardianController.OnRuneGuardianInit -= Init;
+        SpawnedToy.onToyDespawn -= DelayedSpawnRandom;
     }
 
     public void Init(InputData inputData)

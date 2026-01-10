@@ -30,7 +30,6 @@ namespace RuneGuardian
 
         // should be between 0 and 100
         public int gestureMinScore;
-        public int gestureMaxScore;
         
         public int numberOfToys;
 
@@ -72,7 +71,6 @@ namespace RuneGuardian
                 "\"destroyedObjectsDrawing\":\"1\"," +
                 "\"uncoloredObjectsDrawing\":\"2\"," +
                 "\"gestureMinScore\":\"60\"," +
-                "\"gestureMaxScore\":\"90\"," +
                 "\"numberOfToys\":\"10\"}"
             );
             

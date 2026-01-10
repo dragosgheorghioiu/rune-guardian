@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpellProjectile : MonoBehaviour
@@ -14,8 +12,5 @@ public class SpellProjectile : MonoBehaviour
             obj.TryHit(type);
             Destroy(gameObject);
         }
-
-        
     }
-
 }

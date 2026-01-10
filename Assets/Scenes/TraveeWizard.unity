@@ -5075,6 +5075,7 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 06f48a7d40c6bae4e9ba6bd11902b615, type: 2}
+  - {fileID: 2100000, guid: 06f48a7d40c6bae4e9ba6bd11902b615, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19917,11 +19918,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 0}
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1884188895}
   drawColor: {r: 1, g: 1, b: 1, a: 1}
-  lineWidth: 0.1
-  rightControllerTransform: {fileID: 0}
-  leftControllerTransform: {fileID: 0}
+  lineWidth: 0.01
+  rightControllerTransform: {fileID: 1530693320}
+  leftControllerTransform: {fileID: 616378107}
   useRightHand: 1
   minPoints: 10
   minScore: 0.5
@@ -19939,7 +19940,7 @@ Transform:
   m_GameObject: {fileID: 585200440}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.98291, y: -0.8143512, z: 4.2867184}
+  m_LocalPosition: {x: 1.221, y: 2.672, z: 1.807}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25336,7 +25337,6 @@ MonoBehaviour:
     destroyedObjectsDrawing: 0
     uncoloredObjectsDrawing: 0
     gestureMinScore: 0
-    gestureMaxScore: 0
     numberOfToys: 0
   _clinicalUseController: {fileID: 1597783005}
   _homeUseController: {fileID: 1597783006}
@@ -25352,78 +25352,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9df904a73f11aaf4e9ebaff479489098, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputData: "{\n  \"inputParameters\": [\n    {\n      \"name\": \"GameMode\",\n     
-    \"text\": [\n        {\n          \"language\": \"en\",\n          \"value\":
-    \"Game Mode\"\n        }\n      ],\n      \"type\": \"list\",\n      \"value\":
-    [\n        {\n          \"text\": [\n            {\n              \"language\":
-    \"en\",\n              \"value\": \"Conveyor\"\n            }\n          ],\n         
-    \"value\": \"0\"\n        },\n        {\n          \"text\": [\n            {\n             
-    \"language\": \"en\",\n              \"value\": \"Grid\"\n            }\n         
-    ],\n          \"value\": \"1\"\n        }\n      ],\n      \"defaultValue\":
-    \"0\",\n      \"categoryName\": \"Core\"\n    },\n    {\n      \"name\": \"enabledDirtyObjects\",\n     
-    \"text\": \"enabledDirtyObjects\",\n      \"type\": \"bool\",\n      \"defaultValue\":
-    true,\n      \"categoryName\": \"Core\"\n    },\n    {\n      \"name\": \"enabledDestroyedObjects\",\n     
-    \"text\": \"enabledDestroyedObjects\",\n      \"type\": \"bool\",\n      \"defaultValue\":
-    true,\n      \"categoryName\": \"Core\"\n    },\n    {\n      \"name\": \"enabledUncoloredObjects\",\n     
-    \"text\": \"enabledUncoloredObjects\",\n      \"type\": \"bool\",\n      \"defaultValue\":
-    true,\n      \"categoryName\": \"Core\"\n    },\n    {\n      \"name\": \"dirtyObjectsDrawing\",\n     
-    \"text\": \"dirtyObjectsDrawing\",\n      \"type\": \"list\",\n      \"defaultValue\":
-    0,\n      \"categoryName\": \"Core\",\n      \"value\": [\n        {\n         
-    \"text\": \"Circle\",\n          \"value\": \"0\"\n        },\n        {\n         
-    \"text\": \"Square\",\n          \"value\": \"1\"\n        },\n        {\n         
-    \"text\": \"Triangle\",\n          \"value\": \"2\"\n        },\n        {\n         
-    \"text\": \"OpenSquareBracket\",\n          \"value\": \"3\"\n        },\n       
-    {\n          \"text\": \"Star\",\n          \"value\": \"4\"\n        },\n       
-    {\n          \"text\": \"Zigzag\",\n          \"value\": \"5\"\n        },\n       
-    {\n          \"text\": \"X\",\n          \"value\": \"6\"\n        },\n       
-    {\n          \"text\": \"Diamond\",\n          \"value\": \"7\"\n        },\n       
-    {\n          \"text\": \"V\",\n          \"value\": \"8\"\n        },\n       
-    {\n          \"text\": \"Line\",\n          \"value\": \"9\"\n        }\n     
-    ]\n    },\n    {\n      \"name\": \"destroyedObjectsDrawing\",\n      \"text\":
-    \"destroyedObjectsDrawing\",\n      \"type\": \"list\",\n      \"defaultValue\":
-    1,\n      \"categoryName\": \"Core\",\n      \"value\": [\n        {\n         
-    \"text\": \"Circle\",\n          \"value\": \"0\"\n        },\n        {\n         
-    \"text\": \"Square\",\n          \"value\": \"1\"\n        },\n        {\n         
-    \"text\": \"Triangle\",\n          \"value\": \"2\"\n        },\n        {\n         
-    \"text\": \"OpenSquareBracket\",\n          \"value\": \"3\"\n        },\n       
-    {\n          \"text\": \"Star\",\n          \"value\": \"4\"\n        },\n       
-    {\n          \"text\": \"Zigzag\",\n          \"value\": \"5\"\n        },\n       
-    {\n          \"text\": \"X\",\n          \"value\": \"6\"\n        },\n       
-    {\n          \"text\": \"Diamond\",\n          \"value\": \"7\"\n        },\n       
-    {\n          \"text\": \"V\",\n          \"value\": \"8\"\n        },\n       
-    {\n          \"text\": \"Line\",\n          \"value\": \"9\"\n        }\n     
-    ]\n    },\n    {\n      \"name\": \"uncoloredObjectsDrawing\",\n      \"text\":
-    \"uncoloredObjectsDrawing\",\n      \"type\": \"list\",\n      \"defaultValue\":
-    2,\n      \"categoryName\": \"Core\",\n      \"value\": [\n        {\n         
-    \"text\": \"Circle\",\n          \"value\": \"0\"\n        },\n        {\n         
-    \"text\": \"Square\",\n          \"value\": \"1\"\n        },\n        {\n         
-    \"text\": \"Triangle\",\n          \"value\": \"2\"\n        },\n        {\n         
-    \"text\": \"OpenSquareBracket\",\n          \"value\": \"3\"\n        },\n       
-    {\n          \"text\": \"Star\",\n          \"value\": \"4\"\n        },\n       
-    {\n          \"text\": \"Zigzag\",\n          \"value\": \"5\"\n        },\n       
-    {\n          \"text\": \"X\",\n          \"value\": \"6\"\n        },\n       
-    {\n          \"text\": \"Diamond\",\n          \"value\": \"7\"\n        },\n       
-    {\n          \"text\": \"V\",\n          \"value\": \"8\"\n        },\n       
-    {\n          \"text\": \"Line\",\n          \"value\": \"9\"\n        }\n     
-    ]\n    },\n    {\n      \"name\": \"gestureMinScore\",\n      \"text\": \"gestureMinScore\",\n     
-    \"type\": \"int\",\n      \"defaultValue\": 60,\n      \"minValue\": 30,\n     
-    \"maxValue\": 95,\n      \"categoryName\": \"Core\"\n    },\n    {\n      \"name\":
-    \"gestureMaxScore\",\n      \"text\": \"gestureMaxScore\",\n      \"type\": \"int\",\n     
-    \"defaultValue\": 90,\n      \"minValue\": 30,\n      \"maxValue\": 95,\n     
-    \"categoryName\": \"Core\"\n    },\n    {\n      \"name\": \"numberOfToys\",\n     
-    \"text\": \"numberOfToys\",\n      \"type\": \"int\",\n      \"defaultValue\":
-    10,\n      \"minValue\": 1,\n      \"maxValue\": 50,\n      \"categoryName\":
-    \"Core\"\n    }\n  ],\n  \"inputParameterCategories\": [\n    {\n      \"name\":
-    \"Core\",\n      \"text\": [\n        {\n          \"language\": \"en\",\n         
-    \"value\": \"Core\"\n        }\n      ]\n    }\n  ],\n  \"buttons\": [\n    {\n     
-    \"name\": \"startgame\",\n      \"text\": \"Start Game\",\n      \"type\": \"start\",\n     
-    \"observedEvents\": [\n        {\n          \"name\": \"show\",\n          \"activeEventNames\":
-    [\n            \"onNoGameIsPlaying\"\n          ]\n        }\n      ]\n    },\n   
-    {\n      \"name\": \"stopgame\",\n      \"text\": \"Stop Game\",\n      \"type\":
-    \"stop\",\n      \"observedEvents\": [\n        {\n          \"name\": \"show\",\n         
-    \"activeEventNames\": [\n            \"onGameIsPlaying\"\n          ]\n       
-    }\n      ]\n    }\n  ]\n}"
-  Parameters: '{"duration":"0","GameMode":"0","enabledDirtyObjects":"True","enabledDestroyedObjects":"True","enabledUncoloredObjects":"True","dirtyObjectsDrawing":"0","destroyedObjectsDrawing":"1","uncoloredObjectsDrawing":"2","gestureMinScore":"60","gestureMaxScore":"90","numberOfToys":"3"}'
+  InputData: "{\r\n  \"inputParameters\": [\r\n    {\r\n      \"name\": \"GameMode\",\r\n     
+    \"text\": [\r\n        {\r\n          \"language\": \"en\",\r\n          \"value\":
+    \"Game Mode\"\r\n        }\r\n      ],\r\n      \"type\": \"list\",\r\n     
+    \"value\": [\r\n        {\r\n          \"text\": [\r\n            {\r\n             
+    \"language\": \"en\",\r\n              \"value\": \"Conveyor\"\r\n           
+    }\r\n          ],\r\n          \"value\": \"0\"\r\n        },\r\n        {\r\n         
+    \"text\": [\r\n            {\r\n              \"language\": \"en\",\r\n             
+    \"value\": \"Grid\"\r\n            }\r\n          ],\r\n          \"value\":
+    \"1\"\r\n        }\r\n      ],\r\n      \"defaultValue\": \"0\",\r\n      \"categoryName\":
+    \"Core\"\r\n    },\r\n    {\r\n      \"name\": \"enabledDirtyObjects\",\r\n     
+    \"text\": \"enabledDirtyObjects\",\r\n      \"type\": \"bool\",\r\n      \"defaultValue\":
+    true,\r\n      \"categoryName\": \"Core\"\r\n    },\r\n    {\r\n      \"name\":
+    \"enabledDestroyedObjects\",\r\n      \"text\": \"enabledDestroyedObjects\",\r\n     
+    \"type\": \"bool\",\r\n      \"defaultValue\": true,\r\n      \"categoryName\":
+    \"Core\"\r\n    },\r\n    {\r\n      \"name\": \"enabledUncoloredObjects\",\r\n     
+    \"text\": \"enabledUncoloredObjects\",\r\n      \"type\": \"bool\",\r\n     
+    \"defaultValue\": true,\r\n      \"categoryName\": \"Core\"\r\n    },\r\n   
+    {\r\n      \"name\": \"dirtyObjectsDrawing\",\r\n      \"text\": \"dirtyObjectsDrawing\",\r\n     
+    \"type\": \"list\",\r\n      \"defaultValue\": 0,\r\n      \"categoryName\":
+    \"Core\",\r\n      \"value\": [\r\n        {\r\n          \"text\": \"Circle\",\r\n         
+    \"value\": \"0\"\r\n        },\r\n        {\r\n          \"text\": \"Square\",\r\n         
+    \"value\": \"1\"\r\n        },\r\n        {\r\n          \"text\": \"Triangle\",\r\n         
+    \"value\": \"2\"\r\n        },\r\n        {\r\n          \"text\": \"OpenSquareBracket\",\r\n         
+    \"value\": \"3\"\r\n        },\r\n        {\r\n          \"text\": \"Star\",\r\n         
+    \"value\": \"4\"\r\n        },\r\n        {\r\n          \"text\": \"Zigzag\",\r\n         
+    \"value\": \"5\"\r\n        },\r\n        {\r\n          \"text\": \"X\",\r\n         
+    \"value\": \"6\"\r\n        },\r\n        {\r\n          \"text\": \"Diamond\",\r\n         
+    \"value\": \"7\"\r\n        },\r\n        {\r\n          \"text\": \"V\",\r\n         
+    \"value\": \"8\"\r\n        },\r\n        {\r\n          \"text\": \"Line\",\r\n         
+    \"value\": \"9\"\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"name\":
+    \"destroyedObjectsDrawing\",\r\n      \"text\": \"destroyedObjectsDrawing\",\r\n     
+    \"type\": \"list\",\r\n      \"defaultValue\": 1,\r\n      \"categoryName\":
+    \"Core\",\r\n      \"value\": [\r\n        {\r\n          \"text\": \"Circle\",\r\n         
+    \"value\": \"0\"\r\n        },\r\n        {\r\n          \"text\": \"Square\",\r\n         
+    \"value\": \"1\"\r\n        },\r\n        {\r\n          \"text\": \"Triangle\",\r\n         
+    \"value\": \"2\"\r\n        },\r\n        {\r\n          \"text\": \"OpenSquareBracket\",\r\n         
+    \"value\": \"3\"\r\n        },\r\n        {\r\n          \"text\": \"Star\",\r\n         
+    \"value\": \"4\"\r\n        },\r\n        {\r\n          \"text\": \"Zigzag\",\r\n         
+    \"value\": \"5\"\r\n        },\r\n        {\r\n          \"text\": \"X\",\r\n         
+    \"value\": \"6\"\r\n        },\r\n        {\r\n          \"text\": \"Diamond\",\r\n         
+    \"value\": \"7\"\r\n        },\r\n        {\r\n          \"text\": \"V\",\r\n         
+    \"value\": \"8\"\r\n        },\r\n        {\r\n          \"text\": \"Line\",\r\n         
+    \"value\": \"9\"\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"name\":
+    \"uncoloredObjectsDrawing\",\r\n      \"text\": \"uncoloredObjectsDrawing\",\r\n     
+    \"type\": \"list\",\r\n      \"defaultValue\": 2,\r\n      \"categoryName\":
+    \"Core\",\r\n      \"value\": [\r\n        {\r\n          \"text\": \"Circle\",\r\n         
+    \"value\": \"0\"\r\n        },\r\n        {\r\n          \"text\": \"Square\",\r\n         
+    \"value\": \"1\"\r\n        },\r\n        {\r\n          \"text\": \"Triangle\",\r\n         
+    \"value\": \"2\"\r\n        },\r\n        {\r\n          \"text\": \"OpenSquareBracket\",\r\n         
+    \"value\": \"3\"\r\n        },\r\n        {\r\n          \"text\": \"Star\",\r\n         
+    \"value\": \"4\"\r\n        },\r\n        {\r\n          \"text\": \"Zigzag\",\r\n         
+    \"value\": \"5\"\r\n        },\r\n        {\r\n          \"text\": \"X\",\r\n         
+    \"value\": \"6\"\r\n        },\r\n        {\r\n          \"text\": \"Diamond\",\r\n         
+    \"value\": \"7\"\r\n        },\r\n        {\r\n          \"text\": \"V\",\r\n         
+    \"value\": \"8\"\r\n        },\r\n        {\r\n          \"text\": \"Line\",\r\n         
+    \"value\": \"9\"\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"name\":
+    \"gestureMinScore\",\r\n      \"text\": \"gestureMinScore\",\r\n      \"type\":
+    \"int\",\r\n      \"defaultValue\": 60,\r\n      \"minValue\": 30,\r\n      \"maxValue\":
+    95,\r\n      \"categoryName\": \"Core\"\r\n    },\r\n    {\r\n      \"name\":
+    \"numberOfToys\",\r\n      \"text\": \"numberOfToys\",\r\n      \"type\": \"int\",\r\n     
+    \"defaultValue\": 10,\r\n      \"minValue\": 1,\r\n      \"maxValue\": 50,\r\n     
+    \"categoryName\": \"Core\"\r\n    }\r\n  ],\r\n  \"inputParameterCategories\":
+    [\r\n    {\r\n      \"name\": \"Core\",\r\n      \"text\": [\r\n        {\r\n         
+    \"language\": \"en\",\r\n          \"value\": \"Core\"\r\n        }\r\n     
+    ]\r\n    }\r\n  ],\r\n  \"buttons\": [\r\n    {\r\n      \"name\": \"startgame\",\r\n     
+    \"text\": \"Start Game\",\r\n      \"type\": \"start\",\r\n      \"observedEvents\":
+    [\r\n        {\r\n          \"name\": \"show\",\r\n          \"activeEventNames\":
+    [\r\n            \"onNoGameIsPlaying\"\r\n          ]\r\n        }\r\n      ]\r\n   
+    },\r\n    {\r\n      \"name\": \"stopgame\",\r\n      \"text\": \"Stop Game\",\r\n     
+    \"type\": \"stop\",\r\n      \"observedEvents\": [\r\n        {\r\n         
+    \"name\": \"show\",\r\n          \"activeEventNames\": [\r\n            \"onGameIsPlaying\"\r\n         
+    ]\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}"
+  Parameters: '{"GameMode":"0","enabledDirtyObjects":"True","enabledDestroyedObjects":"True","enabledUncoloredObjects":"True","dirtyObjectsDrawing":"6","destroyedObjectsDrawing":"4","uncoloredObjectsDrawing":"5","gestureMinScore":"70","duration":"0","numberOfToys":"11"}'
   Language: 0
   UseType: 1
 --- !u!114 &1597783009
@@ -25560,7 +25561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.482
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 126d619cf4daa52469682f85c1378b4a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -32472,6 +32473,10 @@ PrefabInstance:
     - target: {fileID: 8551012234837049964, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551012234837049964, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
+      propertyPath: m_EnableTreeColliders
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8551012234837049965, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
       propertyPath: m_Enabled

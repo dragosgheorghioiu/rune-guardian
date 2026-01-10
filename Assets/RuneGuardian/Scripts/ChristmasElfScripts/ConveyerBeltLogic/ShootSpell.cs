@@ -12,6 +12,9 @@ public class ShootSpell : MonoBehaviour
 
     [SerializeField] private float speed = 12f;
     [SerializeField] private float spawnOffset = 0.2f;
+    [SerializeField] private float projectileLifetime = 3f;
+
+    private bool isSpellInFlight = false;
 
     public void OnEnable()
     {
@@ -26,6 +29,8 @@ public class ShootSpell : MonoBehaviour
 
     public void FireProjectile(int projectileIndex)
     {
+        if (isSpellInFlight) return; // Block if spell already in flight
+        
         Fire(projectileTypes[projectileIndex % projectileTypes.Count]);
     }
 
@@ -45,5 +50,16 @@ public class ShootSpell : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
         rb.velocity = dir * speed;
+        
+        isSpellInFlight = true;
+        StartCoroutine(ResetSpellCooldown(projectileLifetime));
+        
+        Destroy(go, projectileLifetime);
+    }
+
+    private IEnumerator ResetSpellCooldown(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        isSpellInFlight = false;
     }
 }
