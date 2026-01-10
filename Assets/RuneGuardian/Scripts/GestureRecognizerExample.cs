@@ -84,6 +84,13 @@ namespace RuneGuardian
                 new("Circle", AddCircleTemplate),
                 new("Square", AddSquareTemplate),
                 new("Triangle", AddTriangleTemplate),
+                new("OpenSquareBracket", AddOpenSquareBracketTemplate),
+                new("Star", AddStarTemplate),
+                new("Zigzag", AddZigzagTemplate),
+                new("X", AddXTemplate),
+                new("Diamond", AddDiamondTemplate),
+                new("V", AddVTemplate),
+                new("Line", AddLineTemplate),
             };
 
             validShapes = new();
@@ -337,6 +344,98 @@ namespace RuneGuardian
             new Vector2(50, 0)
         };
             recognizer.AddTemplate("triangle", triangle2);
+        }
+
+        void AddOpenSquareBracketTemplate()
+        {
+            List<Vector2> bracket = new List<Vector2>
+        {
+            new Vector2(100, 0),
+            new Vector2(0, 0),
+            new Vector2(0, 100),
+            new Vector2(100, 100)
+        };
+            recognizer.AddTemplate("openbracket", bracket);
+        }
+
+        void AddStarTemplate()
+        {
+            List<Vector2> star = new List<Vector2>();
+            int numPoints = 5;
+            for (int i = 0; i < numPoints * 2; i++)
+            {
+                float angle = i * Mathf.PI / numPoints - Mathf.PI / 2f;
+                float radius = i % 2 == 0 ? 100f : 50f;
+                star.Add(new Vector2(Mathf.Cos(angle) * radius + 100f, Mathf.Sin(angle) * radius + 100f));
+            }
+            star.Add(star[0]); // Close the star
+            recognizer.AddTemplate("star", star);
+        }
+
+        void AddZigzagTemplate()
+        {
+            List<Vector2> zigzag = new List<Vector2>
+        {
+            new Vector2(0, 0),
+            new Vector2(50, 50),
+            new Vector2(0, 100),
+            new Vector2(50, 150),
+            new Vector2(0, 200)
+        };
+            recognizer.AddTemplate("zigzag", zigzag);
+        }
+
+        void AddXTemplate()
+        {
+            // First stroke (top-left to bottom-right)
+            List<Vector2> x1 = new List<Vector2>
+        {
+            new Vector2(0, 0),
+            new Vector2(100, 100)
+        };
+            recognizer.AddTemplate("x", x1);
+
+            // Second stroke (top-right to bottom-left)
+            List<Vector2> x2 = new List<Vector2>
+        {
+            new Vector2(100, 0),
+            new Vector2(0, 100)
+        };
+            recognizer.AddTemplate("x", x2);
+        }
+
+        void AddDiamondTemplate()
+        {
+            List<Vector2> diamond = new List<Vector2>
+        {
+            new Vector2(50, 0),
+            new Vector2(100, 50),
+            new Vector2(50, 100),
+            new Vector2(0, 50),
+            new Vector2(50, 0)
+        };
+            recognizer.AddTemplate("diamond", diamond);
+        }
+
+        void AddVTemplate()
+        {
+            List<Vector2> v = new List<Vector2>
+        {
+            new Vector2(0, 0),
+            new Vector2(50, 100),
+            new Vector2(100, 0)
+        };
+            recognizer.AddTemplate("v", v);
+        }
+
+        void AddLineTemplate()
+        {
+            List<Vector2> line = new List<Vector2>
+        {
+            new Vector2(0, 50),
+            new Vector2(100, 50)
+        };
+            recognizer.AddTemplate("line", line);
         }
 
     }

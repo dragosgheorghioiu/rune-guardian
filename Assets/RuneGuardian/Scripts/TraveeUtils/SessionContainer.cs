@@ -24,8 +24,6 @@ namespace RuneGuardian
         public bool enabledDestroyedObjects;
         public bool enabledUncoloredObjects;
         
-        // should be 0 and 3(for now)
-        // TODO: add more drawings
         public int dirtyObjectsDrawing;
         public int destroyedObjectsDrawing;
         public int uncoloredObjectsDrawing;
@@ -33,6 +31,8 @@ namespace RuneGuardian
         // should be between 0 and 100
         public int gestureMinScore;
         public int gestureMaxScore;
+        
+        public int numberOfToys;
 
     }
     /// <summary>
@@ -72,7 +72,8 @@ namespace RuneGuardian
                 "\"destroyedObjectsDrawing\":\"1\"," +
                 "\"uncoloredObjectsDrawing\":\"2\"," +
                 "\"gestureMinScore\":\"60\"," +
-                "\"gestureMaxScore\":\"90\"}"
+                "\"gestureMaxScore\":\"90\"," +
+                "\"numberOfToys\":\"10\"}"
             );
             
             // Auto-start game in editor for testing

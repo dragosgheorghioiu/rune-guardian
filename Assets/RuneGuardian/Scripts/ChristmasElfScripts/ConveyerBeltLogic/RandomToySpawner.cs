@@ -11,6 +11,9 @@ public class RandomToySpawner : MonoBehaviour
     [SerializeField] private Transform targetPoint;
     [SerializeField] private Transform despawnPoint;
 
+    private static int numberOfSpawnedToys = 0;
+    private static int maxToyNumber = 0;
+
     [Header("Spawnable prefabs (3)")]
     [SerializeField] private SpawnedToy[] prefabs;
     private List<int> validToys;
@@ -38,16 +41,27 @@ public class RandomToySpawner : MonoBehaviour
         if (inputData.enabledDirtyObjects) validToys.Add(0);
         if (inputData.enabledDestroyedObjects) validToys.Add(1);
         if (inputData.enabledUncoloredObjects) validToys.Add(2);
+        maxToyNumber = inputData.numberOfToys;
     }
 
     public async void DelayedSpawnRandom()
     {
+        if (numberOfSpawnedToys >= maxToyNumber)
+        {
+            conveyor.StopConveyor();
+            return;
+        } 
         await Task.Delay(1000);
         SpawnRandom();
     }
 
     public void SpawnRandom()
     {
+        if (numberOfSpawnedToys >= maxToyNumber) {
+            // TODO: here should shoot an event of end game
+            Debug.Log("Game end");
+            return;
+        }
         if (prefabs == null || prefabs.Length == 0)
         {
             Debug.LogWarning("No prefabs set in RandomToySpawner");
@@ -62,17 +76,18 @@ public class RandomToySpawner : MonoBehaviour
         int idx = Random.Range(0, validToys.Count);
         current = Instantiate(prefabs[validToys[idx]], spawnPoint.position, spawnPoint.rotation);
         current.Init(targetPoint, despawnPoint);
+        ++numberOfSpawnedToys;
 
-        if (conveyor != null) conveyor.StartConveyor();
+        conveyor?.StartConveyor();
 
         current.OnArrivedTarget += () =>
         {
-            if (conveyor != null) conveyor.StopConveyor();
+            conveyor?.StopConveyor();
         };
 
         current.OnStartedDespawn += () =>
         {
-            if (conveyor != null) conveyor.StartConveyor();
+            conveyor?.StartConveyor();
         };
     }
 }
