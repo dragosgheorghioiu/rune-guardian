@@ -29,6 +29,10 @@ namespace RuneGuardian
         [SerializeField] private Camera mainCamera;
         [SerializeField] private Color drawColor = Color.white;
         [SerializeField] private float lineWidth = 0.1f;
+        [SerializeField] private ParticleSystem drawingParticlesPrefab;
+
+        [Header("Audio Feedback")]
+        [SerializeField] private AudioClip drawLoopSound;
 
         [Header("VR Controller Settings")]
         [SerializeField] private Transform rightControllerTransform;
@@ -46,11 +50,14 @@ namespace RuneGuardian
         [SerializeField] private KeyCode shootTypeBKey = KeyCode.Alpha2;
         [SerializeField] private KeyCode shootTypeTriangleKey = KeyCode.Alpha3;
 
+
         private GameObject lineObject;
+        private ParticleSystem activeParticleSystem;
         private Transform activeControllerTransform;
         private InputDevice activeDevice;
         private XRNode activeNode;
         private Vector3 lastRecordedPosition;
+        private AudioSource audioSource;
 
         /// <summary>
         /// Represents a shape template with its name and corresponding add function
@@ -114,6 +121,12 @@ namespace RuneGuardian
             activeNode = useRightHand ? XRNode.RightHand : XRNode.LeftHand;
             activeControllerTransform = useRightHand ? rightControllerTransform : leftControllerTransform;
             UpdateActiveDevice();
+
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                Debug.LogWarning("No AudioSource found on GestureRecognizerExample!");
+            }
 
             Debug.Log("Gesture Recognizer ready! Use VR controller trigger to draw.");
             if (enableKeyboardFallback)
@@ -206,11 +219,20 @@ namespace RuneGuardian
             isDrawing = true;
             currentGesture = new List<Vector2>();
             CreateLineRenderer();
+            CreateDrawingParticles();
             lastRecordedPosition = activeControllerTransform.position;
 
             // Add first point
             AddPoint(activeControllerTransform.position);
             Debug.Log("Started drawing gesture");
+
+            // Start playing looping draw sound
+            if (audioSource != null && drawLoopSound != null)
+            {
+                audioSource.clip = drawLoopSound;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
         }
 
         void ContinueDrawing()
@@ -222,6 +244,12 @@ namespace RuneGuardian
             {
                 AddPoint(currentPos);
                 lastRecordedPosition = currentPos;
+            }
+
+            // Update particle system position to follow controller
+            if (activeParticleSystem != null)
+            {
+                activeParticleSystem.transform.position = currentPos;
             }
         }
 
@@ -245,6 +273,14 @@ namespace RuneGuardian
             isDrawing = false;
             Debug.Log($"Stopped drawing. Points collected: {currentGesture.Count}");
 
+            // Stop looping draw sound and reset audio source
+            if (audioSource != null && audioSource.isPlaying)
+            {
+                audioSource.Stop();
+                audioSource.loop = false;
+            }
+
+            bool gestureRecognized = false;
             if (currentGesture.Count >= minPoints)
             {
                 var result = recognizer.Recognize(currentGesture);
@@ -253,6 +289,7 @@ namespace RuneGuardian
                 {
                     Debug.Log($"✓ Recognized: {result.Name} (Score: {result.Score:F2})");
                     OnValidGesture?.Invoke(result.TemplateIndex);
+                    gestureRecognized = true;
                 }
                 else
                 {
@@ -264,13 +301,20 @@ namespace RuneGuardian
                 Debug.Log($"Gesture too short! Need at least {minPoints} points, got {currentGesture.Count}");
             }
 
-            // Clean up line renderer
+            // Clean up line renderer and particles
             if (lineObject != null)
                 Destroy(lineObject, 0.5f);
+
+            if (activeParticleSystem != null)
+            {
+                // Stop emission and clear all existing particles immediately
+                activeParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                Destroy(activeParticleSystem.gameObject, 0.1f);
+                activeParticleSystem = null;
+            }
         }
 
 
-        // TODO(dragos): maybe add a sparkly effect when drawing
         void CreateLineRenderer()
         {
             lineObject = new GameObject("GestureLine");
@@ -284,6 +328,24 @@ namespace RuneGuardian
             lineRenderer.positionCount = 0;
             lineRenderer.useWorldSpace = true;
             lineRenderer.sortingOrder = 100;
+        }
+
+        void CreateDrawingParticles()
+        {
+            if (drawingParticlesPrefab != null)
+            {
+                GameObject particlesObj = Instantiate(drawingParticlesPrefab.gameObject, activeControllerTransform.position, Quaternion.identity);
+                activeParticleSystem = particlesObj.GetComponent<ParticleSystem>();
+
+                if (activeParticleSystem != null)
+                {
+                    activeParticleSystem.Play();
+
+                    // Set particle color to match drawing color
+                    var main = activeParticleSystem.main;
+                    main.startColor = drawColor;
+                }
+            }
         }
 
         void AddCircleTemplate()

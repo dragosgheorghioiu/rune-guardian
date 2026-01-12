@@ -14576,6 +14576,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  hitSound: {fileID: 8300000, guid: cfce0cea076109f478783201b2a9f57f, type: 3}
+  despawnSound: {fileID: 8300000, guid: aa967a280457c054bb646d57611f5bd0, type: 3}
 --- !u!1 &8068853965252763716
 GameObject:
   m_ObjectHideFlags: 0

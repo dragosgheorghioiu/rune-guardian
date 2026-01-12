@@ -100,6 +100,11 @@ public class SpawnedToy : MonoBehaviour
 
         OnStartedDespawn?.Invoke();
     }
+    
+    public bool IsCorrectSpell(ProjectileType projectileType)
+    {
+        return state == State.WaitingAtTarget && projectileType == requiredProjectile;
+    }
 
     private void SwapToHitVariant()
     {
