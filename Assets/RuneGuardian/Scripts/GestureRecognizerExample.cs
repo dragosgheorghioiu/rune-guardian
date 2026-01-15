@@ -29,6 +29,10 @@ namespace RuneGuardian
         [SerializeField] private Camera mainCamera;
         [SerializeField] private Color drawColor = Color.white;
         [SerializeField] private float lineWidth = 0.1f;
+        [SerializeField] private ParticleSystem drawingParticlesPrefab;
+
+        [Header("Audio Feedback")]
+        [SerializeField] private AudioClip drawLoopSound;
 
         [Header("VR Controller Settings")]
         [SerializeField] private Transform rightControllerTransform;
@@ -46,11 +50,14 @@ namespace RuneGuardian
         [SerializeField] private KeyCode shootTypeBKey = KeyCode.Alpha2;
         [SerializeField] private KeyCode shootTypeTriangleKey = KeyCode.Alpha3;
 
+
         private GameObject lineObject;
+        private ParticleSystem activeParticleSystem;
         private Transform activeControllerTransform;
         private InputDevice activeDevice;
         private XRNode activeNode;
         private Vector3 lastRecordedPosition;
+        private AudioSource audioSource;
 
         /// <summary>
         /// Represents a shape template with its name and corresponding add function
@@ -75,7 +82,7 @@ namespace RuneGuardian
         {
             if (inputData != null)
             {
-                minScore = inputData.gestureMinScore;
+                minScore = inputData.gestureMinScore / 100.0f;
             }
 
             recognizer = new Unistroke();
@@ -102,8 +109,6 @@ namespace RuneGuardian
                 shape.AddTemplateAction();
             }
 
-            Debug.Log("Gesture Recognizer initialized from RuneGuardianController!");
-
             mainCamera ??= Camera.main;
 
             if (rightControllerTransform == null || leftControllerTransform == null)
@@ -114,6 +119,12 @@ namespace RuneGuardian
             activeNode = useRightHand ? XRNode.RightHand : XRNode.LeftHand;
             activeControllerTransform = useRightHand ? rightControllerTransform : leftControllerTransform;
             UpdateActiveDevice();
+
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                Debug.LogWarning("No AudioSource found on GestureRecognizerExample!");
+            }
 
             Debug.Log("Gesture Recognizer ready! Use VR controller trigger to draw.");
             if (enableKeyboardFallback)
@@ -206,11 +217,20 @@ namespace RuneGuardian
             isDrawing = true;
             currentGesture = new List<Vector2>();
             CreateLineRenderer();
+            CreateDrawingParticles();
             lastRecordedPosition = activeControllerTransform.position;
 
             // Add first point
             AddPoint(activeControllerTransform.position);
             Debug.Log("Started drawing gesture");
+
+            // Start playing looping draw sound
+            if (audioSource != null && drawLoopSound != null)
+            {
+                audioSource.clip = drawLoopSound;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
         }
 
         void ContinueDrawing()
@@ -222,6 +242,12 @@ namespace RuneGuardian
             {
                 AddPoint(currentPos);
                 lastRecordedPosition = currentPos;
+            }
+
+            // Update particle system position to follow controller
+            if (activeParticleSystem != null)
+            {
+                activeParticleSystem.transform.position = currentPos;
             }
         }
 
@@ -245,6 +271,14 @@ namespace RuneGuardian
             isDrawing = false;
             Debug.Log($"Stopped drawing. Points collected: {currentGesture.Count}");
 
+            // Stop looping draw sound and reset audio source
+            if (audioSource != null && audioSource.isPlaying)
+            {
+                audioSource.Stop();
+                audioSource.loop = false;
+            }
+
+            bool gestureRecognized = false;
             if (currentGesture.Count >= minPoints)
             {
                 var result = recognizer.Recognize(currentGesture);
@@ -253,6 +287,7 @@ namespace RuneGuardian
                 {
                     Debug.Log($"✓ Recognized: {result.Name} (Score: {result.Score:F2})");
                     OnValidGesture?.Invoke(result.TemplateIndex);
+                    gestureRecognized = true;
                 }
                 else
                 {
@@ -264,13 +299,20 @@ namespace RuneGuardian
                 Debug.Log($"Gesture too short! Need at least {minPoints} points, got {currentGesture.Count}");
             }
 
-            // Clean up line renderer
+            // Clean up line renderer and particles
             if (lineObject != null)
                 Destroy(lineObject, 0.5f);
+
+            if (activeParticleSystem != null)
+            {
+                // Stop emission and clear all existing particles immediately
+                activeParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                Destroy(activeParticleSystem.gameObject, 0.1f);
+                activeParticleSystem = null;
+            }
         }
 
 
-        // TODO(dragos): maybe add a sparkly effect when drawing
         void CreateLineRenderer()
         {
             lineObject = new GameObject("GestureLine");
@@ -284,6 +326,24 @@ namespace RuneGuardian
             lineRenderer.positionCount = 0;
             lineRenderer.useWorldSpace = true;
             lineRenderer.sortingOrder = 100;
+        }
+
+        void CreateDrawingParticles()
+        {
+            if (drawingParticlesPrefab != null)
+            {
+                GameObject particlesObj = Instantiate(drawingParticlesPrefab.gameObject, activeControllerTransform.position, Quaternion.identity);
+                activeParticleSystem = particlesObj.GetComponent<ParticleSystem>();
+
+                if (activeParticleSystem != null)
+                {
+                    activeParticleSystem.Play();
+
+                    // Set particle color to match drawing color
+                    var main = activeParticleSystem.main;
+                    main.startColor = drawColor;
+                }
+            }
         }
 
         void AddCircleTemplate()
@@ -360,15 +420,25 @@ namespace RuneGuardian
 
         void AddStarTemplate()
         {
-            List<Vector2> star = new List<Vector2>();
+            // First, calculate all 5 points on a circle
+            List<Vector2> points = new List<Vector2>();
             int numPoints = 5;
-            for (int i = 0; i < numPoints * 2; i++)
+            for (int i = 0; i < numPoints; i++)
             {
-                float angle = i * Mathf.PI / numPoints - Mathf.PI / 2f;
-                float radius = i % 2 == 0 ? 100f : 50f;
-                star.Add(new Vector2(Mathf.Cos(angle) * radius + 100f, Mathf.Sin(angle) * radius + 100f));
+                float angle = i * 2f * Mathf.PI / numPoints - Mathf.PI / 2f;
+                points.Add(new Vector2(Mathf.Cos(angle) * 100f + 100f, Mathf.Sin(angle) * 100f + 100f));
             }
-            star.Add(star[0]); // Close the star
+
+            // Connect them in star order: 1, 3, 5, 2, 4, 1 (or 0, 2, 4, 1, 3, 0 in 0-based indexing)
+            List<Vector2> star = new List<Vector2>
+            {
+                points[0], // 1
+                points[2], // 3
+                points[4], // 5
+                points[1], // 2
+                points[3], // 4
+                points[0]  // back to 1 to close
+            };
             recognizer.AddTemplate("star", star);
         }
 
@@ -387,21 +457,17 @@ namespace RuneGuardian
 
         void AddXTemplate()
         {
-            // First stroke (top-left to bottom-right)
-            List<Vector2> x1 = new List<Vector2>
-        {
-            new Vector2(0, 0),
-            new Vector2(100, 100)
-        };
-            recognizer.AddTemplate("x", x1);
-
-            // Second stroke (top-right to bottom-left)
-            List<Vector2> x2 = new List<Vector2>
-        {
-            new Vector2(100, 0),
-            new Vector2(0, 100)
-        };
-            recognizer.AddTemplate("x", x2);
+            // Triangle shape with horizontal bar (like letter A)
+            // Draw: bottom-left → top → bottom-right → middle-right → middle-left
+            List<Vector2> x = new List<Vector2>
+            {
+                new Vector2(10, 100),    // bottom-left
+                new Vector2(50, 0),      // top (peak)
+                new Vector2(90, 100),    // bottom-right
+                new Vector2(60, 50),     // middle-right (shorter crossbar)
+                new Vector2(40, 50),     // middle-left (shorter crossbar)
+            };
+            recognizer.AddTemplate("x", x);
         }
 
         void AddDiamondTemplate()
@@ -437,6 +503,5 @@ namespace RuneGuardian
         };
             recognizer.AddTemplate("line", line);
         }
-
     }
 }

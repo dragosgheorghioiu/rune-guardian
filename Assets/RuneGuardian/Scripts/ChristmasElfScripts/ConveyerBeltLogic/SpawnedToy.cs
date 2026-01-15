@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 
@@ -101,6 +99,11 @@ public class SpawnedToy : MonoBehaviour
         state = State.MovingToDespawn;
 
         OnStartedDespawn?.Invoke();
+    }
+    
+    public bool IsCorrectSpell(ProjectileType projectileType)
+    {
+        return state == State.WaitingAtTarget && projectileType == requiredProjectile;
     }
 
     private void SwapToHitVariant()

@@ -30,9 +30,9 @@ namespace RuneGuardian
 
         // should be between 0 and 100
         public int gestureMinScore;
-        public int gestureMaxScore;
         
         public int numberOfToys;
+
 
     }
     /// <summary>
@@ -54,6 +54,9 @@ namespace RuneGuardian
         [SerializeField]
         protected InputData _inputData;
 
+        [SerializeField] 
+        private GameModeManager gameModeManager;
+
         [SerializeField]
         protected ClinicalUseController _clinicalUseController;
         [SerializeField]
@@ -63,19 +66,6 @@ namespace RuneGuardian
         void Start()
         {
 #if (UNITY_EDITOR)
-            OnInit(
-                "{\"gameMode\":\"0\"," +
-                "\"enabledDirtyObjects\":\"true\"," +
-                "\"enabledDestroyedObjects\":\"true\"," +
-                "\"enabledUncoloredObjects\":\"true\"," +
-                "\"dirtyObjectsDrawing\":\"0\"," +
-                "\"destroyedObjectsDrawing\":\"1\"," +
-                "\"uncoloredObjectsDrawing\":\"2\"," +
-                "\"gestureMinScore\":\"60\"," +
-                "\"gestureMaxScore\":\"90\"," +
-                "\"numberOfToys\":\"10\"}"
-            );
-            
             // Auto-start game in editor for testing
             Invoke("AutoStartGame", 1f);
 #endif
@@ -98,6 +88,10 @@ namespace RuneGuardian
         {
             _inputData = JsonUtility.FromJson<InputData>(json);
 
+            Debug.Log($"GAMEMODE {_inputData.gameMode}");
+
+            gameModeManager.PickMode(_inputData.gameMode);
+
             _clinicalUseController.Init(_inputData);
 
             _mainController = _clinicalUseController;
@@ -106,6 +100,8 @@ namespace RuneGuardian
         public override void OnInitHomeUse(string json)
         {
             _inputData = JsonUtility.FromJson<InputData>(json);
+
+            gameModeManager.PickMode(_inputData.gameMode);
 
             _homeUseController.Init(_inputData);
 

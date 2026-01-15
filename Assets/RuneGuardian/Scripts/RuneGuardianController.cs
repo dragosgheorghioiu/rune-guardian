@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace RuneGuardian
 {
@@ -10,16 +9,16 @@ namespace RuneGuardian
         public static Action<InputData> OnRuneGuardianInit;
         private InputData _inputData;
 
+
         public RuneGuardianController(InputData inputData)
         {
             _inputData = inputData;
+
             OnRuneGuardianInit?.Invoke(inputData);
         }
 
         public void UpdateGame(InputData inputData)
         {
-            Debug.Log("RuneGuardianController UpdateGame called");
-
             _inputData = inputData;
 
             Debug.Log(inputData);
@@ -27,7 +26,6 @@ namespace RuneGuardian
 
         public void StartGame()
         {
-            Debug.Log("RuneGuardianController StartGame called");
         }
 
         public void StopGame()

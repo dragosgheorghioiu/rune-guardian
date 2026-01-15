@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using RuneGuardian;
 using UnityEngine;
@@ -24,15 +23,15 @@ public class RandomToySpawner : MonoBehaviour
 
     private void OnEnable()
     {
-       RuneGuardianController.OnRuneGuardianInit += Init;
-       RuneGuardianController.onRuneGuardianStart += SpawnRandom; 
-       SpawnedToy.onToyDespawn += DelayedSpawnRandom; 
+        RuneGuardianController.OnRuneGuardianInit += Init;
+        RuneGuardianController.onRuneGuardianStart += SpawnRandom;
+        SpawnedToy.onToyDespawn += DelayedSpawnRandom;
     }
     private void OnDisable()
     {
-       RuneGuardianController.onRuneGuardianStart -= SpawnRandom; 
-       RuneGuardianController.OnRuneGuardianInit -= Init;
-       SpawnedToy.onToyDespawn -= DelayedSpawnRandom; 
+        RuneGuardianController.onRuneGuardianStart -= SpawnRandom;
+        RuneGuardianController.OnRuneGuardianInit -= Init;
+        SpawnedToy.onToyDespawn -= DelayedSpawnRandom;
     }
 
     public void Init(InputData inputData)
@@ -48,6 +47,7 @@ public class RandomToySpawner : MonoBehaviour
     {
         if (numberOfSpawnedToys >= maxToyNumber)
         {
+            Debug.Log("Game end");
             conveyor.StopConveyor();
             return;
         } 
@@ -57,11 +57,6 @@ public class RandomToySpawner : MonoBehaviour
 
     public void SpawnRandom()
     {
-        if (numberOfSpawnedToys >= maxToyNumber) {
-            // TODO: here should shoot an event of end game
-            Debug.Log("Game end");
-            return;
-        }
         if (prefabs == null || prefabs.Length == 0)
         {
             Debug.LogWarning("No prefabs set in RandomToySpawner");

@@ -196,6 +196,15 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.postprocessing": {
+      "version": "3.5.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.modules.physics": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.render-pipelines.core": {
       "version": "14.0.12",
       "depth": 1,
@@ -377,6 +386,15 @@
         "com.unity.xr.legacyinputhelpers": "2.1.2"
       },
       "url": "https://packages.unity.com"
+    },
+    "io.z3y.github.shadergraph": {
+      "version": "https://github.com/z3y/ShaderGraphVRC.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.shadergraph": "14.0.10"
+      },
+      "hash": "06f7fe1b209c11e32045883d1a6f54e37dfb5b82"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

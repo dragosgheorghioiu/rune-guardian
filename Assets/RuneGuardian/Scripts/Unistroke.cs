@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -111,7 +110,14 @@ namespace RuneGuardian
             points = ScaleToSquare(points, SquareSize);
             points = TranslateToOrigin(points);
 
-            // Find the best match
+            // Also create a reversed version to match flipped drawings
+            List<Vector2> reversedPoints = new List<Vector2>(points);
+            reversedPoints.Reverse();
+            reversedPoints = RotateToZero(reversedPoints);
+            reversedPoints = ScaleToSquare(reversedPoints, SquareSize);
+            reversedPoints = TranslateToOrigin(reversedPoints);
+
+            // Find the best match (checking both directions)
             float bestDistance = float.MaxValue;
             GestureTemplate bestTemplate = null;
             int bestTemplateIndex = -1;
@@ -119,12 +125,21 @@ namespace RuneGuardian
             for (int i = 0; i < Templates.Count; i++)
             {
                 var template = Templates[i];
+                
+                // Check normal direction
                 float distance = DistanceAtBestAngle(points, template.Points,
                     -AngleRange, AngleRange, AnglePrecision);
 
-                if (distance < bestDistance)
+                // Check reversed direction
+                float reversedDistance = DistanceAtBestAngle(reversedPoints, template.Points,
+                    -AngleRange, AngleRange, AnglePrecision);
+
+                // Use the better match
+                float minDistance = Mathf.Min(distance, reversedDistance);
+
+                if (minDistance < bestDistance)
                 {
-                    bestDistance = distance;
+                    bestDistance = minDistance;
                     bestTemplate = template;
                     bestTemplateIndex = i;
                 }

@@ -26,6 +26,11 @@ public class InputDataEditor : Editor
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
     }
 
+    void OnDestroy()
+    {
+        EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+    }
+
     void OnEnable()
     {
         _inputData = serializedObject.FindProperty("InputData");
