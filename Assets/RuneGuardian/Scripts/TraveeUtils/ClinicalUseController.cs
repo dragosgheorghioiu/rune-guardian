@@ -36,8 +36,6 @@ namespace RuneGuardian
         public void UpdateGame(InputData inputData)
         {
             _inputData = inputData;
-
-            Debug.Log("ClinicalUseController UpdateGame called");
         }
 
         public void StopGame()

@@ -109,8 +109,6 @@ namespace RuneGuardian
                 shape.AddTemplateAction();
             }
 
-            Debug.Log("Gesture Recognizer initialized from RuneGuardianController!");
-
             mainCamera ??= Camera.main;
 
             if (rightControllerTransform == null || leftControllerTransform == null)

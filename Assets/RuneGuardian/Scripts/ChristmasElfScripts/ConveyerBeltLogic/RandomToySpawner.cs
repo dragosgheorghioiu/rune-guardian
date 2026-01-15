@@ -47,6 +47,7 @@ public class RandomToySpawner : MonoBehaviour
     {
         if (numberOfSpawnedToys >= maxToyNumber)
         {
+            Debug.Log("Game end");
             conveyor.StopConveyor();
             return;
         } 
@@ -56,11 +57,6 @@ public class RandomToySpawner : MonoBehaviour
 
     public void SpawnRandom()
     {
-        if (numberOfSpawnedToys >= maxToyNumber) {
-            // TODO: here should shoot an event of end game
-            Debug.Log("Game end");
-            return;
-        }
         if (prefabs == null || prefabs.Length == 0)
         {
             Debug.LogWarning("No prefabs set in RandomToySpawner");
