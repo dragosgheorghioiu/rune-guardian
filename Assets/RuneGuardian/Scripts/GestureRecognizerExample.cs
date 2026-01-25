@@ -39,6 +39,12 @@ namespace RuneGuardian
         [SerializeField] private Transform leftControllerTransform;
         [SerializeField] private bool useRightHand = true;
 
+        [Header("Hand Tracking (Pinch)")]
+        [SerializeField] private OVRHand rightOVRHand;
+        [SerializeField] private OVRHand leftOVRHand;
+        [SerializeField] private Transform rightIndexTip;
+        [SerializeField] private Transform leftIndexTip;
+
         [Header("Recognition Settings")]
         [SerializeField] private int minPoints = 10;
         [SerializeField] private float minScore = 0.5f;
@@ -58,6 +64,8 @@ namespace RuneGuardian
         private XRNode activeNode;
         private Vector3 lastRecordedPosition;
         private AudioSource audioSource;
+        private bool isPinchDrawing = false;
+        private OVRHand.HandFinger pinchFinger = OVRHand.HandFinger.Index;
 
         /// <summary>
         /// Represents a shape template with its name and corresponding add function
@@ -181,50 +189,82 @@ namespace RuneGuardian
                 }
             }
 
-            // VR Controller handling
-            if (!activeDevice.isValid)
-                UpdateActiveDevice();
+            // Hand tracking pinch detection (both hands)
+            bool rightTracked = rightOVRHand != null && rightOVRHand.IsTracked;
+            bool leftTracked = leftOVRHand != null && leftOVRHand.IsTracked;
+            bool handTracked = rightTracked || leftTracked;
+            bool rightPinching = rightTracked && rightOVRHand.GetFingerIsPinching(pinchFinger);
+            bool leftPinching = leftTracked && leftOVRHand.GetFingerIsPinching(pinchFinger);
+            bool anyPinching = rightPinching || leftPinching;
 
-            if (!activeDevice.isValid || activeControllerTransform == null)
+            Transform drawingTransform = null;
+            if (rightPinching && rightIndexTip != null)
+                drawingTransform = rightIndexTip;
+            else if (leftPinching && leftIndexTip != null)
+                drawingTransform = leftIndexTip;
+
+            // Only allow hand drawing if a hand is tracked
+            if (handTracked)
+            {
+                if (anyPinching && drawingTransform != null && !isDrawing)
+                {
+                    StartDrawing(drawingTransform);
+                }
+                else if (anyPinching && isDrawing && drawingTransform != null)
+                {
+                    ContinueDrawing(drawingTransform);
+                }
+                else if (!anyPinching && isDrawing)
+                {
+                    StopDrawing();
+                }
+                // Do not allow controller drawing if hands are tracked
                 return;
-
-            // Get grip button (side trigger) instead of main trigger to avoid jumps
-            bool triggerPressed = false;
-            if (activeDevice.TryGetFeatureValue(CommonUsages.gripButton, out bool gripButton))
-            {
-                triggerPressed = gripButton;
             }
 
-            // Start drawing
-            if (triggerPressed && !isDrawing)
+            // Only allow controller drawing if no hands are tracked
+            if (!handTracked)
             {
-                StartDrawing();
-            }
-            // Continue drawing
-            else if (triggerPressed && isDrawing)
-            {
-                ContinueDrawing();
-            }
-            // Stop drawing
-            else if (!triggerPressed && isDrawing)
-            {
-                StopDrawing();
+                if (!activeDevice.isValid)
+                    UpdateActiveDevice();
+
+                if (!activeDevice.isValid || activeControllerTransform == null)
+                    return;
+
+                // Get grip button (side trigger) instead of main trigger to avoid jumps
+                bool triggerPressed = false;
+                if (activeDevice.TryGetFeatureValue(CommonUsages.gripButton, out bool gripButton))
+                {
+                    triggerPressed = gripButton;
+                }
+
+                // Start drawing
+                if (triggerPressed && !isDrawing)
+                {
+                    StartDrawing(activeControllerTransform);
+                }
+                // Continue drawing
+                else if (triggerPressed && isDrawing)
+                {
+                    ContinueDrawing(activeControllerTransform);
+                }
+                // Stop drawing
+                else if (!triggerPressed && isDrawing)
+                {
+                    StopDrawing();
+                }
             }
         }
 
-        void StartDrawing()
+        void StartDrawing(Transform drawTransform)
         {
             isDrawing = true;
             currentGesture = new List<Vector2>();
             CreateLineRenderer();
-            CreateDrawingParticles();
-            lastRecordedPosition = activeControllerTransform.position;
-
-            // Add first point
-            AddPoint(activeControllerTransform.position);
+            CreateDrawingParticlesAt(drawTransform.position);
+            lastRecordedPosition = drawTransform.position;
+            AddPoint(drawTransform.position);
             Debug.Log("Started drawing gesture");
-
-            // Start playing looping draw sound
             if (audioSource != null && drawLoopSound != null)
             {
                 audioSource.clip = drawLoopSound;
@@ -233,21 +273,33 @@ namespace RuneGuardian
             }
         }
 
-        void ContinueDrawing()
+        void ContinueDrawing(Transform drawTransform)
         {
-            Vector3 currentPos = activeControllerTransform.position;
-
-            // Only add point if controller has moved enough
+            Vector3 currentPos = drawTransform.position;
             if (Vector3.Distance(currentPos, lastRecordedPosition) >= minPointDistance)
             {
                 AddPoint(currentPos);
                 lastRecordedPosition = currentPos;
             }
-
-            // Update particle system position to follow controller
             if (activeParticleSystem != null)
             {
                 activeParticleSystem.transform.position = currentPos;
+            }
+        }
+
+        // Create particles at a specific position
+        private void CreateDrawingParticlesAt(Vector3 position)
+        {
+            if (drawingParticlesPrefab != null)
+            {
+                GameObject particlesObj = Instantiate(drawingParticlesPrefab.gameObject, position, Quaternion.identity);
+                activeParticleSystem = particlesObj.GetComponent<ParticleSystem>();
+                if (activeParticleSystem != null)
+                {
+                    activeParticleSystem.Play();
+                    var main = activeParticleSystem.main;
+                    main.startColor = drawColor;
+                }
             }
         }
 
