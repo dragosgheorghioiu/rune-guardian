@@ -1,127 +1,78 @@
-Shader "Custom/PortalReveal"
+Shader "URP/PortalReveal"
 {
  Properties
     {
-        _MainTex ("Albedo", 2D) = "white" {}
-        _Color ("Color", Color) = (1,1,1,1)
-
-        [Normal] _BumpMap ("Normal Map", 2D) = "bump" {}
+        _BaseMap ("Albedo", 2D) = "white" {}
+        _BaseColor ("Color", Color) = (1,1,1,1)
+        _BumpMap ("Normal Map", 2D) = "bump" {}
         _BumpScale ("Normal Strength", Range(0,2)) = 1
-
         _Metallic ("Metallic", Range(0,1)) = 0
         _Smoothness ("Smoothness", Range(0,1)) = 0.5
-
-        _DepthCutoff ("Depth Write Cutoff (0..1)", Range(0,1)) = 0.2
+        _PortalPlanePos ("Portal Plane Pos", Vector) = (0,0,0,0)
+        _PortalPlaneNormal ("Portal Plane Normal", Vector) = (0,1,0,0)
+        _PortalFadeWidth ("Portal Fade Width", Float) = 0.5
     }
 
     SubShader
     {
-        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+        Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         LOD 300
         Cull Back
-
         Pass
         {
-            Tags { "LightMode"="Always" }
-            ZWrite On
-            ZTest LEqual
-            ColorMask 0
-
-            CGPROGRAM
-            #pragma target 3.0
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #include "UnityCG.cginc"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-            float3 _PortalPlanePos;
-            float3 _PortalPlaneNormal;
-            float _PortalFadeWidth;
-            float _DepthCutoff;
-
-            struct appdata
+            struct Attributes
             {
-                float4 vertex : POSITION;
+                float4 positionOS : POSITION;
+                float2 uv : TEXCOORD0;
             };
 
-            struct v2f
+            struct Varyings
             {
-                float4 pos  : SV_POSITION;
-                float3 wpos : TEXCOORD0;
+                float4 positionHCS : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                float3 worldPos : TEXCOORD1;
             };
 
-            v2f vert(appdata v)
+            CBUFFER_START(UnityPerMaterial)
+                float4 _BaseColor;
+                float _BumpScale;
+                float _Metallic;
+                float _Smoothness;
+                float3 _PortalPlanePos;
+                float3 _PortalPlaneNormal;
+                float _PortalFadeWidth;
+            CBUFFER_END
+
+            TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
+            TEXTURE2D(_BumpMap); SAMPLER(sampler_BumpMap);
+
+            Varyings vert(Attributes IN)
             {
-                v2f o;
-                o.pos  = UnityObjectToClipPos(v.vertex);
-                o.wpos = mul(unity_ObjectToWorld, v.vertex).xyz;
-                return o;
+                Varyings OUT;
+                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                OUT.uv = IN.uv;
+                OUT.worldPos = TransformObjectToWorld(IN.positionOS.xyz);
+                return OUT;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            half4 frag(Varyings IN) : SV_Target
             {
-                float d = dot(i.wpos - _PortalPlanePos, normalize(_PortalPlaneNormal));
-
+                float d = dot(IN.worldPos - _PortalPlanePos, normalize(_PortalPlaneNormal));
                 if (d < -_PortalFadeWidth) discard;
-
                 float a = saturate((d + _PortalFadeWidth) / max(_PortalFadeWidth, 1e-5));
-
-                if (a < _DepthCutoff) discard;
-
-                return 0;
+                half4 c = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv) * _BaseColor;
+                if (a < 0.01) discard;
+                c.a *= a;
+                return c;
             }
-            ENDCG
+            ENDHLSL
         }
-
-
-        Blend SrcAlpha OneMinusSrcAlpha
-        ZWrite Off
-        ZTest LEqual
-
-        CGPROGRAM
-        #pragma target 3.0
-        #pragma surface surf Standard fullforwardshadows alpha:fade
-        #include "UnityStandardUtils.cginc"
-
-        sampler2D _MainTex;
-        fixed4 _Color;
-
-        sampler2D _BumpMap;
-        half _BumpScale;
-
-        half _Metallic;
-        half _Smoothness;
-
-        float3 _PortalPlanePos;
-        float3 _PortalPlaneNormal;
-        float _PortalFadeWidth;
-
-        struct Input
-        {
-            float2 uv_MainTex;
-            float2 uv_BumpMap;
-            float3 worldPos;
-        };
-
-        void surf (Input IN, inout SurfaceOutputStandard o)
-        {
-            float3 n = normalize(_PortalPlaneNormal);
-            float d = dot(IN.worldPos - _PortalPlanePos, n);
-
-            if (d < -_PortalFadeWidth)
-                clip(-1);
-
-            float a = saturate((d + _PortalFadeWidth) / max(_PortalFadeWidth, 1e-5));
-
-            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
-
-            o.Albedo = c.rgb;
-            o.Metallic = _Metallic;
-            o.Smoothness = _Smoothness;
-            o.Normal = UnpackScaleNormal(tex2D(_BumpMap, IN.uv_BumpMap), _BumpScale);
-            o.Alpha = c.a * a;
-        }
-        ENDCG
     }
 
-    FallBack "Standard"
+    FallBack "Universal Forward"
 }
