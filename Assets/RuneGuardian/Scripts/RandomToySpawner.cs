@@ -12,6 +12,7 @@ public class RandomToySpawner : MonoBehaviour
 
     private static int numberOfSpawnedToys = 0;
     private static int maxToyNumber = 0;
+    private static Quaternion extraToyRotation;
 
     [Header("Spawnable prefabs (3)")]
     [SerializeField] private SpawnedToy[] prefabs;
@@ -24,14 +25,10 @@ public class RandomToySpawner : MonoBehaviour
     private void OnEnable()
     {
         RuneGuardianController.OnRuneGuardianInit += Init;
-        RuneGuardianController.onRuneGuardianStart += SpawnRandom;
-        SpawnedToy.onToyDespawn += DelayedSpawnRandom;
     }
     private void OnDisable()
     {
-        RuneGuardianController.onRuneGuardianStart -= SpawnRandom;
         RuneGuardianController.OnRuneGuardianInit -= Init;
-        SpawnedToy.onToyDespawn -= DelayedSpawnRandom;
     }
 
     public void Init(InputData inputData)
@@ -41,6 +38,7 @@ public class RandomToySpawner : MonoBehaviour
         if (inputData.enabledDestroyedObjects) validToys.Add(1);
         if (inputData.enabledUncoloredObjects) validToys.Add(2);
         maxToyNumber = inputData.numberOfToys;
+        extraToyRotation = inputData.gameMode == GameMode.GRID ? Quaternion.Euler(0.0f, -90.0f, 0.0f) : Quaternion.identity; 
     }
 
     public async void DelayedSpawnRandom()
@@ -69,7 +67,7 @@ public class RandomToySpawner : MonoBehaviour
         }
 
         int idx = Random.Range(0, validToys.Count);
-        current = Instantiate(prefabs[validToys[idx]], spawnPoint.position, spawnPoint.rotation);
+        current = Instantiate(prefabs[validToys[idx]], spawnPoint.position, spawnPoint.rotation * extraToyRotation);
         current.Init(targetPoint, despawnPoint);
         ++numberOfSpawnedToys;
 
