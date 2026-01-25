@@ -109173,9 +109173,21 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8551012234837049965, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
+      propertyPath: m_ReceiveGI
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551012234837049965, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
       propertyPath: m_MaterialTemplate
       value: 
       objectReference: {fileID: 2100000, guid: 847440c6197cb4a43bfe559b6a8cc488, type: 2}
+    - target: {fileID: 8551012234837049965, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
+      propertyPath: m_TreeCrossFadeLength
+      value: 10.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551012234837049965, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
+      propertyPath: m_TreeBillboardDistance
+      value: 172
+      objectReference: {fileID: 0}
     - target: {fileID: 8551012234837049966, guid: 2a16ca8b00f609249b491931cca66764, type: 3}
       propertyPath: m_IsActive
       value: 1
