@@ -27,28 +27,24 @@ public class SpellProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log($"Projectile of type {type} collided with {collision.collider.name}");
         var obj = collision.collider.GetComponentInParent<SpawnedToy>();
         if (obj != null)
         {
             // Check if it's the correct spell before hitting
             hitCorrectSpell = obj.IsCorrectSpell(type);
-            
             obj.TryHit(type);
-
-            // Play appropriate effects
             if (hitCorrectSpell)
             {
-                // Correct spell - play hit sound
                 PlayHitEffects(collision.contacts[0].point);
+                DestroyProjectile();
+                return;
             }
-            else
-            {
-                // Wrong spell - play despawn sound
-                PlayDespawnEffects(collision.contacts[0].point);
-            }
-
-            DestroyProjectile();
         }
+
+        // Despawn on any collision (unless correct spell hit above)
+        PlayDespawnEffects(collision.contacts[0].point);
+        DestroyProjectile();
     }
 
     private void OnDestroy()

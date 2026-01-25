@@ -7,7 +7,7 @@ namespace RuneGuardian
 {
     public class GestureRecognizerExample : MonoBehaviour
     {
-        public static event Action<int> OnValidGesture;
+        public static event Action<int, Vector3> OnValidGesture;
 
         void OnEnable()
         {
@@ -26,7 +26,7 @@ namespace RuneGuardian
 
         [Header("Visual Feedback")]
         [SerializeField] private LineRenderer lineRenderer;
-        [SerializeField] private Camera mainCamera;
+        [SerializeField] public Camera mainCamera;
         [SerializeField] private Color drawColor = Color.white;
         [SerializeField] private float lineWidth = 0.1f;
         [SerializeField] private ParticleSystem drawingParticlesPrefab;
@@ -64,7 +64,6 @@ namespace RuneGuardian
         private XRNode activeNode;
         private Vector3 lastRecordedPosition;
         private AudioSource audioSource;
-        private bool isPinchDrawing = false;
         private OVRHand.HandFinger pinchFinger = OVRHand.HandFinger.Index;
 
         /// <summary>
@@ -177,15 +176,15 @@ namespace RuneGuardian
             {
                 if (Input.GetKeyDown(shootTypeAKey))
                 {
-                    OnValidGesture?.Invoke(0);
+                    OnValidGesture?.Invoke(0, Vector3.zero);
                 }
                 else if (Input.GetKeyDown(shootTypeBKey))
                 {
-                    OnValidGesture?.Invoke(1);
+                    OnValidGesture?.Invoke(1, Vector3.zero);
                 }
                 else if (Input.GetKeyDown(shootTypeTriangleKey))
                 {
-                    OnValidGesture?.Invoke(2);
+                    OnValidGesture?.Invoke(2, Vector3.zero);
                 }
             }
 
@@ -203,56 +202,63 @@ namespace RuneGuardian
             else if (leftPinching && leftIndexTip != null)
                 drawingTransform = leftIndexTip;
 
-            // Only allow hand drawing if a hand is tracked
-            if (handTracked)
+            // Check if controller grip is pressed
+            bool controllerGripPressed = false;
+            bool controllerTracked = false;
+            if (!activeDevice.isValid)
+                UpdateActiveDevice();
+            if (activeDevice.isValid && activeControllerTransform != null)
             {
-                if (anyPinching && drawingTransform != null && !isDrawing)
+                if (activeDevice.TryGetFeatureValue(CommonUsages.gripButton, out bool gripButton))
                 {
-                    StartDrawing(drawingTransform);
+                    controllerGripPressed = gripButton;
                 }
-                else if (anyPinching && isDrawing && drawingTransform != null)
+                if (activeDevice.TryGetFeatureValue(CommonUsages.isTracked, out bool isTracked))
                 {
-                    ContinueDrawing(drawingTransform);
+                    controllerTracked = isTracked;
                 }
-                else if (!anyPinching && isDrawing)
+            }
+
+            // If controller grip is pressed and controller is tracked, prioritize controller drawing and ignore hand tracking completely
+            if (controllerTracked && activeControllerTransform != null)
+            {
+                if (controllerGripPressed)
+                {
+                    if (!isDrawing)
+                    {
+                        StartDrawing(activeControllerTransform);
+                    }
+                    else
+                    {
+                        ContinueDrawing(activeControllerTransform);
+                    }
+                }
+                else if (isDrawing)
                 {
                     StopDrawing();
                 }
-                // Do not allow controller drawing if hands are tracked
                 return;
             }
 
-            // Only allow controller drawing if no hands are tracked
-            if (!handTracked)
+            // Only allow hand tracking drawing if the controller is not being used
+            if (handTracked && !controllerTracked)
             {
-                if (!activeDevice.isValid)
-                    UpdateActiveDevice();
-
-                if (!activeDevice.isValid || activeControllerTransform == null)
-                    return;
-
-                // Get grip button (side trigger) instead of main trigger to avoid jumps
-                bool triggerPressed = false;
-                if (activeDevice.TryGetFeatureValue(CommonUsages.gripButton, out bool gripButton))
+                if (anyPinching && drawingTransform != null)
                 {
-                    triggerPressed = gripButton;
+                    if (!isDrawing)
+                    {
+                        StartDrawing(drawingTransform);
+                    }
+                    else
+                    {
+                        ContinueDrawing(drawingTransform);
+                    }
                 }
-
-                // Start drawing
-                if (triggerPressed && !isDrawing)
-                {
-                    StartDrawing(activeControllerTransform);
-                }
-                // Continue drawing
-                else if (triggerPressed && isDrawing)
-                {
-                    ContinueDrawing(activeControllerTransform);
-                }
-                // Stop drawing
-                else if (!triggerPressed && isDrawing)
+                else if (isDrawing)
                 {
                     StopDrawing();
                 }
+                return;
             }
         }
 
@@ -330,7 +336,6 @@ namespace RuneGuardian
                 audioSource.loop = false;
             }
 
-            bool gestureRecognized = false;
             if (currentGesture.Count >= minPoints)
             {
                 var result = recognizer.Recognize(currentGesture);
@@ -338,8 +343,11 @@ namespace RuneGuardian
                 if (result.Score >= minScore)
                 {
                     Debug.Log($"✓ Recognized: {result.Name} (Score: {result.Score:F2})");
-                    OnValidGesture?.Invoke(result.TemplateIndex);
-                    gestureRecognized = true;
+                    // Get the last drawn world position from the line renderer
+                    Vector3 lastPoint = Vector3.zero;
+                    if (lineRenderer != null && lineRenderer.positionCount > 0)
+                        lastPoint = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
+                    OnValidGesture?.Invoke(result.TemplateIndex, lastPoint);
                 }
                 else
                 {
@@ -554,6 +562,11 @@ namespace RuneGuardian
             new Vector2(100, 50)
         };
             recognizer.AddTemplate("line", line);
+        }
+
+        public bool IsGridModeActive()
+        {
+            return GameModeManager.CurrentMode.ToString() == "GRID";
         }
     }
 }
