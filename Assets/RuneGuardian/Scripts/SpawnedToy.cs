@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Threading.Tasks;
+using System.Collections;
 
 public class SpawnedToy : MonoBehaviour
 {
@@ -23,35 +24,60 @@ public class SpawnedToy : MonoBehaviour
 
     private Transform targetPoint;
     private Transform despawnPoint;
+    private Transform portalPoint;
 
-    private enum State { MovingToTarget, WaitingAtTarget, MovingToDespawn }
+    private enum State { MovingToPortal, MovingToTarget, WaitingAtTarget, MovingBackToPortal, MovingToDespawn }
     private State state;
-
-    private GameObject _currentVariantInstance;
 
     public System.Action OnArrivedTarget;
     public System.Action OnStartedDespawn;
 
+    private CanvasGroup canvasGroup;
+    private bool isFadingIn = false;
+    private bool isFadingOut = false;
+    private float fadeStartDistance = 1.0f;
+
     private void Awake()
     {
-        if (normalModel != null) normalModel.SetActive(true);
+        if (normalModel != null) normalModel.SetActive(false);
         if (hitModel != null) hitModel.SetActive(false);
     }
 
-    public void Init(Transform tPoint, Transform dPoint)
+    public void Init(Transform tPoint, Transform dPoint, Transform pPoint)
     {
         targetPoint = tPoint;
         despawnPoint = dPoint;
-        state = State.MovingToTarget;
-
+        portalPoint = pPoint;
+        
         if (variantAnchor == null) variantAnchor = transform;
-    }
 
+        if (portalPoint != null)
+        {
+            state = State.MovingToPortal;
+        }
+    }
+    
     private void Update()
     {
         if (targetPoint == null || despawnPoint == null) return;
 
-        if (state == State.MovingToTarget)
+        if (state == State.MovingToPortal)
+        {
+            MoveTowards(portalPoint.position);
+            float distanceToPortal = Vector3.Distance(transform.position, portalPoint.position);
+
+            if (distanceToPortal <= fadeStartDistance && !isFadingIn)
+            {
+                isFadingIn = true;
+                StartCoroutine(FadeVisibility(true));
+            }
+
+            if (distanceToPortal <= arriveDistance)
+            {
+                state = State.MovingToTarget;
+            }
+        }
+        else if (state == State.MovingToTarget)
         {
             MoveTowards(targetPoint.position);
 
@@ -59,6 +85,22 @@ public class SpawnedToy : MonoBehaviour
             {
                 state = State.WaitingAtTarget;
                 OnArrivedTarget?.Invoke();
+            }
+        }
+        else if (state == State.MovingBackToPortal)
+        {
+            MoveTowards(portalPoint.position);
+            float distanceToPortal = Vector3.Distance(transform.position, portalPoint.position);
+
+            if (distanceToPortal <= fadeStartDistance && !isFadingOut)
+            {
+                isFadingOut = true;
+                StartCoroutine(FadeVisibility(false));
+            }
+
+            if (distanceToPortal <= arriveDistance)
+            {
+                state = State.MovingToDespawn;
             }
         }
         else if (state == State.MovingToDespawn)
@@ -80,15 +122,9 @@ public class SpawnedToy : MonoBehaviour
 
     async public void TryHit(ProjectileType projectileType)
     {
-        // ignora deocamdata proiectilul daca nu a ajuns la target
-        if (state != State.WaitingAtTarget)
-            return;
+        if (state != State.WaitingAtTarget) return;
+        if (projectileType != requiredProjectile) return;
 
-        // daca nu e lovit de proiectilul asociat
-        if (projectileType != requiredProjectile)
-            return;
-
-        // hit by correct projectile
         onToyHit?.Invoke();
         await Task.Delay(1000);
 
@@ -96,8 +132,8 @@ public class SpawnedToy : MonoBehaviour
         onToyRepaired?.Invoke();
 
         await Task.Delay(2500);
-        state = State.MovingToDespawn;
 
+        state = State.MovingBackToPortal;
         OnStartedDespawn?.Invoke();
     }
     
@@ -110,5 +146,37 @@ public class SpawnedToy : MonoBehaviour
     {
         if (normalModel != null) normalModel.SetActive(false);
         if (hitModel != null) hitModel.SetActive(true);
+    }
+
+    private IEnumerator FadeVisibility(bool fadeIn)
+    {
+        float duration = 0.5f;
+        float elapsed = 0f;
+
+        if (fadeIn)
+        {
+            if (normalModel != null) normalModel.SetActive(true);
+            if (hitModel != null) hitModel.SetActive(false);
+        }
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = fadeIn ? (elapsed / duration) : (1f - elapsed / duration);
+
+            if (normalModel != null)
+            {
+                var canvasGroup = normalModel.GetComponent<CanvasGroup>();
+                if (canvasGroup != null) canvasGroup.alpha = alpha;
+            }
+
+            yield return null;
+        }
+
+        if (!fadeIn)
+        {
+            if (normalModel != null) normalModel.SetActive(false);
+            if (hitModel != null) hitModel.SetActive(false);
+        }
     }
 }

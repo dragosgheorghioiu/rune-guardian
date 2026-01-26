@@ -9,10 +9,11 @@ public class RandomToySpawner : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Transform targetPoint;
     [SerializeField] private Transform despawnPoint;
+    [SerializeField] private Transform portalPoint;
 
     private static int numberOfSpawnedToys = 0;
     private static int maxToyNumber = 0;
-    private static Quaternion extraToyRotation;
+    private static Quaternion extraToyRotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
 
     [Header("Spawnable prefabs (3)")]
     [SerializeField] private SpawnedToy[] prefabs;
@@ -38,7 +39,6 @@ public class RandomToySpawner : MonoBehaviour
         if (inputData.enabledDestroyedObjects) validToys.Add(1);
         if (inputData.enabledUncoloredObjects) validToys.Add(2);
         maxToyNumber = inputData.numberOfToys;
-        extraToyRotation = inputData.gameMode == GameMode.GRID ? Quaternion.Euler(0.0f, -90.0f, 0.0f) : Quaternion.identity; 
     }
 
     public async void DelayedSpawnRandom()
@@ -68,7 +68,7 @@ public class RandomToySpawner : MonoBehaviour
 
         int idx = Random.Range(0, validToys.Count);
         current = Instantiate(prefabs[validToys[idx]], spawnPoint.position, spawnPoint.rotation * extraToyRotation);
-        current.Init(targetPoint, despawnPoint);
+        current.Init(targetPoint, despawnPoint, portalPoint);
         ++numberOfSpawnedToys;
 
         conveyor?.StartConveyor();
