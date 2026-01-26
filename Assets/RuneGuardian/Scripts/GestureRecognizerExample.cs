@@ -37,7 +37,7 @@ namespace RuneGuardian
         [Header("VR Controller Settings")]
         [SerializeField] private Transform rightControllerTransform;
         [SerializeField] private Transform leftControllerTransform;
-        [SerializeField] private bool useRightHand = true;
+        [SerializeField] private bool useRightHand;
 
         [Header("Hand Tracking (Pinch)")]
         [SerializeField] private OVRHand rightOVRHand;
@@ -123,7 +123,20 @@ namespace RuneGuardian
                 FindVRControllers();
             }
 
+            useRightHand = inputData.useRightHand;
             activeNode = useRightHand ? XRNode.RightHand : XRNode.LeftHand;
+            pinchFinger = inputData.pinchFingerIndex switch
+            {
+                PinchFinger.INDEX => OVRHand.HandFinger.Index,
+                PinchFinger.MIDDLE => OVRHand.HandFinger.Middle,
+                PinchFinger.PINKY => OVRHand.HandFinger.Pinky,
+                PinchFinger.RING => OVRHand.HandFinger.Ring,
+                _ => OVRHand.HandFinger.Index
+            };
+
+            Debug.Log($"PINCH FINGER {pinchFinger}");
+            Debug.Log($"RIGHT HAND {useRightHand}");
+
             activeControllerTransform = useRightHand ? rightControllerTransform : leftControllerTransform;
             UpdateActiveDevice();
 
@@ -189,8 +202,8 @@ namespace RuneGuardian
             }
 
             // Hand tracking pinch detection (both hands)
-            bool rightTracked = rightOVRHand != null && rightOVRHand.IsTracked;
-            bool leftTracked = leftOVRHand != null && leftOVRHand.IsTracked;
+            bool rightTracked = rightOVRHand != null && rightOVRHand.IsTracked && useRightHand;
+            bool leftTracked = leftOVRHand != null && leftOVRHand.IsTracked && !useRightHand;
             bool handTracked = rightTracked || leftTracked;
             bool rightPinching = rightTracked && rightOVRHand.GetFingerIsPinching(pinchFinger);
             bool leftPinching = leftTracked && leftOVRHand.GetFingerIsPinching(pinchFinger);
@@ -206,7 +219,9 @@ namespace RuneGuardian
             bool controllerGripPressed = false;
             bool controllerTracked = false;
             if (!activeDevice.isValid)
-                UpdateActiveDevice();
+            {
+                UpdateActiveDevice();                
+            }
             if (activeDevice.isValid && activeControllerTransform != null)
             {
                 if (activeDevice.TryGetFeatureValue(CommonUsages.gripButton, out bool gripButton))
