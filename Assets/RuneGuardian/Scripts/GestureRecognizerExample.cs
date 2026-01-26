@@ -56,6 +56,8 @@ namespace RuneGuardian
         [SerializeField] private KeyCode shootTypeBKey = KeyCode.Alpha2;
         [SerializeField] private KeyCode shootTypeTriangleKey = KeyCode.Alpha3;
 
+        [Header("Drawing Mode")]
+        private bool useToggleMode = false;
 
         private GameObject lineObject;
         private ParticleSystem activeParticleSystem;
@@ -65,6 +67,10 @@ namespace RuneGuardian
         private Vector3 lastRecordedPosition;
         private AudioSource audioSource;
         private OVRHand.HandFinger pinchFinger = OVRHand.HandFinger.Index;
+        
+        // Toggle mode tracking
+        private bool wasControllerGripPressed = false;
+        private bool wasAnyPinching = false;
 
         /// <summary>
         /// Represents a shape template with its name and corresponding add function
@@ -124,6 +130,7 @@ namespace RuneGuardian
             }
 
             useRightHand = inputData.useRightHand;
+            useToggleMode = inputData.useToggleMode;
             activeNode = useRightHand ? XRNode.RightHand : XRNode.LeftHand;
             pinchFinger = inputData.pinchFingerIndex switch
             {
@@ -133,9 +140,6 @@ namespace RuneGuardian
                 PinchFinger.RING => OVRHand.HandFinger.Ring,
                 _ => OVRHand.HandFinger.Index
             };
-
-            Debug.Log($"PINCH FINGER {pinchFinger}");
-            Debug.Log($"RIGHT HAND {useRightHand}");
 
             activeControllerTransform = useRightHand ? rightControllerTransform : leftControllerTransform;
             UpdateActiveDevice();
@@ -147,6 +151,8 @@ namespace RuneGuardian
             }
 
             Debug.Log("Gesture Recognizer ready! Use VR controller trigger to draw.");
+            string drawModeText = useToggleMode ? "TOGGLE mode (tap to start/stop)" : "CONTINUOUS mode (hold to draw)";
+            Debug.Log($"Drawing mode: {drawModeText}");
             if (enableKeyboardFallback)
             {
                 Debug.Log($"Keyboard fallback enabled: {shootTypeAKey} = Square/TypeA, {shootTypeBKey} = Circle/TypeB, {shootTypeTriangleKey} = Triangle");
@@ -237,44 +243,98 @@ namespace RuneGuardian
             // If controller grip is pressed and controller is tracked, prioritize controller drawing and ignore hand tracking completely
             if (controllerTracked && activeControllerTransform != null)
             {
-                if (controllerGripPressed)
+                if (useToggleMode)
                 {
-                    if (!isDrawing)
+                    // Toggle mode: detect edge (transition) from not pressed to pressed
+                    if (controllerGripPressed && !wasControllerGripPressed)
                     {
-                        StartDrawing(activeControllerTransform);
+                        if (!isDrawing)
+                        {
+                            StartDrawing(activeControllerTransform);
+                        }
+                        else
+                        {
+                            StopDrawing();
+                        }
                     }
-                    else
+                    else if (isDrawing)
                     {
+                        // Continue drawing if we're in drawing mode
                         ContinueDrawing(activeControllerTransform);
                     }
                 }
-                else if (isDrawing)
+                else
                 {
-                    StopDrawing();
+                    // Continuous mode: hold to draw
+                    if (controllerGripPressed)
+                    {
+                        if (!isDrawing)
+                        {
+                            StartDrawing(activeControllerTransform);
+                        }
+                        else
+                        {
+                            ContinueDrawing(activeControllerTransform);
+                        }
+                    }
+                    else if (isDrawing)
+                    {
+                        StopDrawing();
+                    }
                 }
+                wasControllerGripPressed = controllerGripPressed;
                 return;
             }
 
             // Only allow hand tracking drawing if the controller is not being used
             if (handTracked && !controllerTracked)
             {
-                if (anyPinching && drawingTransform != null)
+                if (useToggleMode)
                 {
-                    if (!isDrawing)
+                    // Toggle mode: detect edge (transition) from not pinching to pinching
+                    if (anyPinching && !wasAnyPinching && drawingTransform != null)
                     {
-                        StartDrawing(drawingTransform);
+                        if (!isDrawing)
+                        {
+                            StartDrawing(drawingTransform);
+                        }
+                        else
+                        {
+                            StopDrawing();
+                        }
                     }
-                    else
+                    else if (isDrawing && drawingTransform != null)
                     {
+                        // Continue drawing if we're in drawing mode
                         ContinueDrawing(drawingTransform);
                     }
                 }
-                else if (isDrawing)
+                else
                 {
-                    StopDrawing();
+                    // Continuous mode: hold to draw
+                    if (anyPinching && drawingTransform != null)
+                    {
+                        if (!isDrawing)
+                        {
+                            StartDrawing(drawingTransform);
+                        }
+                        else
+                        {
+                            ContinueDrawing(drawingTransform);
+                        }
+                    }
+                    else if (isDrawing)
+                    {
+                        StopDrawing();
+                    }
                 }
+                wasAnyPinching = anyPinching;
                 return;
             }
+            
+            // Reset toggle tracking when neither input is active
+            wasControllerGripPressed = false;
+            wasAnyPinching = false;
         }
 
         void StartDrawing(Transform drawTransform)
@@ -582,6 +642,16 @@ namespace RuneGuardian
         public bool IsGridModeActive()
         {
             return GameModeManager.CurrentMode.ToString() == "GRID";
+        }
+
+        /// <summary>
+        /// Toggles between continuous draw mode (hold to draw) and toggle draw mode (tap to start/stop)
+        /// </summary>
+        public void SetDrawingMode(bool toggleMode)
+        {
+            useToggleMode = toggleMode;
+            string drawModeText = useToggleMode ? "TOGGLE mode (tap to start/stop)" : "CONTINUOUS mode (hold to draw)";
+            Debug.Log($"Drawing mode changed to: {drawModeText}");
         }
     }
 }
