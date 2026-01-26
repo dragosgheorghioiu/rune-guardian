@@ -30,7 +30,6 @@ namespace RuneGuardian
 
             _inputData = inputData;
             _runeGuardianController = new RuneGuardianController(_inputData);
-            RuneGuardianController.OnRuneGuardianInit(inputData);
         }
 
         public void UpdateGame(InputData inputData)

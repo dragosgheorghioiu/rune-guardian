@@ -10,6 +10,7 @@ public class RandomToySpawner : MonoBehaviour
     [SerializeField] private Transform targetPoint;
     [SerializeField] private Transform despawnPoint;
     [SerializeField] private Transform portalPoint;
+    [SerializeField] private List<ParticleSystem> CloudParticles;
 
     private static int numberOfSpawnedToys = 0;
     private static int maxToyNumber = 0;
@@ -48,7 +49,7 @@ public class RandomToySpawner : MonoBehaviour
             Debug.Log("Game end");
             conveyor.StopConveyor();
             return;
-        } 
+        }
         await Task.Delay(1000);
         SpawnRandom();
     }
@@ -71,6 +72,7 @@ public class RandomToySpawner : MonoBehaviour
         current.Init(targetPoint, despawnPoint, portalPoint);
         ++numberOfSpawnedToys;
 
+        conveyor?.Reverse();
         conveyor?.StartConveyor();
 
         current.OnArrivedTarget += () =>
@@ -81,6 +83,23 @@ public class RandomToySpawner : MonoBehaviour
         current.OnStartedDespawn += () =>
         {
             conveyor?.StartConveyor();
+        };
+        
+        current.onToyHit += () =>
+        {
+            conveyor?.Reverse();
+            foreach (var Cloud in CloudParticles)
+            {
+                Cloud.Play();
+            }
+        };
+
+        current.onToyRepaired += () =>
+        {
+            foreach (var Cloud in CloudParticles)
+            {
+                Cloud.Stop();
+            }
         };
     }
 }

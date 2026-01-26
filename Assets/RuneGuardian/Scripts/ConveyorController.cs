@@ -7,16 +7,17 @@ public class ConveyorController : MonoBehaviour
     [Header("Material / Shader param")]
     [SerializeField] private Renderer conveyorRenderer;
     [SerializeField] private string uvOffsetProperty = "UVOffset";
-    [SerializeField] private float runningSpeed = 1f;
+    [SerializeField] private float runningSpeed = -1f;
 
     private MaterialPropertyBlock mpb;
     private int uvOffsetId;
 
     private float uvOffset;
-    private bool isRunning = true;
+    private bool isRunning = false;
 
     private void Awake()
     {
+        SpawnedToy.onToyDespawn += StopConveyor;
         if (conveyorRenderer == null)
             conveyorRenderer = GetComponentInChildren<Renderer>();
 
@@ -38,6 +39,8 @@ public class ConveyorController : MonoBehaviour
 
     public void StartConveyor() => isRunning = true;
     public void StopConveyor() => isRunning = false;
+
+    public void Reverse() => runningSpeed *= -1;
 
     public void SetRunningSpeed(float s) => runningSpeed = Mathf.Max(0f, s);
 
