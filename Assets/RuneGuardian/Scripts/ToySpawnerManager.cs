@@ -6,6 +6,7 @@ using RuneGuardian;
 public class ToySpawnerManager : MonoBehaviour
 {
     [SerializeField] private List<RandomToySpawner> toySpawners;
+
     private void OnEnable()
     {
         RuneGuardianController.onRuneGuardianStart += SpawnRandom;

@@ -6,8 +6,12 @@ using System.Collections;
 public class SpawnedToy : MonoBehaviour
 {
     public static Action onToyDespawn;
-    public static Action onToyHit;
-    public static Action onToyRepaired;
+
+    public Action OnArrivedTarget;
+    public Action onToyHit;
+    public Action OnStartedDespawn;
+    public Action onToyRepaired;
+
 
     [Header("Cu ce spell trebuie sa fie lovit")]
     public ProjectileType requiredProjectile;
@@ -29,8 +33,6 @@ public class SpawnedToy : MonoBehaviour
     private enum State { MovingToPortal, MovingToTarget, WaitingAtTarget, MovingBackToPortal, MovingToDespawn }
     private State state;
 
-    public System.Action OnArrivedTarget;
-    public System.Action OnStartedDespawn;
 
     private CanvasGroup canvasGroup;
     private bool isFadingIn = false;
@@ -124,7 +126,7 @@ public class SpawnedToy : MonoBehaviour
     {
         if (state != State.WaitingAtTarget) return;
         if (projectileType != requiredProjectile) return;
-
+        
         onToyHit?.Invoke();
         await Task.Delay(1000);
 
