@@ -10,6 +10,14 @@ namespace RuneGuardian
         GRID = 1,
     };
 
+    public enum PinchFinger
+    {
+		INDEX  = 0,
+		MIDDLE = 1,
+		RING   = 2,
+		PINKY  = 3,
+    }
+
 
     /// <summary>
     /// Input data for Rune Guardian game.
@@ -18,6 +26,8 @@ namespace RuneGuardian
     public class InputData
     {
         public GameMode gameMode;
+        public bool useRightHand;
+        public PinchFinger pinchFingerIndex;
 
         // should influence the toy spawnner
         public bool enabledDirtyObjects;
