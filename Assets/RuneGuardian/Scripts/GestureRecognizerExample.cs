@@ -51,6 +51,7 @@ namespace RuneGuardian
         [SerializeField] private float minPointDistance = 0.01f; // Minimum distance between points
 
         [Header("Keyboard Fallback")]
+        [SerializeField] private Transform keyboardSpawnPosition;
         [SerializeField] private bool enableKeyboardFallback = true;
         [SerializeField] private KeyCode shootTypeAKey = KeyCode.Alpha1;
         [SerializeField] private KeyCode shootTypeBKey = KeyCode.Alpha2;
@@ -193,17 +194,18 @@ namespace RuneGuardian
             // Keyboard fallback controls
             if (enableKeyboardFallback)
             {
+                
                 if (Input.GetKeyDown(shootTypeAKey))
                 {
-                    OnValidGesture?.Invoke(0, Vector3.zero);
+                    OnValidGesture?.Invoke(0, keyboardSpawnPosition.position);
                 }
                 else if (Input.GetKeyDown(shootTypeBKey))
                 {
-                    OnValidGesture?.Invoke(1, Vector3.zero);
+                    OnValidGesture?.Invoke(1, keyboardSpawnPosition.position);
                 }
                 else if (Input.GetKeyDown(shootTypeTriangleKey))
                 {
-                    OnValidGesture?.Invoke(2, Vector3.zero);
+                    OnValidGesture?.Invoke(2, keyboardSpawnPosition.position);
                 }
             }
 
