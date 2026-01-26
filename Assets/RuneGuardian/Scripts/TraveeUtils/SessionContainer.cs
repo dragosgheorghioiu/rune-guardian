@@ -27,6 +27,7 @@ namespace RuneGuardian
     {
         public GameMode gameMode;
         public bool useRightHand;
+        public bool useToggleMode;
         public PinchFinger pinchFingerIndex;
 
         // should influence the toy spawnner
