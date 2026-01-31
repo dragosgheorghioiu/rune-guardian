@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ConveyorController : MonoBehaviour
@@ -47,7 +48,7 @@ public class ConveyorController : MonoBehaviour
     private void ApplyOffset()
     {
         if (conveyorRenderer == null) return;
-
+        Debug.Log(uvOffset);
         conveyorRenderer.GetPropertyBlock(mpb);
         mpb.SetFloat(uvOffsetId, uvOffset);
         conveyorRenderer.SetPropertyBlock(mpb);
