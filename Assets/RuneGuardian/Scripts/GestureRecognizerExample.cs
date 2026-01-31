@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.Events;
 
 namespace RuneGuardian
 {
@@ -76,21 +77,28 @@ namespace RuneGuardian
         /// <summary>
         /// Represents a shape template with its name and corresponding add function
         /// </summary>
-        private class ShapeTemplate
+        [System.Serializable]
+        public class ShapeTemplate
         {
             public string Name;
-            public Action AddTemplateAction;
+            public UnityEvent AddTemplateAction;
+            public GameObject BulletinDrawing;
 
-            public ShapeTemplate(string name, Action addTemplateAction)
+            public ShapeTemplate(string name, UnityEvent addTemplateAction, GameObject bulletinDrawing)
             {
                 Name = name;
                 AddTemplateAction = addTemplateAction;
+                BulletinDrawing = bulletinDrawing;
             }
         }
 
-        private List<ShapeTemplate> availableShapes;
+        public List<ShapeTemplate> availableShapes;
         private List<ShapeTemplate> validShapes;
+        
 
+        [SerializeField] private BulletinBoard bulletinBoard;
+        [SerializeField] private List<GameObject> spellTypeBulletinBoardDrawing;
+        private static Vector3 DefaultPositionOffset = new Vector3(-0.4f, 2.3f, 0.127f);
 
         void Init(InputData inputData)
         {
@@ -100,27 +108,27 @@ namespace RuneGuardian
             }
 
             recognizer = new Unistroke();
-            availableShapes = new List<ShapeTemplate>
-            {
-                new("Circle", AddCircleTemplate),
-                new("Square", AddSquareTemplate),
-                new("Triangle", AddTriangleTemplate),
-                new("OpenSquareBracket", AddOpenSquareBracketTemplate),
-                new("Star", AddStarTemplate),
-                new("Zigzag", AddZigzagTemplate),
-                new("X", AddXTemplate),
-                new("Diamond", AddDiamondTemplate),
-                new("V", AddVTemplate),
-                new("Line", AddLineTemplate),
-            };
 
-            validShapes = new();
-            validShapes.Add(availableShapes[inputData.dirtyObjectsDrawing]);
-            validShapes.Add(availableShapes[inputData.destroyedObjectsDrawing]);
-            validShapes.Add(availableShapes[inputData.uncoloredObjectsDrawing]);
-            foreach (var shape in validShapes)
+            int objectTypeCount = 0;
+            if (inputData.enabledDirtyObjects){
+                ShapeTemplate validShape = availableShapes[inputData.dirtyObjectsDrawing];
+                bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[0], validShape, objectTypeCount);
+                ++objectTypeCount;
+            }
+            if (inputData.enabledDestroyedObjects){
+                ShapeTemplate validShape = availableShapes[inputData.destroyedObjectsDrawing];
+                bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[1], validShape, objectTypeCount);
+                ++objectTypeCount;
+            }
+            if (inputData.enabledUncoloredObjects){
+                ShapeTemplate validShape = availableShapes[inputData.uncoloredObjectsDrawing];
+                bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[2], validShape, objectTypeCount);
+                ++objectTypeCount;
+            }
+            if (bulletinBoard == null)
             {
-                shape.AddTemplateAction();
+                Debug.LogError("bulletinBoard is not assigned!");
+                return;
             }
 
             mainCamera ??= Camera.main;
@@ -483,7 +491,7 @@ namespace RuneGuardian
             }
         }
 
-        void AddCircleTemplate()
+        public void AddCircleTemplate()
         {
             List<Vector2> circle = new List<Vector2>();
             int numPoints = 32;
@@ -495,7 +503,7 @@ namespace RuneGuardian
             recognizer.AddTemplate("circle", circle);
         }
 
-        void AddSquareTemplate()
+        public void AddSquareTemplate()
         {
             // Clockwise square
             List<Vector2> square1 = new List<Vector2>
@@ -520,7 +528,7 @@ namespace RuneGuardian
             recognizer.AddTemplate("square", square2);
         }
 
-        void AddTriangleTemplate()
+        public void AddTriangleTemplate()
         {
             // Clockwise triangle
             List<Vector2> triangle1 = new List<Vector2>
@@ -543,7 +551,7 @@ namespace RuneGuardian
             recognizer.AddTemplate("triangle", triangle2);
         }
 
-        void AddOpenSquareBracketTemplate()
+        public void AddOpenSquareBracketTemplate()
         {
             List<Vector2> bracket = new List<Vector2>
         {
@@ -555,7 +563,7 @@ namespace RuneGuardian
             recognizer.AddTemplate("openbracket", bracket);
         }
 
-        void AddStarTemplate()
+        public void AddStarTemplate()
         {
             // First, calculate all 5 points on a circle
             List<Vector2> points = new List<Vector2>();
@@ -579,7 +587,7 @@ namespace RuneGuardian
             recognizer.AddTemplate("star", star);
         }
 
-        void AddZigzagTemplate()
+        public void AddZigzagTemplate()
         {
             List<Vector2> zigzag = new List<Vector2>
         {
@@ -592,7 +600,7 @@ namespace RuneGuardian
             recognizer.AddTemplate("zigzag", zigzag);
         }
 
-        void AddXTemplate()
+        public void AddXTemplate()
         {
             // Triangle shape with horizontal bar (like letter A)
             // Draw: bottom-left → top → bottom-right → middle-right → middle-left
@@ -607,7 +615,7 @@ namespace RuneGuardian
             recognizer.AddTemplate("x", x);
         }
 
-        void AddDiamondTemplate()
+        public void AddDiamondTemplate()
         {
             List<Vector2> diamond = new List<Vector2>
         {
@@ -620,7 +628,7 @@ namespace RuneGuardian
             recognizer.AddTemplate("diamond", diamond);
         }
 
-        void AddVTemplate()
+        public void AddVTemplate()
         {
             List<Vector2> v = new List<Vector2>
         {
@@ -631,7 +639,7 @@ namespace RuneGuardian
             recognizer.AddTemplate("v", v);
         }
 
-        void AddLineTemplate()
+        public void AddLineTemplate()
         {
             List<Vector2> line = new List<Vector2>
         {

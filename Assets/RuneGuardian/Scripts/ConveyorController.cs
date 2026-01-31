@@ -48,7 +48,6 @@ public class ConveyorController : MonoBehaviour
     private void ApplyOffset()
     {
         if (conveyorRenderer == null) return;
-        Debug.Log(uvOffset);
         conveyorRenderer.GetPropertyBlock(mpb);
         mpb.SetFloat(uvOffsetId, uvOffset);
         conveyorRenderer.SetPropertyBlock(mpb);
