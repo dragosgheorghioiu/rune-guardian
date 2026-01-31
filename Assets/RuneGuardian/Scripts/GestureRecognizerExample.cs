@@ -93,8 +93,6 @@ namespace RuneGuardian
         }
 
         public List<ShapeTemplate> availableShapes;
-        private List<ShapeTemplate> validShapes;
-        
 
         [SerializeField] private BulletinBoard bulletinBoard;
         [SerializeField] private List<GameObject> spellTypeBulletinBoardDrawing;

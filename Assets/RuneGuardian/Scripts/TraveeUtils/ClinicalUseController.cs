@@ -39,11 +39,6 @@ namespace RuneGuardian
 
         public void StopGame()
         {
-            OnGameFinished();
-        }
-
-        private void OnGameFinished()
-        {
             _finishExercisePanelsController.Show(FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE);
 
             _timerController.StopTimer();
