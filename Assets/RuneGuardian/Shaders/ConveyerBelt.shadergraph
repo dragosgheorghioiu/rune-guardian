@@ -1879,7 +1879,7 @@
     "m_DefaultRefNameVersion": 1,
     "m_RefNameGeneratedByDisplayName": "Direction",
     "m_DefaultReferenceName": "_Direction",
-    "m_OverrideReferenceName": "",
+    "m_OverrideReferenceName": "Direction",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
