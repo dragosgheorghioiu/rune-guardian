@@ -10,6 +10,9 @@ namespace RuneGuardian
     {
         public static event Action<int, Vector3> OnValidGesture;
 
+        // Maps gesture shape names to projectile type indices
+        private static Dictionary<string, int> shapeToProjectileMap = new Dictionary<string, int>();
+
         void OnEnable()
         {
             RuneGuardianController.OnRuneGuardianInit += Init;
@@ -69,10 +72,11 @@ namespace RuneGuardian
         private Vector3 lastRecordedPosition;
         private AudioSource audioSource;
         private OVRHand.HandFinger pinchFinger = OVRHand.HandFinger.Index;
-        
+
         // Toggle mode tracking
         private bool wasControllerGripPressed = false;
         private bool wasAnyPinching = false;
+        private Transform activeDrawingTransform = null; // Track the active drawing transform in toggle mode
 
         /// <summary>
         /// Represents a shape template with its name and corresponding add function
@@ -107,20 +111,38 @@ namespace RuneGuardian
 
             recognizer = new Unistroke();
 
+            // Reset game statistics when initializing
+            GameStats.Reset();
+
+            // Clear and rebuild the shape-to-projectile mapping
+            shapeToProjectileMap.Clear();
+
             int objectTypeCount = 0;
-            if (inputData.enabledDirtyObjects){
+            if (inputData.enabledDirtyObjects)
+            {
                 ShapeTemplate validShape = availableShapes[inputData.dirtyObjectsDrawing];
                 bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[0], validShape, objectTypeCount);
+                // Map this shape name to projectile type 0 (dirty)
+                shapeToProjectileMap[validShape.Name] = 0;
+                Debug.Log($"Mapped gesture '{validShape.Name}' -> Dirty Objects (projectile 0)");
                 ++objectTypeCount;
             }
-            if (inputData.enabledDestroyedObjects){
+            if (inputData.enabledDestroyedObjects)
+            {
                 ShapeTemplate validShape = availableShapes[inputData.destroyedObjectsDrawing];
                 bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[1], validShape, objectTypeCount);
+                // Map this shape name to projectile type 1 (destroyed)
+                shapeToProjectileMap[validShape.Name] = 1;
+                Debug.Log($"Mapped gesture '{validShape.Name}' -> Destroyed Objects (projectile 1)");
                 ++objectTypeCount;
             }
-            if (inputData.enabledUncoloredObjects){
+            if (inputData.enabledUncoloredObjects)
+            {
                 ShapeTemplate validShape = availableShapes[inputData.uncoloredObjectsDrawing];
                 bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[2], validShape, objectTypeCount);
+                // Map this shape name to projectile type 2 (uncolored)
+                shapeToProjectileMap[validShape.Name] = 2;
+                Debug.Log($"Mapped gesture '{validShape.Name}' -> Uncolored Objects (projectile 2)");
                 ++objectTypeCount;
             }
             if (bulletinBoard == null)
@@ -200,7 +222,7 @@ namespace RuneGuardian
             // Keyboard fallback controls
             if (enableKeyboardFallback)
             {
-                
+
                 if (Input.GetKeyDown(shootTypeAKey))
                 {
                     OnValidGesture?.Invoke(0, keyboardSpawnPosition.position);
@@ -223,6 +245,14 @@ namespace RuneGuardian
             bool leftPinching = leftTracked && leftOVRHand.GetFingerIsPinching(pinchFinger);
             bool anyPinching = rightPinching || leftPinching;
 
+            // Get the appropriate finger tip transform based on which hand is active
+            Transform fingerTipTransform = null;
+            if (rightTracked && rightIndexTip != null)
+                fingerTipTransform = rightIndexTip;
+            else if (leftTracked && leftIndexTip != null)
+                fingerTipTransform = leftIndexTip;
+
+            // For pinch detection, we still need to know if currently pinching
             Transform drawingTransform = null;
             if (rightPinching && rightIndexTip != null)
                 drawingTransform = rightIndexTip;
@@ -234,7 +264,7 @@ namespace RuneGuardian
             bool controllerTracked = false;
             if (!activeDevice.isValid)
             {
-                UpdateActiveDevice();                
+                UpdateActiveDevice();
             }
             if (activeDevice.isValid && activeControllerTransform != null)
             {
@@ -258,17 +288,19 @@ namespace RuneGuardian
                     {
                         if (!isDrawing)
                         {
+                            activeDrawingTransform = activeControllerTransform;
                             StartDrawing(activeControllerTransform);
                         }
                         else
                         {
                             StopDrawing();
+                            activeDrawingTransform = null;
                         }
                     }
-                    else if (isDrawing)
+                    else if (isDrawing && activeDrawingTransform != null)
                     {
-                        // Continue drawing if we're in drawing mode
-                        ContinueDrawing(activeControllerTransform);
+                        // Continue drawing using the stored transform, even if not pressing
+                        ContinueDrawing(activeDrawingTransform);
                     }
                 }
                 else
@@ -304,17 +336,19 @@ namespace RuneGuardian
                     {
                         if (!isDrawing)
                         {
+                            activeDrawingTransform = fingerTipTransform;
                             StartDrawing(drawingTransform);
                         }
                         else
                         {
                             StopDrawing();
+                            activeDrawingTransform = null;
                         }
                     }
-                    else if (isDrawing && drawingTransform != null)
+                    else if (isDrawing && activeDrawingTransform != null)
                     {
-                        // Continue drawing if we're in drawing mode
-                        ContinueDrawing(drawingTransform);
+                        // Continue drawing using the stored finger tip transform, even when not pinching
+                        ContinueDrawing(activeDrawingTransform);
                     }
                 }
                 else
@@ -339,10 +373,14 @@ namespace RuneGuardian
                 wasAnyPinching = anyPinching;
                 return;
             }
-            
+
             // Reset toggle tracking when neither input is active
             wasControllerGripPressed = false;
             wasAnyPinching = false;
+            if (!isDrawing)
+            {
+                activeDrawingTransform = null;
+            }
         }
 
         void StartDrawing(Transform drawTransform)
@@ -353,7 +391,6 @@ namespace RuneGuardian
             CreateDrawingParticlesAt(drawTransform.position);
             lastRecordedPosition = drawTransform.position;
             AddPoint(drawTransform.position);
-            Debug.Log("Started drawing gesture");
             if (audioSource != null && drawLoopSound != null)
             {
                 audioSource.clip = drawLoopSound;
@@ -410,7 +447,7 @@ namespace RuneGuardian
         void StopDrawing()
         {
             isDrawing = false;
-            Debug.Log($"Stopped drawing. Points collected: {currentGesture.Count}");
+            activeDrawingTransform = null; // Clear the active drawing transform
 
             // Stop looping draw sound and reset audio source
             if (audioSource != null && audioSource.isPlaying)
@@ -426,20 +463,35 @@ namespace RuneGuardian
                 if (result.Score >= minScore)
                 {
                     Debug.Log($"✓ Recognized: {result.Name} (Score: {result.Score:F2})");
+                    // Record successful gesture
+                    GameStats.RecordGesture(result.Score, true);
                     // Get the last drawn world position from the line renderer
                     Vector3 lastPoint = Vector3.zero;
                     if (lineRenderer != null && lineRenderer.positionCount > 0)
                         lastPoint = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
-                    OnValidGesture?.Invoke(result.TemplateIndex, lastPoint);
+
+                    // Convert shape name to projectile type index using mapping
+                    if (shapeToProjectileMap.TryGetValue(result.Name, out int projectileIndex))
+                    {
+                        OnValidGesture?.Invoke(projectileIndex, lastPoint);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"No projectile mapping found for shape: {result.Name}");
+                    }
                 }
                 else
                 {
                     Debug.Log($"? Gesture not recognized (Best: {result.Name}, Score: {result.Score:F2})");
+                    // Record failed gesture
+                    GameStats.RecordGesture(result.Score, false);
                 }
             }
             else
             {
                 Debug.Log($"Gesture too short! Need at least {minPoints} points, got {currentGesture.Count}");
+                // Record failed gesture (too short = 0 score)
+                GameStats.RecordGesture(0f, false);
             }
 
             // Clean up line renderer and particles
@@ -498,7 +550,7 @@ namespace RuneGuardian
                 float angle = i * 2f * Mathf.PI / numPoints;
                 circle.Add(new Vector2(Mathf.Cos(angle) * 100f, Mathf.Sin(angle) * 100f));
             }
-            recognizer.AddTemplate("circle", circle);
+            recognizer.AddTemplate("Circle", circle);
         }
 
         public void AddSquareTemplate()
@@ -512,7 +564,7 @@ namespace RuneGuardian
             new Vector2(0, 100),
             new Vector2(0, 0)
         };
-            recognizer.AddTemplate("square", square1);
+            recognizer.AddTemplate("Square", square1);
 
             // Counter-clockwise square
             List<Vector2> square2 = new List<Vector2>
@@ -523,7 +575,7 @@ namespace RuneGuardian
             new Vector2(100, 0),
             new Vector2(0, 0)
         };
-            recognizer.AddTemplate("square", square2);
+            recognizer.AddTemplate("Square", square2);
         }
 
         public void AddTriangleTemplate()
@@ -536,7 +588,7 @@ namespace RuneGuardian
             new Vector2(0, 100),
             new Vector2(50, 0)
         };
-            recognizer.AddTemplate("triangle", triangle1);
+            recognizer.AddTemplate("Triangle", triangle1);
 
             // Counter-clockwise triangle
             List<Vector2> triangle2 = new List<Vector2>
@@ -546,7 +598,7 @@ namespace RuneGuardian
             new Vector2(100, 100),
             new Vector2(50, 0)
         };
-            recognizer.AddTemplate("triangle", triangle2);
+            recognizer.AddTemplate("Triangle", triangle2);
         }
 
         public void AddOpenSquareBracketTemplate()
@@ -558,7 +610,7 @@ namespace RuneGuardian
             new Vector2(0, 100),
             new Vector2(100, 100)
         };
-            recognizer.AddTemplate("openbracket", bracket);
+            recognizer.AddTemplate("OpenSquareBracket", bracket);
         }
 
         public void AddStarTemplate()
@@ -582,7 +634,7 @@ namespace RuneGuardian
                 points[3], // 4
                 points[0]  // back to 1 to close
             };
-            recognizer.AddTemplate("star", star);
+            recognizer.AddTemplate("Star", star);
         }
 
         public void AddZigzagTemplate()
@@ -595,7 +647,7 @@ namespace RuneGuardian
             new Vector2(50, 150),
             new Vector2(0, 200)
         };
-            recognizer.AddTemplate("zigzag", zigzag);
+            recognizer.AddTemplate("Zigzag", zigzag);
         }
 
         public void AddXTemplate()
@@ -610,7 +662,7 @@ namespace RuneGuardian
                 new Vector2(60, 50),     // middle-right (shorter crossbar)
                 new Vector2(40, 50),     // middle-left (shorter crossbar)
             };
-            recognizer.AddTemplate("x", x);
+            recognizer.AddTemplate("X", x);
         }
 
         public void AddDiamondTemplate()
@@ -623,7 +675,7 @@ namespace RuneGuardian
             new Vector2(0, 50),
             new Vector2(50, 0)
         };
-            recognizer.AddTemplate("diamond", diamond);
+            recognizer.AddTemplate("Diamong", diamond);
         }
 
         public void AddVTemplate()
@@ -634,7 +686,7 @@ namespace RuneGuardian
             new Vector2(50, 100),
             new Vector2(100, 0)
         };
-            recognizer.AddTemplate("v", v);
+            recognizer.AddTemplate("V", v);
         }
 
         public void AddLineTemplate()
@@ -644,7 +696,7 @@ namespace RuneGuardian
             new Vector2(0, 50),
             new Vector2(100, 50)
         };
-            recognizer.AddTemplate("line", line);
+            recognizer.AddTemplate("Line", line);
         }
 
         public bool IsGridModeActive()

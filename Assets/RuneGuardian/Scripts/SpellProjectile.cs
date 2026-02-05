@@ -27,7 +27,6 @@ public class SpellProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($"Projectile of type {type} collided with {collision.collider.name}");
         var obj = collision.collider.GetComponentInParent<SpawnedToy>();
         if (obj != null)
         {
@@ -39,6 +38,11 @@ public class SpellProjectile : MonoBehaviour
                 PlayHitEffects(collision.contacts[0].point);
                 DestroyProjectile();
                 return;
+            }
+            else
+            {
+                // Record wrong spell usage
+                RuneGuardian.GameStats.RecordWrongSpell();
             }
         }
 

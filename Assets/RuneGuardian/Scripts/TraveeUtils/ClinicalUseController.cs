@@ -18,6 +18,24 @@ namespace RuneGuardian
         /// Object that contains the input parameter values for the game.
         /// </summary>
         private InputData _inputData;
+        private bool isActiveController = false;
+
+        private void OnEnable()
+        {
+            RandomToySpawner.onAllToysCleared += OnAllToysCleared;
+        }
+
+        private void OnDisable()
+        {
+            RandomToySpawner.onAllToysCleared -= OnAllToysCleared;
+            isActiveController = false;
+        }
+
+        private void OnAllToysCleared()
+        {
+            if (!isActiveController) return;
+            StopGame();
+        }
 
         public void StartGame()
         {
@@ -30,6 +48,8 @@ namespace RuneGuardian
 
             _inputData = inputData;
             _runeGuardianController = new RuneGuardianController(_inputData);
+
+            isActiveController = true;
         }
 
         public void UpdateGame(InputData inputData)
@@ -40,6 +60,10 @@ namespace RuneGuardian
         public void StopGame()
         {
             _finishExercisePanelsController.Show(FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE);
+
+            // Set statistics text on the finish panel
+            string statsText = "Game Complete!\n\n" + GameStats.GetFormattedStats();
+            _finishExercisePanelsController.SetText(FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE, statsText);
 
             _timerController.StopTimer();
 

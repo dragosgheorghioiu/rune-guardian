@@ -1,6 +1,6 @@
 public enum ProjectileType
 {
-    Cube,
-    Sphere,
-    Capsule
+    Clean,
+    Repair,
+    Paint
 }

@@ -12,10 +12,10 @@ namespace RuneGuardian
 
     public enum PinchFinger
     {
-		INDEX  = 0,
-		MIDDLE = 1,
-		RING   = 2,
-		PINKY  = 3,
+        INDEX = 0,
+        MIDDLE = 1,
+        RING = 2,
+        PINKY = 3,
     }
 
 
@@ -26,6 +26,7 @@ namespace RuneGuardian
     public class InputData
     {
         public GameMode gameMode;
+        public bool ambientMusic;
         public bool useRightHand;
         public bool useToggleMode;
         public PinchFinger pinchFingerIndex;
@@ -34,14 +35,14 @@ namespace RuneGuardian
         public bool enabledDirtyObjects;
         public bool enabledDestroyedObjects;
         public bool enabledUncoloredObjects;
-        
+
         public int dirtyObjectsDrawing;
         public int destroyedObjectsDrawing;
         public int uncoloredObjectsDrawing;
 
         // should be between 0 and 100
         public int gestureMinScore;
-        
+
         public int numberOfToys;
 
 
@@ -65,7 +66,7 @@ namespace RuneGuardian
         [SerializeField]
         protected InputData _inputData;
 
-        [SerializeField] 
+        [SerializeField]
         private GameModeManager gameModeManager;
 
         [SerializeField]
@@ -73,6 +74,9 @@ namespace RuneGuardian
         [SerializeField]
         protected HomeUseController _homeUseController;
         protected GameManagerBase _mainController;
+
+        [SerializeField]
+        private GameObject ambientSources;
 
         void Start()
         {
@@ -99,7 +103,7 @@ namespace RuneGuardian
         {
             _inputData = JsonUtility.FromJson<InputData>(json);
 
-            Debug.Log($"GAMEMODE {_inputData.gameMode}");
+            ambientSources.SetActive(_inputData.ambientMusic);
 
             gameModeManager.PickMode(_inputData.gameMode);
 
@@ -111,6 +115,8 @@ namespace RuneGuardian
         public override void OnInitHomeUse(string json)
         {
             _inputData = JsonUtility.FromJson<InputData>(json);
+
+            ambientSources.SetActive(_inputData.ambientMusic);
 
             gameModeManager.PickMode(_inputData.gameMode);
 

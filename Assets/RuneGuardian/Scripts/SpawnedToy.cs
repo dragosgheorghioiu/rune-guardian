@@ -126,12 +126,15 @@ public class SpawnedToy : MonoBehaviour
     {
         if (state != State.WaitingAtTarget) return;
         if (projectileType != requiredProjectile) return;
-        
+
         onToyHit?.Invoke();
         await Task.Delay(1000);
 
         SwapToHitVariant();
         onToyRepaired?.Invoke();
+
+        // Record successful toy delivery
+        RuneGuardian.GameStats.RecordToyDelivered();
 
         await Task.Delay(2500);
 
@@ -141,6 +144,7 @@ public class SpawnedToy : MonoBehaviour
     
     public bool IsCorrectSpell(ProjectileType projectileType)
     {
+        Debug.Log($"Checking spell: required={requiredProjectile}, provided={projectileType}");
         return state == State.WaitingAtTarget && projectileType == requiredProjectile;
     }
 

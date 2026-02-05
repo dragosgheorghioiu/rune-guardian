@@ -19,8 +19,6 @@ namespace RuneGuardian
         public void UpdateGame(InputData inputData)
         {
             _inputData = inputData;
-
-            Debug.Log(inputData);
         }
 
         public void StartGame()

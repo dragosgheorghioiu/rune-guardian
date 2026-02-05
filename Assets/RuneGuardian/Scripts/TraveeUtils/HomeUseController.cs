@@ -11,6 +11,24 @@ namespace RuneGuardian
         [SerializeField] private FinishExercisePanelsController _finishExercisePanelsController;
 
         private InputData _inputData;
+        private bool isActiveController = false;
+
+        private void OnEnable()
+        {
+            RandomToySpawner.onAllToysCleared += OnAllToysCleared;
+        }
+
+        private void OnDisable()
+        {
+            RandomToySpawner.onAllToysCleared -= OnAllToysCleared;
+            isActiveController = false;
+        }
+
+        private void OnAllToysCleared()
+        {
+            if (!isActiveController) return;
+            OnGameFinished();
+        }
 
         public void StartGame()
         {
@@ -22,6 +40,7 @@ namespace RuneGuardian
             _inputData = inputData;
             _runeGuardianController = new RuneGuardianController(_inputData);
 
+            isActiveController = true;
             StartIteration();
         }
 
@@ -68,6 +87,10 @@ namespace RuneGuardian
         private void OnGameFinished()
         {
             _finishExercisePanelsController.Show(FinishExercisePanelType.PANEL_TYPE_HOME_USE);
+
+            // Set statistics text on the finish panel
+            string statsText = "Game Complete!\n\n" + GameStats.GetFormattedStats();
+            _finishExercisePanelsController.SetText(FinishExercisePanelType.PANEL_TYPE_HOME_USE, statsText);
 
             _timerController.StopTimer();
 

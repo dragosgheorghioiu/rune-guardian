@@ -54,7 +54,7 @@ public class FinishExercisePanelsController : MonoBehaviour
     {
         if (panelType == FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE)
         {
-            // _finishExercisePanelClinicalUse.SetActive(false);
+            _finishExercisePanelClinicalUse.SetActive(false);
         }
 
         if (panelType == FinishExercisePanelType.PANEL_TYPE_HOME_USE)
@@ -67,7 +67,7 @@ public class FinishExercisePanelsController : MonoBehaviour
     {
         if (panelType == FinishExercisePanelType.PANEL_TYPE_CLINICAL_USE)
         {
-            // _finishExercisePanelClinicalUseTextRenderer.text = text;
+            _finishExercisePanelClinicalUseTextRenderer.text = text;
         }
 
         if (panelType == FinishExercisePanelType.PANEL_TYPE_HOME_USE)
@@ -78,7 +78,7 @@ public class FinishExercisePanelsController : MonoBehaviour
 
     protected void ShowFinishExercisePanelClinicalUse()
     {
-        // _finishExercisePanelClinicalUse.SetActive(true);
+        _finishExercisePanelClinicalUse.SetActive(true);
 
         foreach (Camera camera in _cameras)
         {

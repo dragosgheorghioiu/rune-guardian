@@ -24253,6 +24253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af15e66b8e088d943ac9bd4e3d15e3fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
+  type: 1
   hitSound: {fileID: 8300000, guid: cfce0cea076109f478783201b2a9f57f, type: 3}
   despawnSound: {fileID: 8300000, guid: aa967a280457c054bb646d57611f5bd0, type: 3}

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 public class RandomToySpawner : MonoBehaviour
 {
+    public static System.Action onAllToysCleared;
+
     [Header("Points")]
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Transform targetPoint;
@@ -40,6 +42,7 @@ public class RandomToySpawner : MonoBehaviour
         if (inputData.enabledDestroyedObjects) validToys.Add(1);
         if (inputData.enabledUncoloredObjects) validToys.Add(2);
         maxToyNumber = inputData.numberOfToys;
+        numberOfSpawnedToys = 0; // Reset counter when game starts
     }
 
     public async void DelayedSpawnRandom()
@@ -48,6 +51,7 @@ public class RandomToySpawner : MonoBehaviour
         {
             Debug.Log("Game end");
             conveyor.StopConveyor();
+            onAllToysCleared?.Invoke();
             return;
         }
         await Task.Delay(1000);
