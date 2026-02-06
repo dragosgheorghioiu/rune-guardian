@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using RuneGuardian;
 using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine.XR.Interaction.Toolkit.AR;
 
 public class RandomToySpawner : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class RandomToySpawner : MonoBehaviour
     [SerializeField] private Transform despawnPoint;
     [SerializeField] private Transform portalPoint;
     [SerializeField] private List<ParticleSystem> CloudParticles;
+    [SerializeField] private GestureRecognizerExample gestureRecognizer;
 
     private static int numberOfSpawnedToys = 0;
     private static int maxToyNumber = 0;
@@ -28,6 +30,8 @@ public class RandomToySpawner : MonoBehaviour
     [SerializeField] private ConveyorController conveyor;
     [SerializeField] private MagicSphereSystem magicSphereSystem;
 
+    private InputData currentInputData;
+
     private void OnEnable()
     {
         RuneGuardianController.OnRuneGuardianInit += Init;
@@ -39,6 +43,7 @@ public class RandomToySpawner : MonoBehaviour
 
     public void Init(InputData inputData)
     {
+        currentInputData = inputData;
         validToys = new List<int>();
         gameMode = inputData.gameMode;
         if (inputData.enabledDirtyObjects) validToys.Add(0);
@@ -46,13 +51,18 @@ public class RandomToySpawner : MonoBehaviour
         if (inputData.enabledUncoloredObjects) validToys.Add(2);
         maxToyNumber = inputData.numberOfToys;
         numberOfSpawnedToys = 0; // Reset counter when game starts
+        
+        // Randomize shape mapping at game start if enabled
+        // if (currentInputData != null && currentInputData.randomizeShapes)
+        // {
+        //     gestureRecognizer.RandomizeShapeMapping();
+        // }
     }
 
     public async void DelayedSpawnRandom()
     {
         if (numberOfSpawnedToys >= maxToyNumber)
         {
-            Debug.Log("Game end");
             conveyor.StopConveyor();
             onAllToysCleared?.Invoke();
             return;
@@ -72,6 +82,12 @@ public class RandomToySpawner : MonoBehaviour
         {
             Debug.LogWarning("No target/spawn/despawn");
             return;
+        }
+
+        // Randomize shape mapping on every toy spawn if enabled
+        if (currentInputData != null && currentInputData.randomizeShapes && gestureRecognizer != null)
+        {
+            gestureRecognizer.RandomizeShapeMapping();
         }
 
         int idx = Random.Range(0, validToys.Count);
@@ -95,7 +111,7 @@ public class RandomToySpawner : MonoBehaviour
         {
             conveyor?.StartConveyor();
         };
-        
+
         current.onToyHit += () =>
         {
             conveyor?.Reverse();

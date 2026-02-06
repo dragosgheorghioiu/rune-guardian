@@ -121,8 +121,6 @@ namespace FruitsGame
                     return fruitPrefabPosition;
                 }
             }
-
-            return new Vector3(); //...
         }
 
         private Vector3 ComputeRandomFruitPosition (InputData inputData,

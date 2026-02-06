@@ -4,7 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/TraveeWizard.unity
+    guid: ae35ba8721f28c44fafcc1eb8ce1fadd
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 79e892e7a00c40949a6b484e562e1c2e, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: fae5c3f9c3f01774eb743ab358cbd788, type: 2}

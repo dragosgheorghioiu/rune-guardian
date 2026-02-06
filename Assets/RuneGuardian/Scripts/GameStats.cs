@@ -8,11 +8,7 @@ namespace RuneGuardian
     /// </summary>
     public class GameStats
     {
-        public static event Action<float> OnGestureAttempted;
-        public static event Action OnToyDelivered;
-
         private static int totalGesturesAttempted = 0;
-        private static int gesturesRecognized = 0;
         private static int gesturesMissed = 0;
         private static float totalAccuracy = 0f;
         private static int toysDelivered = 0;
@@ -24,7 +20,6 @@ namespace RuneGuardian
         public static void Reset()
         {
             totalGesturesAttempted = 0;
-            gesturesRecognized = 0;
             gesturesMissed = 0;
             totalAccuracy = 0f;
             toysDelivered = 0;
@@ -42,11 +37,7 @@ namespace RuneGuardian
             totalGesturesAttempted++;
             totalAccuracy += score;
 
-            if (wasRecognized)
-            {
-                gesturesRecognized++;
-            }
-            else
+            if (!wasRecognized)
             {
                 gesturesMissed++;
             }

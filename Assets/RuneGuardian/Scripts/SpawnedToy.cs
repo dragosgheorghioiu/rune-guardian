@@ -13,7 +13,6 @@ public class SpawnedToy : MonoBehaviour
     public Action OnStartedDespawn;
     public Action onToyRepaired;
 
-
     [Header("Cu ce spell trebuie sa fie lovit")]
     public ProjectileType requiredProjectile;
 
@@ -53,7 +52,7 @@ public class SpawnedToy : MonoBehaviour
         targetPoint = tPoint;
         despawnPoint = dPoint;
         portalPoint = pPoint;
-        
+
         if (variantAnchor == null) variantAnchor = transform;
 
         if (portalPoint != null)
@@ -61,7 +60,7 @@ public class SpawnedToy : MonoBehaviour
             state = State.MovingToPortal;
         }
     }
-    
+
     private void Update()
     {
         if (targetPoint == null || despawnPoint == null) return;
@@ -143,10 +142,9 @@ public class SpawnedToy : MonoBehaviour
         state = State.MovingBackToPortal;
         OnStartedDespawn?.Invoke();
     }
-    
+
     public bool IsCorrectSpell(ProjectileType projectileType)
     {
-        Debug.Log($"Checking spell: required={requiredProjectile}, provided={projectileType}");
         return isSphereMode || (state == State.WaitingAtTarget && projectileType == requiredProjectile);
     }
 

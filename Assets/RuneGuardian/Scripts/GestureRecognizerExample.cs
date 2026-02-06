@@ -22,7 +22,6 @@ namespace RuneGuardian
             RuneGuardianController.OnRuneGuardianInit -= Init;
         }
 
-        [Header("Gesture Recognition")]
         private Unistroke recognizer;
         private List<Vector2> currentGesture;
         private bool isDrawing = false;
@@ -46,19 +45,19 @@ namespace RuneGuardian
         [SerializeField] private OVRHand rightOVRHand;
         [SerializeField] private OVRHand leftOVRHand;
         [SerializeField] private Transform rightIndexTip;
+        [SerializeField] private Transform rightMiddleTip;
+        [SerializeField] private Transform rightRingTip;
+        [SerializeField] private Transform rightPinkyTip;
         [SerializeField] private Transform leftIndexTip;
+        [SerializeField] private Transform leftMiddleTip;
+        [SerializeField] private Transform leftRingTip;
+        [SerializeField] private Transform leftPinkyTip;
+        [SerializeField] private float pinchStrengthThreshold = 0.3f; // Relaxed threshold for pinch detection
 
         [Header("Recognition Settings")]
         [SerializeField] private int minPoints = 10;
         [SerializeField] private float minScore = 0.5f;
         [SerializeField] private float minPointDistance = 0.01f; // Minimum distance between points
-
-        [Header("Keyboard Fallback")]
-        [SerializeField] private Transform keyboardSpawnPosition;
-        [SerializeField] private bool enableKeyboardFallback = true;
-        [SerializeField] private KeyCode shootTypeAKey = KeyCode.Alpha1;
-        [SerializeField] private KeyCode shootTypeBKey = KeyCode.Alpha2;
-        [SerializeField] private KeyCode shootTypeTriangleKey = KeyCode.Alpha3;
 
         [Header("Drawing Mode")]
         private bool useToggleMode = false;
@@ -71,10 +70,11 @@ namespace RuneGuardian
         private Vector3 lastRecordedPosition;
         private AudioSource audioSource;
         private OVRHand.HandFinger pinchFinger = OVRHand.HandFinger.Index;
+        private Transform currentFingerTip = null; // Track the current finger tip for drawing
 
         // Toggle mode tracking
         private bool wasControllerGripPressed = false;
-        private bool wasAnyPinching = false;
+        private bool wasHandPinching = false; // Track pinch state for toggle mode
         private Transform activeDrawingTransform = null; // Track the active drawing transform in toggle mode
 
         /// <summary>
@@ -95,16 +95,23 @@ namespace RuneGuardian
             }
         }
 
+        private InputData currentInputData;
+
         public List<ShapeTemplate> availableShapes;
 
         [SerializeField] private BulletinBoard bulletinBoard;
         [SerializeField] private GameObject bulletinBoardObject;
         [SerializeField] private List<GameObject> spellTypeBulletinBoardDrawing;
-        private static Vector3 DefaultPositionOffset = new Vector3(-0.4f, 2.3f, 0.127f);
-
         private bool isSphereMode;
+        private List<ShapeTemplate> enabledShapes = new List<ShapeTemplate>();
+        private bool shouldRandomizeShapes = false;
+        private List<GameObject> spawnedBulletinBoardObjects = new List<GameObject>(); // Track dynamically spawned bulletin board children
+
         void Init(InputData inputData)
         {
+            currentInputData = inputData;
+            shouldRandomizeShapes = inputData.randomizeShapes;
+
             if (inputData != null)
             {
                 minScore = inputData.gestureMinScore / 100.0f;
@@ -112,45 +119,39 @@ namespace RuneGuardian
             isSphereMode = inputData.gameMode == GameMode.SPHERE;
             if (isSphereMode) return;
 
+            // NON-SPHERE MODE INITIALIZATION
             recognizer = new Unistroke();
 
             // Reset game statistics when initializing
             GameStats.Reset();
 
-            // Clear and rebuild the shape-to-projectile mapping
-            shapeToProjectileMap.Clear();
-
+            // Clear any previously spawned bulletin board objects
             bulletinBoardObject.SetActive(true);
-            int objectTypeCount = 0;
+            spawnedBulletinBoardObjects.Clear();
+
+            // Collect enabled shapes
+            enabledShapes.Clear();
             if (inputData.enabledDirtyObjects)
             {
-                ShapeTemplate validShape = availableShapes[inputData.dirtyObjectsDrawing];
-                bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[0], validShape, objectTypeCount);
-                // Map this shape name to projectile type 0 (dirty)
-                shapeToProjectileMap[validShape.Name] = 0;
-                Debug.Log($"Mapped gesture '{validShape.Name}' -> Dirty Objects (projectile 0)");
-                ++objectTypeCount;
+                enabledShapes.Add(availableShapes[inputData.dirtyObjectsDrawing]);
             }
             if (inputData.enabledDestroyedObjects)
             {
-                ShapeTemplate validShape = availableShapes[inputData.destroyedObjectsDrawing];
-                bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[1], validShape, objectTypeCount);
-                // Map this shape name to projectile type 1 (destroyed)
-                shapeToProjectileMap[validShape.Name] = 1;
-                Debug.Log($"Mapped gesture '{validShape.Name}' -> Destroyed Objects (projectile 1)");
-                ++objectTypeCount;
+                enabledShapes.Add(availableShapes[inputData.destroyedObjectsDrawing]);
             }
             if (inputData.enabledUncoloredObjects)
             {
-                ShapeTemplate validShape = availableShapes[inputData.uncoloredObjectsDrawing];
-                bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[2], validShape, objectTypeCount);
-                // Map this shape name to projectile type 2 (uncolored)
-                shapeToProjectileMap[validShape.Name] = 2;
-                Debug.Log($"Mapped gesture '{validShape.Name}' -> Uncolored Objects (projectile 2)");
-                ++objectTypeCount;
+                enabledShapes.Add(availableShapes[inputData.uncoloredObjectsDrawing]);
             }
 
+            // Clear and rebuild the shape-to-projectile mapping
+            BuildShapeMapping(inputData);
 
+            if (bulletinBoard == null)
+            {
+                Debug.LogError("bulletinBoard is not assigned!");
+                return;
+            }
 
             mainCamera ??= Camera.main;
 
@@ -171,6 +172,9 @@ namespace RuneGuardian
                 _ => OVRHand.HandFinger.Index
             };
 
+            // Set the correct finger tip based on hand and pinch finger
+            currentFingerTip = GetFingerTipTransform(useRightHand, pinchFinger);
+
             activeControllerTransform = useRightHand ? rightControllerTransform : leftControllerTransform;
             UpdateActiveDevice();
 
@@ -179,14 +183,196 @@ namespace RuneGuardian
             {
                 Debug.LogWarning("No AudioSource found on GestureRecognizerExample!");
             }
+        }
 
-            Debug.Log("Gesture Recognizer ready! Use VR controller trigger to draw.");
-            string drawModeText = useToggleMode ? "TOGGLE mode (tap to start/stop)" : "CONTINUOUS mode (hold to draw)";
-            Debug.Log($"Drawing mode: {drawModeText}");
-            if (enableKeyboardFallback)
+        /// <summary>
+        /// Builds the shape-to-projectile mapping based on InputData
+        /// </summary>
+        private void BuildShapeMapping(InputData inputData)
+        {
+            shapeToProjectileMap.Clear();
+
+            int objectTypeCount = 0;
+            if (inputData.enabledDirtyObjects)
             {
-                Debug.Log($"Keyboard fallback enabled: {shootTypeAKey} = Square/TypeA, {shootTypeBKey} = Circle/TypeB, {shootTypeTriangleKey} = Triangle");
+                ShapeTemplate validShape = availableShapes[inputData.dirtyObjectsDrawing];
+                GameObject[] spawned = bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[0], validShape, objectTypeCount);
+                spawnedBulletinBoardObjects.AddRange(spawned);
+                // Add the gesture template for this shape
+                validShape.AddTemplateAction?.Invoke();
+                // Map this shape name to projectile type 0 (dirty)
+                shapeToProjectileMap[validShape.Name] = 0;
+                ++objectTypeCount;
             }
+            if (inputData.enabledDestroyedObjects)
+            {
+                ShapeTemplate validShape = availableShapes[inputData.destroyedObjectsDrawing];
+                GameObject[] spawned = bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[1], validShape, objectTypeCount);
+                spawnedBulletinBoardObjects.AddRange(spawned);
+                // Add the gesture template for this shape
+                validShape.AddTemplateAction?.Invoke();
+                // Map this shape name to projectile type 1 (destroyed)
+                shapeToProjectileMap[validShape.Name] = 1;
+                ++objectTypeCount;
+            }
+            if (inputData.enabledUncoloredObjects)
+            {
+                ShapeTemplate validShape = availableShapes[inputData.uncoloredObjectsDrawing];
+                GameObject[] spawned = bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[2], validShape, objectTypeCount);
+                spawnedBulletinBoardObjects.AddRange(spawned);
+                // Add the gesture template for this shape
+                validShape.AddTemplateAction?.Invoke();
+                // Map this shape name to projectile type 2 (uncolored)
+                shapeToProjectileMap[validShape.Name] = 2;
+            }
+        }
+
+        /// <summary>
+        /// Randomizes the shape-to-projectile mapping for symbol randomization.
+        /// Picks random shapes from all available shapes and updates the bulletin board.
+        /// </summary>
+        public void RandomizeShapeMapping()
+        {
+            if (!shouldRandomizeShapes || enabledShapes.Count == 0 || bulletinBoard == null)
+            {
+                return;
+            }
+
+            // Get the number of enabled object types
+            int targetShapeCount = currentInputData.enabledDirtyObjects ? 1 : 0;
+            targetShapeCount += currentInputData.enabledDestroyedObjects ? 1 : 0;
+            targetShapeCount += currentInputData.enabledUncoloredObjects ? 1 : 0;
+
+            if (targetShapeCount == 0 || availableShapes.Count < targetShapeCount)
+            {
+                Debug.LogWarning("Not enough shapes available for randomization");
+                return;
+            }
+
+            // Pick random unique shapes from all available shapes
+            List<int> selectedIndices = new List<int>();
+            List<int> availableIndices = new List<int>();
+            for (int i = 0; i < availableShapes.Count; i++)
+            {
+                availableIndices.Add(i);
+            }
+
+            // Shuffle and pick the first N shapes
+            for (int i = availableIndices.Count - 1; i > 0; i--)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, i + 1);
+                var temp = availableIndices[i];
+                availableIndices[i] = availableIndices[randomIndex];
+                availableIndices[randomIndex] = temp;
+            }
+
+            selectedIndices = availableIndices.GetRange(0, targetShapeCount);
+            List<ShapeTemplate> selectedShapes = new List<ShapeTemplate>();
+            foreach (var idx in selectedIndices)
+            {
+                selectedShapes.Add(availableShapes[idx]);
+            }
+
+            // Clear only the dynamically spawned bulletin board objects (preserve initial prefab children)
+            foreach (GameObject spawnedObject in spawnedBulletinBoardObjects)
+            {
+                if (spawnedObject != null)
+                {
+                    Destroy(spawnedObject);
+                }
+            }
+            spawnedBulletinBoardObjects.Clear();
+
+            // Clear old gesture templates from the recognizer to prevent conflicts
+            recognizer.ClearTemplates();
+
+            // Clear and rebuild the shape-to-projectile mapping
+            shapeToProjectileMap.Clear();
+
+            // Rebuild mapping and bulletin board with new random shapes
+            int objectTypeCount = 0;
+            if (currentInputData.enabledDirtyObjects && objectTypeCount < selectedShapes.Count)
+            {
+                ShapeTemplate validShape = selectedShapes[objectTypeCount];
+                // Respawn on bulletin board
+                GameObject[] spawned = bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[0], validShape, objectTypeCount);
+                spawnedBulletinBoardObjects.AddRange(spawned);
+                // Add the gesture template for this shape
+                validShape.AddTemplateAction.Invoke();
+                shapeToProjectileMap[validShape.Name] = 0;
+                Debug.Log($"Randomized: '{validShape.Name}' -> Dirty Objects (projectile 0)");
+                objectTypeCount++;
+            }
+            if (currentInputData.enabledDestroyedObjects && objectTypeCount < selectedShapes.Count)
+            {
+                ShapeTemplate validShape = selectedShapes[objectTypeCount];
+                GameObject[] spawned = bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[1], validShape, objectTypeCount);
+                spawnedBulletinBoardObjects.AddRange(spawned);
+                // Add the gesture template for this shape
+                validShape.AddTemplateAction.Invoke();
+                shapeToProjectileMap[validShape.Name] = 1;
+                Debug.Log($"Randomized: '{validShape.Name}' -> Destroyed Objects (projectile 1)");
+                objectTypeCount++;
+            }
+            if (currentInputData.enabledUncoloredObjects && objectTypeCount < selectedShapes.Count)
+            {
+                ShapeTemplate validShape = selectedShapes[objectTypeCount];
+                GameObject[] spawned = bulletinBoard.SpawnShapeWithSpell(spellTypeBulletinBoardDrawing[2], validShape, objectTypeCount);
+                spawnedBulletinBoardObjects.AddRange(spawned);
+                // Add the gesture template for this shape
+                validShape.AddTemplateAction.Invoke();
+                shapeToProjectileMap[validShape.Name] = 2;
+                Debug.Log($"Randomized: '{validShape.Name}' -> Uncolored Objects (projectile 2)");
+            }
+        }
+
+        /// <summary>
+        /// Gets the finger tip transform for the specified hand and finger.
+        /// </summary>
+        private Transform GetFingerTipTransform(bool rightHand, OVRHand.HandFinger finger)
+        {
+            if (rightHand)
+            {
+                return finger switch
+                {
+                    OVRHand.HandFinger.Index => rightIndexTip,
+                    OVRHand.HandFinger.Middle => rightMiddleTip,
+                    OVRHand.HandFinger.Ring => rightRingTip,
+                    OVRHand.HandFinger.Pinky => rightPinkyTip,
+                    _ => rightIndexTip
+                };
+            }
+            else
+            {
+                return finger switch
+                {
+                    OVRHand.HandFinger.Index => leftIndexTip,
+                    OVRHand.HandFinger.Middle => leftMiddleTip,
+                    OVRHand.HandFinger.Ring => leftRingTip,
+                    OVRHand.HandFinger.Pinky => leftPinkyTip,
+                    _ => leftIndexTip
+                };
+            }
+        }
+
+        /// <summary>
+        /// Checks if a finger is pinching with relaxed threshold.
+        /// Uses pinch strength instead of strict binary detection.
+        /// </summary>
+        private bool IsFingerPinching(OVRHand hand, OVRHand.HandFinger finger)
+        {
+            if (hand == null || !hand.IsTracked)
+                return false;
+
+            // Try strict pinching first
+            if (hand.GetFingerIsPinching(finger))
+                return true;
+
+            // Fallback to pinch strength threshold for relaxed detection
+            if (hand.GetFingerPinchStrength(finger) >= pinchStrengthThreshold)
+                return true;
+
+            return false;
         }
 
         void FindVRControllers()
@@ -218,51 +404,34 @@ namespace RuneGuardian
             }
         }
 
+
+
         void Update()
         {
-            // Keyboard fallback controls
-            if (enableKeyboardFallback)
+            if (isSphereMode)
             {
-
-                if (Input.GetKeyDown(shootTypeAKey))
-                {
-                    OnValidGesture?.Invoke(0, keyboardSpawnPosition.position);
-                }
-                else if (Input.GetKeyDown(shootTypeBKey))
-                {
-                    OnValidGesture?.Invoke(1, keyboardSpawnPosition.position);
-                }
-                else if (Input.GetKeyDown(shootTypeTriangleKey))
-                {
-                    OnValidGesture?.Invoke(2, keyboardSpawnPosition.position);
-                }
+                return;
             }
 
-            // Hand tracking pinch detection (both hands)
+            // Hand tracking detection (both hands) - Pinch or Closed Hand
             bool rightTracked = rightOVRHand != null && rightOVRHand.IsTracked && useRightHand;
             bool leftTracked = leftOVRHand != null && leftOVRHand.IsTracked && !useRightHand;
             bool handTracked = rightTracked || leftTracked;
-            bool rightPinching = rightTracked && rightOVRHand.GetFingerIsPinching(pinchFinger);
-            bool leftPinching = leftTracked && leftOVRHand.GetFingerIsPinching(pinchFinger);
-            bool anyPinching = rightPinching || leftPinching;
 
-            if (!isSphereMode) {
-                // TODO: add sphere mode logic here
-                return;
-            }
-            // Get the appropriate finger tip transform based on which hand is active
-            Transform fingerTipTransform = null;
-            if (rightTracked && rightIndexTip != null)
-                fingerTipTransform = rightIndexTip;
-            else if (leftTracked && leftIndexTip != null)
-                fingerTipTransform = leftIndexTip;
+            // Detect pinch input from configured finger with relaxed detection
+            bool rightHandActive = rightTracked && IsFingerPinching(rightOVRHand, pinchFinger);
+            bool leftHandActive = leftTracked && IsFingerPinching(leftOVRHand, pinchFinger);
+            bool anyHandActive = rightHandActive || leftHandActive;
 
-            // For pinch detection, we still need to know if currently pinching
+            // Get the appropriate finger tip transform based on pinch finger
+            Transform fingerTipTransform = currentFingerTip;
+
+            // For hand input detection, use the correct finger tip based on active hand
             Transform drawingTransform = null;
-            if (rightPinching && rightIndexTip != null)
-                drawingTransform = rightIndexTip;
-            else if (leftPinching && leftIndexTip != null)
-                drawingTransform = leftIndexTip;
+            if (rightHandActive && currentFingerTip != null)
+                drawingTransform = currentFingerTip;
+            else if (leftHandActive && currentFingerTip != null)
+                drawingTransform = currentFingerTip;
 
             // Check if controller grip is pressed
             bool controllerGripPressed = false;
@@ -337,7 +506,7 @@ namespace RuneGuardian
                 if (useToggleMode)
                 {
                     // Toggle mode: detect edge (transition) from not pinching to pinching
-                    if (anyPinching && !wasAnyPinching && drawingTransform != null)
+                    if (anyHandActive && !wasHandPinching && drawingTransform != null)
                     {
                         if (!isDrawing)
                         {
@@ -352,14 +521,14 @@ namespace RuneGuardian
                     }
                     else if (isDrawing && activeDrawingTransform != null)
                     {
-                        // Continue drawing using the stored finger tip transform, even when not pinching
+                        // Continue drawing using the stored finger tip transform, even when not active
                         ContinueDrawing(activeDrawingTransform);
                     }
                 }
                 else
                 {
                     // Continuous mode: hold to draw
-                    if (anyPinching && drawingTransform != null)
+                    if (anyHandActive && drawingTransform != null)
                     {
                         if (!isDrawing)
                         {
@@ -375,13 +544,13 @@ namespace RuneGuardian
                         StopDrawing();
                     }
                 }
-                wasAnyPinching = anyPinching;
+                wasHandPinching = anyHandActive;
                 return;
             }
 
             // Reset toggle tracking when neither input is active
             wasControllerGripPressed = false;
-            wasAnyPinching = false;
+            wasHandPinching = false;
             if (!isDrawing)
             {
                 activeDrawingTransform = null;
@@ -461,13 +630,12 @@ namespace RuneGuardian
                 audioSource.loop = false;
             }
 
-            if (currentGesture.Count >= minPoints)
+            if (recognizer != null && currentGesture.Count >= minPoints)
             {
                 var result = recognizer.Recognize(currentGesture);
 
                 if (result.Score >= minScore)
                 {
-                    Debug.Log($"✓ Recognized: {result.Name} (Score: {result.Score:F2})");
                     // Record successful gesture
                     GameStats.RecordGesture(result.Score, true);
                     // Get the last drawn world position from the line renderer
@@ -487,14 +655,12 @@ namespace RuneGuardian
                 }
                 else
                 {
-                    Debug.Log($"? Gesture not recognized (Best: {result.Name}, Score: {result.Score:F2})");
                     // Record failed gesture
                     GameStats.RecordGesture(result.Score, false);
                 }
             }
             else
             {
-                Debug.Log($"Gesture too short! Need at least {minPoints} points, got {currentGesture.Count}");
                 // Record failed gesture (too short = 0 score)
                 GameStats.RecordGesture(0f, false);
             }
@@ -680,7 +846,7 @@ namespace RuneGuardian
             new Vector2(0, 50),
             new Vector2(50, 0)
         };
-            recognizer.AddTemplate("Diamong", diamond);
+            recognizer.AddTemplate("Diamond", diamond);
         }
 
         public void AddVTemplate()

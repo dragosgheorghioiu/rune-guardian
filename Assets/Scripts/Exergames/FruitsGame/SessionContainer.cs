@@ -82,7 +82,7 @@ namespace FruitsGame
 
         void Start()
         {
-    #if (UNITY_EDITOR)
+#if (UNITY_EDITOR)
             //OnInit("{\"NrFructe\":\"5\"," +
             //    "\"NrTotalFructe\":\"20\"," +
             //    " \"NecesitaGestPrindere\":\"false\"," +
@@ -97,7 +97,7 @@ namespace FruitsGame
             //    "\"BasketScale\":\"100\"," +
             //    "\"GameType\":\"0\"," +
             //    "\"BasketOffsetY\":\"0\"}");
-    #endif
+#endif
 
         }
 
@@ -146,13 +146,13 @@ namespace FruitsGame
         /// <param name="eventName">The name of the custom event.</param>
         public override void OnCustomEvent(string eventName)
         {
-            Debug.Log(eventName);
-
-            if (eventName == "startgame") {
+            if (eventName == "startgame")
+            {
                 _clinicalUseController.StartGame();
             }
 
-            if (eventName == "stopgame") {
+            if (eventName == "stopgame")
+            {
                 _clinicalUseController.StopGame();
             }
         }
@@ -162,7 +162,8 @@ namespace FruitsGame
         /// </summary>
         public override void OnStop()
         {
-            if (_onStop == null) {
+            if (_onStop == null)
+            {
                 return;
             }
 
