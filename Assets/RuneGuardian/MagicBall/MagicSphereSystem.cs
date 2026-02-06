@@ -9,6 +9,7 @@ namespace RuneGuardian
         [SerializeField] private Transform shootSource;
         [SerializeField] private ShootSpell shooter;
 
+        [SerializeField] public AudioSource audioSource;
         private List<int> currentSession;
         private int currentIndex;
         private bool patternComplete;
@@ -97,6 +98,7 @@ namespace RuneGuardian
                 }
                 else
                 {
+                    audioSource.Play();
                     UpdateAllSphereColors();
                 }
             }
