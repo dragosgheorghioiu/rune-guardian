@@ -10,7 +10,6 @@ namespace RuneGuardian
     {
         public static event Action<int, Vector3> OnValidGesture;
 
-        // Maps gesture shape names to projectile type indices
         private static Dictionary<string, int> shapeToProjectileMap = new Dictionary<string, int>();
 
         void OnEnable()
@@ -99,15 +98,19 @@ namespace RuneGuardian
         public List<ShapeTemplate> availableShapes;
 
         [SerializeField] private BulletinBoard bulletinBoard;
+        [SerializeField] private GameObject bulletinBoardObject;
         [SerializeField] private List<GameObject> spellTypeBulletinBoardDrawing;
         private static Vector3 DefaultPositionOffset = new Vector3(-0.4f, 2.3f, 0.127f);
 
+        private bool isSphereMode;
         void Init(InputData inputData)
         {
             if (inputData != null)
             {
                 minScore = inputData.gestureMinScore / 100.0f;
             }
+            isSphereMode = inputData.gameMode == GameMode.SPHERE;
+            if (isSphereMode) return;
 
             recognizer = new Unistroke();
 
@@ -117,6 +120,7 @@ namespace RuneGuardian
             // Clear and rebuild the shape-to-projectile mapping
             shapeToProjectileMap.Clear();
 
+            bulletinBoardObject.SetActive(true);
             int objectTypeCount = 0;
             if (inputData.enabledDirtyObjects)
             {
@@ -145,11 +149,8 @@ namespace RuneGuardian
                 Debug.Log($"Mapped gesture '{validShape.Name}' -> Uncolored Objects (projectile 2)");
                 ++objectTypeCount;
             }
-            if (bulletinBoard == null)
-            {
-                Debug.LogError("bulletinBoard is not assigned!");
-                return;
-            }
+
+
 
             mainCamera ??= Camera.main;
 
@@ -245,6 +246,10 @@ namespace RuneGuardian
             bool leftPinching = leftTracked && leftOVRHand.GetFingerIsPinching(pinchFinger);
             bool anyPinching = rightPinching || leftPinching;
 
+            if (!isSphereMode) {
+                // TODO: add sphere mode logic here
+                return;
+            }
             // Get the appropriate finger tip transform based on which hand is active
             Transform fingerTipTransform = null;
             if (rightTracked && rightIndexTip != null)

@@ -6,8 +6,9 @@ namespace RuneGuardian
 {
     public enum GameMode
     {
-        CONVEYOR_BELT = 0,
-        GRID = 1,
+        SPHERE = 0,
+        CONVEYOR_BELT = 1,
+        GRID = 2,
     };
 
     public enum PinchFinger

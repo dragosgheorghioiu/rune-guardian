@@ -17,6 +17,7 @@ public class RandomToySpawner : MonoBehaviour
     private static int numberOfSpawnedToys = 0;
     private static int maxToyNumber = 0;
     private static Quaternion extraToyRotation = Quaternion.Euler(0.0f, -90.0f, 0.0f);
+    private GameMode gameMode;
 
     [Header("Spawnable prefabs (3)")]
     [SerializeField] private SpawnedToy[] prefabs;
@@ -25,6 +26,7 @@ public class RandomToySpawner : MonoBehaviour
     private SpawnedToy current;
 
     [SerializeField] private ConveyorController conveyor;
+    [SerializeField] private MagicSphereSystem magicSphereSystem;
 
     private void OnEnable()
     {
@@ -38,6 +40,7 @@ public class RandomToySpawner : MonoBehaviour
     public void Init(InputData inputData)
     {
         validToys = new List<int>();
+        gameMode = inputData.gameMode;
         if (inputData.enabledDirtyObjects) validToys.Add(0);
         if (inputData.enabledDestroyedObjects) validToys.Add(1);
         if (inputData.enabledUncoloredObjects) validToys.Add(2);
@@ -73,7 +76,7 @@ public class RandomToySpawner : MonoBehaviour
 
         int idx = Random.Range(0, validToys.Count);
         current = Instantiate(prefabs[validToys[idx]], spawnPoint.position, spawnPoint.rotation * extraToyRotation);
-        current.Init(targetPoint, despawnPoint, portalPoint);
+        current.Init(gameMode, targetPoint, despawnPoint, portalPoint);
         ++numberOfSpawnedToys;
 
         conveyor?.Reverse();
@@ -82,6 +85,10 @@ public class RandomToySpawner : MonoBehaviour
         current.OnArrivedTarget += () =>
         {
             conveyor?.StopConveyor();
+            if (magicSphereSystem != null)
+            {
+                magicSphereSystem.SetupPattern();
+            }
         };
 
         current.OnStartedDespawn += () =>

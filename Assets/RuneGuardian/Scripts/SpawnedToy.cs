@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections;
+using RuneGuardian;
 
 public class SpawnedToy : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class SpawnedToy : MonoBehaviour
     private Transform targetPoint;
     private Transform despawnPoint;
     private Transform portalPoint;
+    private bool isSphereMode;
 
     private enum State { MovingToPortal, MovingToTarget, WaitingAtTarget, MovingBackToPortal, MovingToDespawn }
     private State state;
@@ -45,8 +47,9 @@ public class SpawnedToy : MonoBehaviour
         if (hitModel != null) hitModel.SetActive(false);
     }
 
-    public void Init(Transform tPoint, Transform dPoint, Transform pPoint)
+    public void Init(GameMode gameMode, Transform tPoint, Transform dPoint, Transform pPoint)
     {
+        isSphereMode = gameMode == GameMode.SPHERE;
         targetPoint = tPoint;
         despawnPoint = dPoint;
         portalPoint = pPoint;
@@ -125,7 +128,7 @@ public class SpawnedToy : MonoBehaviour
     async public void TryHit(ProjectileType projectileType)
     {
         if (state != State.WaitingAtTarget) return;
-        if (projectileType != requiredProjectile) return;
+        if (!isSphereMode && projectileType != requiredProjectile) return;
 
         onToyHit?.Invoke();
         await Task.Delay(1000);
@@ -133,7 +136,6 @@ public class SpawnedToy : MonoBehaviour
         SwapToHitVariant();
         onToyRepaired?.Invoke();
 
-        // Record successful toy delivery
         RuneGuardian.GameStats.RecordToyDelivered();
 
         await Task.Delay(2500);
@@ -145,7 +147,7 @@ public class SpawnedToy : MonoBehaviour
     public bool IsCorrectSpell(ProjectileType projectileType)
     {
         Debug.Log($"Checking spell: required={requiredProjectile}, provided={projectileType}");
-        return state == State.WaitingAtTarget && projectileType == requiredProjectile;
+        return isSphereMode || (state == State.WaitingAtTarget && projectileType == requiredProjectile);
     }
 
     private void SwapToHitVariant()
