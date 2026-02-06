@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using RuneGuardian;
 using UnityEngine;
 using System.Threading.Tasks;
-using UnityEngine.XR.Interaction.Toolkit.AR;
 
 public class RandomToySpawner : MonoBehaviour
 {
@@ -51,12 +50,6 @@ public class RandomToySpawner : MonoBehaviour
         if (inputData.enabledUncoloredObjects) validToys.Add(2);
         maxToyNumber = inputData.numberOfToys;
         numberOfSpawnedToys = 0; // Reset counter when game starts
-        
-        // Randomize shape mapping at game start if enabled
-        // if (currentInputData != null && currentInputData.randomizeShapes)
-        // {
-        //     gestureRecognizer.RandomizeShapeMapping();
-        // }
     }
 
     public async void DelayedSpawnRandom()
@@ -91,8 +84,21 @@ public class RandomToySpawner : MonoBehaviour
         }
 
         int idx = Random.Range(0, validToys.Count);
-        current = Instantiate(prefabs[validToys[idx]], spawnPoint.position, spawnPoint.rotation * extraToyRotation);
+
+        int toyType = validToys[idx]; // 0=dirty, 1=destroyed, 2=uncolored
+        current = Instantiate(prefabs[toyType], spawnPoint.position, spawnPoint.rotation * extraToyRotation);
         current.Init(gameMode, targetPoint, despawnPoint, portalPoint);
+
+        // Attach the spell symbol to the toy
+        if (gestureRecognizer != null)
+        {
+            GameObject shapeSymbol = gestureRecognizer.GetShapeForProjectileType(toyType);
+            if (shapeSymbol != null)
+            {
+                current.AttachSpellSymbol(shapeSymbol);
+            }
+        }
+
         ++numberOfSpawnedToys;
 
         conveyor?.Reverse();

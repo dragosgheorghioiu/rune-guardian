@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace RuneGuardian
@@ -8,9 +7,7 @@ namespace RuneGuardian
     /// </summary>
     public class GameStats
     {
-        private static int totalGesturesAttempted = 0;
         private static int gesturesMissed = 0;
-        private static float totalAccuracy = 0f;
         private static int toysDelivered = 0;
         private static int wrongSpellsUsed = 0;
 
@@ -19,9 +16,7 @@ namespace RuneGuardian
         /// </summary>
         public static void Reset()
         {
-            totalGesturesAttempted = 0;
             gesturesMissed = 0;
-            totalAccuracy = 0f;
             toysDelivered = 0;
             wrongSpellsUsed = 0;
             Debug.Log("GameStats: Statistics reset");
@@ -34,9 +29,6 @@ namespace RuneGuardian
         /// <param name="wasRecognized">Whether the gesture was successfully recognized</param>
         public static void RecordGesture(float score, bool wasRecognized)
         {
-            totalGesturesAttempted++;
-            totalAccuracy += score;
-
             if (!wasRecognized)
             {
                 gesturesMissed++;
@@ -61,15 +53,6 @@ namespace RuneGuardian
         {
             wrongSpellsUsed++;
             Debug.Log($"GameStats: Wrong spell used! Total: {wrongSpellsUsed}");
-        }
-
-        /// <summary>
-        /// Get the average gesture accuracy (0-100%)
-        /// </summary>
-        public static float GetAverageAccuracy()
-        {
-            if (totalGesturesAttempted == 0) return 0f;
-            return (totalAccuracy / totalGesturesAttempted) * 100f;
         }
 
         /// <summary>
@@ -101,10 +84,9 @@ namespace RuneGuardian
         /// </summary>
         public static string GetFormattedStats()
         {
-            return $"Toys Delivered: {toysDelivered}\n" +
-                   $"Drawings Missed: {gesturesMissed}\n" +
-                   $"Wrong Spells Used: {wrongSpellsUsed}\n" +
-                   $"Average Accuracy: {GetAverageAccuracy():F1}%";
+            return $"Jucarii livrate: {toysDelivered}\n" +
+                   $"Vraji ratate: {gesturesMissed}\n" +
+                   $"Vraji gresite: {wrongSpellsUsed}\n";
         }
     }
 }
