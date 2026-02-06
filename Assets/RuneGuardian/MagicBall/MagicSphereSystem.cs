@@ -58,7 +58,7 @@ namespace RuneGuardian
             currentIndex = 0;
             patternComplete = false;
 
-            int randomCount = Random.Range(1, spheres.Count + 1);
+            int randomCount = Random.Range(3, spheres.Count + 1);
 
             List<int> availableIndices = new List<int>();
             for (int i = 0; i < spheres.Count; i++)
@@ -114,28 +114,24 @@ namespace RuneGuardian
         {
             for (int i = 0; i < spheres.Count; i++)
             {
-                Renderer renderer = spheres[i].GetComponent<Renderer>();
-                if (renderer != null)
-                {
                     int sessionIndex = currentSession.IndexOf(i);
 
                     if (sessionIndex == -1)
                     {
-                        renderer.material.color = greyColor;
+                        spheres[i].GetComponent<MagicSphere>().Grey();
                     }
                     else if (sessionIndex < currentIndex)
                     {
-                        renderer.material.color = greenColor;
+                        spheres[i].GetComponent<MagicSphere>().Green();
                     }
                     else if (sessionIndex == currentIndex)
                     {
-                        renderer.material.color = yellowColor;
+                        spheres[i].GetComponent<MagicSphere>().Yellow();
                     }
                     else
                     {
-                        renderer.material.color = greyColor;
-                    }
-                }
+                        spheres[i].GetComponent<MagicSphere>().Grey();
+                    }               
             }
         }
         
@@ -143,11 +139,9 @@ namespace RuneGuardian
         {
             for (int i = 0; i < spheres.Count; i++)
             {
-                Renderer renderer = spheres[i].GetComponent<Renderer>();
-                if (renderer != null)
-                {
-                    renderer.material.color = greyColor;
-                }
+
+                spheres[i].GetComponent<MagicSphere>().Grey();
+
             }
         }
     }

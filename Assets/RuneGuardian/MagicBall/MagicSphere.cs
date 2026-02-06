@@ -6,19 +6,41 @@ namespace RuneGuardian
     {
         private MagicSphereSystem magicSystem;
         private int sphereIndex;
-
+        [SerializeField] public GameObject green;
+        [SerializeField] public GameObject yellow;
+        [SerializeField] public GameObject grey;
         public void Initialize(MagicSphereSystem system, int index)
         {
             magicSystem = system;
             sphereIndex = index;
         }
 
+        public void Green()
+        {
+            green.SetActive(true);
+            yellow.SetActive(false);
+            grey.SetActive(false);
+        }
+
+        public void Yellow()
+        {
+            green.SetActive(false);
+            yellow.SetActive(true);
+            grey.SetActive(false);
+
+        }
+
+        public void Grey() {
+            green.SetActive(false);
+            yellow.SetActive(false);
+            grey.SetActive(true);
+        }
+
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("PlayerHand"))
-            {
-                magicSystem.UpdatePatternColors(sphereIndex);
-            }
+            Debug.Log(other.tag);
+               magicSystem.UpdatePatternColors(sphereIndex);
+
         }
 
         private void OnMouseDown()
@@ -26,6 +48,8 @@ namespace RuneGuardian
             Debug.Log("SPHERE CLICK");
             magicSystem.UpdatePatternColors(sphereIndex);
         }
+
+
     }
 
 }
