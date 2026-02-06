@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,9 +6,6 @@ namespace RuneGuardian
     public class MagicSphereSystem : MonoBehaviour
     {
         [SerializeField] private List<GameObject> spheres;
-        [SerializeField] private Color greyColor = Color.grey;
-        [SerializeField] private Color greenColor = Color.green;
-        [SerializeField] private Color yellowColor = Color.yellow;
         [SerializeField] private Transform shootSource;
         [SerializeField] private ShootSpell shooter;
 
@@ -30,7 +26,7 @@ namespace RuneGuardian
         public void Init(InputData inputData)
         {
             if (inputData.gameMode != GameMode.SPHERE) return;
-            
+
             for (int i = 0; i < spheres.Count; i++)
             {
                 MagicSphere magicSphere = spheres[i].GetComponent<MagicSphere>();
@@ -41,7 +37,7 @@ namespace RuneGuardian
                 magicSphere.Initialize(this, i);
             }
         }
-        
+
         public void SetupPattern()
         {
             for (int i = 0; i < spheres.Count; i++)
@@ -86,13 +82,13 @@ namespace RuneGuardian
 
         public void UpdatePatternColors(int index)
         {
-            if (patternComplete) return;
-            
+            if (patternComplete || currentSession == null) return;
+
             if (currentSession[currentIndex] == index)
             {
                 Debug.Log("Correct sphere: " + index);
                 currentIndex++;
-                
+
                 if (currentIndex >= currentSession.Count)
                 {
                     patternComplete = true;
@@ -114,27 +110,27 @@ namespace RuneGuardian
         {
             for (int i = 0; i < spheres.Count; i++)
             {
-                    int sessionIndex = currentSession.IndexOf(i);
+                int sessionIndex = currentSession.IndexOf(i);
 
-                    if (sessionIndex == -1)
-                    {
-                        spheres[i].GetComponent<MagicSphere>().Grey();
-                    }
-                    else if (sessionIndex < currentIndex)
-                    {
-                        spheres[i].GetComponent<MagicSphere>().Green();
-                    }
-                    else if (sessionIndex == currentIndex)
-                    {
-                        spheres[i].GetComponent<MagicSphere>().Yellow();
-                    }
-                    else
-                    {
-                        spheres[i].GetComponent<MagicSphere>().Grey();
-                    }               
+                if (sessionIndex == -1)
+                {
+                    spheres[i].GetComponent<MagicSphere>().Grey();
+                }
+                else if (sessionIndex < currentIndex)
+                {
+                    spheres[i].GetComponent<MagicSphere>().Green();
+                }
+                else if (sessionIndex == currentIndex)
+                {
+                    spheres[i].GetComponent<MagicSphere>().Yellow();
+                }
+                else
+                {
+                    spheres[i].GetComponent<MagicSphere>().Grey();
+                }
             }
         }
-        
+
         private void MakeAllSpheresGrey()
         {
             for (int i = 0; i < spheres.Count; i++)

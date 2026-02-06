@@ -46,7 +46,7 @@ namespace RuneGuardian
 
         public int numberOfToys;
 
-
+        public bool randomizeShapes;
     }
     /// <summary>
     /// An example of output data.
