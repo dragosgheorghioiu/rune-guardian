@@ -48,6 +48,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredProjectile: 0
+  symbolAnchor: {fileID: 0}
+  symbolYOffset: 1
+  symbolScale: 0.5
   normalModel: {fileID: 4275727867806936603}
   hitModel: {fileID: 2083472797290155993}
   variantAnchor: {fileID: 0}

@@ -116,10 +116,11 @@ namespace RuneGuardian
             {
                 minScore = inputData.gestureMinScore / 100.0f;
             }
+
             isSphereMode = inputData.gameMode == GameMode.SPHERE;
             if (isSphereMode) return;
 
-            // NON-SPHERE MODE INITIALIZATION
+            // ======= NON-SPHERE MODE INITIALIZATION =======
             recognizer = new Unistroke();
 
             // Reset game statistics when initializing
@@ -638,6 +639,7 @@ namespace RuneGuardian
                 {
                     // Record successful gesture
                     GameStats.RecordGesture(result.Score, true);
+
                     // Get the last drawn world position from the line renderer
                     Vector3 lastPoint = Vector3.zero;
                     if (lineRenderer != null && lineRenderer.positionCount > 0)
@@ -692,24 +694,6 @@ namespace RuneGuardian
             lineRenderer.positionCount = 0;
             lineRenderer.useWorldSpace = true;
             lineRenderer.sortingOrder = 100;
-        }
-
-        void CreateDrawingParticles()
-        {
-            if (drawingParticlesPrefab != null)
-            {
-                GameObject particlesObj = Instantiate(drawingParticlesPrefab.gameObject, activeControllerTransform.position, Quaternion.identity);
-                activeParticleSystem = particlesObj.GetComponent<ParticleSystem>();
-
-                if (activeParticleSystem != null)
-                {
-                    activeParticleSystem.Play();
-
-                    // Set particle color to match drawing color
-                    var main = activeParticleSystem.main;
-                    main.startColor = drawColor;
-                }
-            }
         }
 
         public void AddCircleTemplate()
@@ -836,19 +820,6 @@ namespace RuneGuardian
             recognizer.AddTemplate("X", x);
         }
 
-        public void AddDiamondTemplate()
-        {
-            List<Vector2> diamond = new List<Vector2>
-        {
-            new Vector2(50, 0),
-            new Vector2(100, 50),
-            new Vector2(50, 100),
-            new Vector2(0, 50),
-            new Vector2(50, 0)
-        };
-            recognizer.AddTemplate("Diamond", diamond);
-        }
-
         public void AddVTemplate()
         {
             List<Vector2> v = new List<Vector2>
@@ -860,14 +831,29 @@ namespace RuneGuardian
             recognizer.AddTemplate("V", v);
         }
 
-        public void AddLineTemplate()
+
+        /// <summary>
+        /// Gets the current shape GameObject for a specific projectile type.
+        /// Used to display spell symbols on toys.
+        /// </summary>
+        public GameObject GetShapeForProjectileType(int projectileType)
         {
-            List<Vector2> line = new List<Vector2>
-        {
-            new Vector2(0, 50),
-            new Vector2(100, 50)
-        };
-            recognizer.AddTemplate("Line", line);
+            // Find which shape is currently mapped to this projectile type
+            foreach (var kvp in shapeToProjectileMap)
+            {
+                if (kvp.Value == projectileType)
+                {
+                    // Find the shape template by name
+                    foreach (var shape in availableShapes)
+                    {
+                        if (shape.Name == kvp.Key)
+                        {
+                            return shape.BulletinDrawing;
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
         public bool IsGridModeActive()

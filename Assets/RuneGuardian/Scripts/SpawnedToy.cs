@@ -16,6 +16,12 @@ public class SpawnedToy : MonoBehaviour
     [Header("Cu ce spell trebuie sa fie lovit")]
     public ProjectileType requiredProjectile;
 
+    [Header("Spell Symbol Display")]
+    [SerializeField] private Transform symbolAnchor; // Where to attach the symbol (above toy)
+    [SerializeField] private float symbolYOffset = 1.5f; // Vertical offset above toy
+    [SerializeField] private float symbolScale = 0.3f; // Scale of the symbol
+    private GameObject spawnedSymbol; // The instantiated symbol
+
     [SerializeField] private GameObject normalModel;
     [SerializeField] private GameObject hitModel;
 
@@ -59,6 +65,29 @@ public class SpawnedToy : MonoBehaviour
         {
             state = State.MovingToPortal;
         }
+    }
+
+    /// <summary>
+    /// Attaches a spell symbol above the toy to show which gesture is needed.
+    /// </summary>
+    public void AttachSpellSymbol(GameObject symbolPrefab)
+    {
+        if (symbolPrefab == null) return;
+
+        // Determine the anchor point
+        Transform anchor = symbolAnchor != null ? symbolAnchor : transform;
+
+        // Calculate position above the toy
+        Vector3 symbolPosition = anchor.position + Vector3.up * symbolYOffset;
+
+        // Instantiate the symbol (flipped to face the player)
+        spawnedSymbol = Instantiate(symbolPrefab, symbolPosition, Quaternion.Euler(90f, 180f, 0f));
+
+        // Parent it to the toy so it moves with it
+        spawnedSymbol.transform.SetParent(anchor);
+
+        // Scale it down (10x smaller)
+        spawnedSymbol.transform.localScale = Vector3.one * symbolScale * 0.1f;
     }
 
     private void Update()
@@ -135,7 +164,15 @@ public class SpawnedToy : MonoBehaviour
         SwapToHitVariant();
         onToyRepaired?.Invoke();
 
-        RuneGuardian.GameStats.RecordToyDelivered();
+        // Hide the spell symbol after repair
+        if (spawnedSymbol != null)
+        {
+            Destroy(spawnedSymbol);
+            spawnedSymbol = null;
+        }
+
+        // Record successful toy delivery
+        GameStats.RecordToyDelivered();
 
         await Task.Delay(2500);
 
