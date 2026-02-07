@@ -708,6 +708,67 @@ namespace RuneGuardian
             recognizer.AddTemplate("Circle", circle);
         }
 
+        public void AddInfinityTemplate()
+        {
+            List<Vector2> infinity = new List<Vector2>();
+            int numPoints = 16;
+            int c1x = 50;
+            int c1y = 50;
+            int c2x = 100;
+            int c2y = 50;
+            for (int i = numPoints/2; i > 0; i--)
+            {
+                float angle = i * 2 * Mathf.PI / numPoints;
+                infinity.Add(new Vector2(Mathf.Cos(angle) * 50f + c1x, Mathf.Sin(angle) * 50f + c1y));
+            }
+
+            for (int i = numPoints/2 ; i < numPoints; i++)
+            {
+                float angle = i * 2 * Mathf.PI / numPoints;
+                infinity.Add(new Vector2(Mathf.Cos(angle) * 50f + c2x, Mathf.Sin(angle) * 50f + c2y));
+            }
+
+            for (int i = 0; i < numPoints/2; i++)
+            {
+                float angle = i * 2 * Mathf.PI / numPoints;
+                infinity.Add(new Vector2(Mathf.Cos(angle) * 50f + c2x, Mathf.Sin(angle) * 50f + c2y));
+            }
+
+            for (int i = numPoints; i >= numPoints /2 ; i--)
+            {
+                float angle = i * 2 * Mathf.PI / numPoints;
+                infinity.Add(new Vector2(Mathf.Cos(angle) * 50f + c1x, Mathf.Sin(angle) * 50f + c1y));
+            }
+            recognizer.AddTemplate("Infinity", infinity);
+        }
+
+        public void AddBTemplate()
+        {
+            List<Vector2> B = new List<Vector2>();
+            int numPoints = 32;
+            int c1x = 0;
+            int c1y = 25;
+            int c2x = 0;
+            int c2y = 75;
+
+            B.Add(new Vector2(0, 100));
+            B.Add(new Vector2(0, 0));
+
+            for (int i = numPoints; i > 0; i--)
+            {
+                float angle = (i * Mathf.PI / numPoints) - (Mathf.PI/2);
+                B.Add(new Vector2(Mathf.Cos(angle) * 25f + c1x, Mathf.Sin(angle) * 25f + c1y));
+            }
+
+            for (int i = numPoints; i >= 0; i--)
+            {
+                float angle = (i * Mathf.PI / numPoints) - (Mathf.PI / 2);
+                B.Add(new Vector2(Mathf.Cos(angle) * 25f + c2x, Mathf.Sin(angle) * 25f + c2y));
+            }
+
+            recognizer.AddTemplate("B", B);
+        }
+
         public void AddSquareTemplate()
         {
             // Clockwise square
@@ -800,25 +861,37 @@ namespace RuneGuardian
             new Vector2(50, 50),
             new Vector2(0, 100),
             new Vector2(50, 150),
-            new Vector2(0, 200)
+            new Vector2(0, 200),
         };
             recognizer.AddTemplate("Zigzag", zigzag);
         }
 
+        public void AddDiamondTemplate()
+        {
+            List<Vector2> diamond = new List<Vector2>
+        {
+            new Vector2(0, 50),
+            new Vector2(50, 0),
+            new Vector2(100, 50),
+            new Vector2(50, 100),
+            new Vector2(0, 50),
+        };
+            recognizer.AddTemplate("Diamond", diamond);
+        }
         public void AddXTemplate()
         {
-            // Triangle shape with horizontal bar (like letter A)
-            // Draw: bottom-left → top → bottom-right → middle-right → middle-left
+
             List<Vector2> x = new List<Vector2>
             {
-                new Vector2(10, 100),    // bottom-left
-                new Vector2(50, 0),      // top (peak)
-                new Vector2(90, 100),    // bottom-right
-                new Vector2(60, 50),     // middle-right (shorter crossbar)
-                new Vector2(40, 50),     // middle-left (shorter crossbar)
+                new Vector2(0, 100),    
+                new Vector2(100, 0),    
+                new Vector2(100, 100),     
+                new Vector2(0, 0),    
+                new Vector2(0, 100)       
             };
             recognizer.AddTemplate("X", x);
         }
+
 
         public void AddVTemplate()
         {
