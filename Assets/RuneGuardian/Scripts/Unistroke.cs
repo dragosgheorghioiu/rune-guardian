@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace RuneGuardian
 {
+    /// <summary>
+    /// Implements the $1 Recognizer algorithm for fast and simple gesture recognition.
+    /// Used to identify drawn runes by comparing them against predefined templates.
+    /// </summary>
     public class Unistroke
     {
         // Constants
@@ -125,7 +129,7 @@ namespace RuneGuardian
             for (int i = 0; i < Templates.Count; i++)
             {
                 var template = Templates[i];
-                
+
                 // Check normal direction
                 float distance = DistanceAtBestAngle(points, template.Points,
                     -AngleRange, AngleRange, AnglePrecision);

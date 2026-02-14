@@ -4,8 +4,15 @@ using System.Threading.Tasks;
 using System.Collections;
 using RuneGuardian;
 
+/// <summary>
+/// Represents an individual toy spawned in the world. 
+/// Handles its own state, movement, and interaction with magic spells.
+/// </summary>
 public class SpawnedToy : MonoBehaviour
 {
+    /// <summary>
+    /// Triggered when the toy is despawned (either repaired or missed).
+    /// </summary>
     public static Action onToyDespawn;
 
     public Action OnArrivedTarget;
@@ -13,6 +20,9 @@ public class SpawnedToy : MonoBehaviour
     public Action OnStartedDespawn;
     public Action onToyRepaired;
 
+    /// <summary>
+    /// The type of projectile required to "fix" this toy.
+    /// </summary>
     [Header("Cu ce spell trebuie sa fie lovit")]
     public ProjectileType requiredProjectile;
 

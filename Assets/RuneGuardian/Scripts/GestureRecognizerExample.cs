@@ -6,8 +6,16 @@ using UnityEngine.Events;
 
 namespace RuneGuardian
 {
+    /// <summary>
+    /// Handles gesture input through VR controllers or hand tracking (pinch).
+    /// Records point data and uses the Unistroke recognizer to identify magical runes.
+    /// </summary>
     public class GestureRecognizerExample : MonoBehaviour
     {
+        /// <summary>
+        /// Event triggered when a valid gesture is recognized. 
+        /// Provides the projectile index mapped to the shape and the world position of the gesture.
+        /// </summary>
         public static event Action<int, Vector3> OnValidGesture;
 
         private static Dictionary<string, int> shapeToProjectileMap = new Dictionary<string, int>();
@@ -716,25 +724,25 @@ namespace RuneGuardian
             int c1y = 50;
             int c2x = 100;
             int c2y = 50;
-            for (int i = numPoints/2; i > 0; i--)
+            for (int i = numPoints / 2; i > 0; i--)
             {
                 float angle = i * 2 * Mathf.PI / numPoints;
                 infinity.Add(new Vector2(Mathf.Cos(angle) * 50f + c1x, Mathf.Sin(angle) * 50f + c1y));
             }
 
-            for (int i = numPoints/2 ; i < numPoints; i++)
+            for (int i = numPoints / 2; i < numPoints; i++)
             {
                 float angle = i * 2 * Mathf.PI / numPoints;
                 infinity.Add(new Vector2(Mathf.Cos(angle) * 50f + c2x, Mathf.Sin(angle) * 50f + c2y));
             }
 
-            for (int i = 0; i < numPoints/2; i++)
+            for (int i = 0; i < numPoints / 2; i++)
             {
                 float angle = i * 2 * Mathf.PI / numPoints;
                 infinity.Add(new Vector2(Mathf.Cos(angle) * 50f + c2x, Mathf.Sin(angle) * 50f + c2y));
             }
 
-            for (int i = numPoints; i >= numPoints /2 ; i--)
+            for (int i = numPoints; i >= numPoints / 2; i--)
             {
                 float angle = i * 2 * Mathf.PI / numPoints;
                 infinity.Add(new Vector2(Mathf.Cos(angle) * 50f + c1x, Mathf.Sin(angle) * 50f + c1y));
@@ -756,7 +764,7 @@ namespace RuneGuardian
 
             for (int i = numPoints; i > 0; i--)
             {
-                float angle = (i * Mathf.PI / numPoints) - (Mathf.PI/2);
+                float angle = (i * Mathf.PI / numPoints) - (Mathf.PI / 2);
                 B.Add(new Vector2(Mathf.Cos(angle) * 25f + c1x, Mathf.Sin(angle) * 25f + c1y));
             }
 
@@ -883,11 +891,11 @@ namespace RuneGuardian
 
             List<Vector2> x = new List<Vector2>
             {
-                new Vector2(0, 100),    
-                new Vector2(100, 0),    
-                new Vector2(100, 100),     
-                new Vector2(0, 0),    
-                new Vector2(0, 100)       
+                new Vector2(0, 100),
+                new Vector2(100, 0),
+                new Vector2(100, 100),
+                new Vector2(0, 0),
+                new Vector2(0, 100)
             };
             recognizer.AddTemplate("X", x);
         }
